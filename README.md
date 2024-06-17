@@ -1,6 +1,6 @@
 <h1 align="center">🏆 The Russell Cup</h1>
 <h3 align="center">An open-source simulation basketball league manager.</h3>
-<p>This project is highly customized for our use-case, but there are surely some gems you can take from it. Contributions are much appreciated!
+<p>This project is highly customized to our use-case, but there are surely some gems you can take from it. Contributions are much appreciated!
 
 <b>League Compendium</b>
 Are you a league member? Head over to our [compendium.](https://github.com/doublesync/TheRussellCup/wiki)

@@ -1,0 +1,21 @@
+{% extends '_base.html' %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <h1 class="mt-4">Recent Posts</h1><hr>
+    {% for post in posts %}
+    <div class="card mb-2">
+        <div class="card-header">
+            <h5>{{ post.title }}</h5>
+            <small>Posted on {{ post.created }} by <a href="{% url 'user' post.user.id %}">{{ post.user }}</a></small>
+        </div>
+        <div class="card-body text-truncate">
+            <p style="white-space: pre-line;">{{ post.content|truncatechars:200 }}</p>
+            <a href="{% url 'post' post.id %}" class="btn btn-sm btn-success">View post</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

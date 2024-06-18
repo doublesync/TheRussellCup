@@ -1,0 +1,45 @@
+{% extends '_base.html' %}
+
+{% block title %}{{ user.username }}{% endblock %}
+
+{% block content %}
+<div class="mt-4 container-fluid">
+    <div class="card mt-5">
+        <div class="card-header">
+            <h3 class="card-title">User Profile</h3>
+        </div>
+        <div class="card-body">
+            <h1>{{ user.username }}</h1>
+            <p class="bg-primary badge badge-primary">Joined on {{ user.date_joined }}</p><hr>
+            <h2 class="mt-4">Posts</h2>
+            <p>Here are the last five posts by {{ user.username }}</p>
+            <ul class="list-group list-group-numbered">
+                <!-- Let's only do the last five posts -->
+                {% if user.post_set.count > 5 %}
+                    {% for post in user.post_set.all|slice:":5" %}
+                    <li class="p-3 list-group-item d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold">{{ post.title }}</div>
+                            <a href="{% url 'post' post.id %}" class="mt-2 btn btn-sm btn-success">View Post</a>
+                        </div>
+                        <span class="badge bg-primary rounded-pill">{{ post.created }}</span>
+                    </li>
+                    {% endfor %}
+                {% else %}
+                    {% for post in user.post_set.all %}
+                    <li class="p-3 list-group-item d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold">{{ post.title }}</div>
+                            <a href="{% url 'post' post.id %}" class="mt-2 btn btn-sm btn-success">View Post</a>
+                        </div>
+                        <span class="badge bg-primary rounded-pill">{{ post.created }}</span>
+                    </li>
+                    {% endfor %}
+                {% endif %}
+            </ul>
+            <h2 class="mt-4">Players</h2>
+            <p>Here are the players that {{ user.username }} has created</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

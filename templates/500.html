@@ -1,0 +1,14 @@
+{% extends '_base.html' %}
+
+{% block title %}500 Server Error{% endblock %}
+
+{% block content %}
+
+<h1>500 Server Error</h1>
+<p>Looks like something went wrong!</p>
+
+{% if reason %}
+<span class="p-2 bg-danger badge badge-danger text-white">{{ reason }}</span>
+{% endif %}
+
+{% endblock content %}

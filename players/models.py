@@ -10,6 +10,7 @@ import simulation.scripts.utility as utility
 
 # Create your models here.
 class Player(models.Model):
+    
     # User defined fields
     first_name = models.CharField(max_length=16)
     last_name = models.CharField(max_length=16)

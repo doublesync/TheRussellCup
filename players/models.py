@@ -28,6 +28,7 @@ class Player(models.Model):
     # Server defined fields
     attributes = models.JSONField(default=default.default_attributes)
     badges = models.JSONField(default=default.default_badges)
+    sim_rating = models.IntegerField(default=0)
     # Foreign key fields
     user = models.ForeignKey("accounts.CustomUser", on_delete=models.CASCADE, null=True, blank=True)
     team = models.ForeignKey("teams.Team", on_delete=models.CASCADE, null=True, blank=True)
@@ -49,6 +50,8 @@ class Player(models.Model):
         self.attributes["Lateral Quickness"] = (
             self.attributes["Speed"] + self.attributes["Perimeter Defense"]
         ) // 2
+        # Calculate the overall rating after potential upgrades
+        self.sim_rating = round((sum(self.attributes.values()) / len(self.attributes)), 2)
         # Call the parent save method
         super(Player, self).save(*args, **kwargs)
 

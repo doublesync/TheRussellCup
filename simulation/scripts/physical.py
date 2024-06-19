@@ -75,7 +75,6 @@ starting_height_physicals = {
 def set_starting_physicals(player: any) -> any:
     # fmt: off
     # These are the physical attributes that are set based on height
-    player.attributes = default.default_attributes()
     player.attributes["Speed"] = starting_height_physicals[player.height]["Speed"]
     player.attributes["Speed with Ball"] = starting_height_physicals[player.height]["Speed"]
     player.attributes["Acceleration"] = starting_height_physicals[player.height]["Speed"]

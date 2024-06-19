@@ -1,11 +1,16 @@
 # Python imports
 import random
 
+# Local imports
+from accounts.models import CustomUser
+import simulation.config as config
+
 
 # These are anomaly methods that are called when an anomaly is received
 def height_anomaly(player):
     player.height += 3
     player.anomaly = True
+    player.user.sp += config["CONFIG_PLAYER"]["SP_ANOMALY_BONUS"]
     return player
 
 

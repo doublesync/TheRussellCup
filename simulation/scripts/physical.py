@@ -85,13 +85,5 @@ def set_starting_physicals(player: any) -> any:
     weight_roll_result = weight.weight_roll(player.position)
     player.weight = weight_roll_result["weight"]
     player.attributes["Strength"] = weight_roll_result["strength"]
-    print(f"Player {player.first_name} {player.last_name} has been created with the following physical attributes:")
-    print(f"Speed: {player.attributes['Speed']}")
-    print(f"Speed with Ball: {player.attributes['Speed with Ball']}")
-    print(f"Acceleration: {player.attributes['Acceleration']}")
-    print(f"Vertical: {player.attributes['Vertical']}")
-    print(f"Lateral Quickness: {player.attributes['Lateral Quickness']}")
-    print(f"Strength: {player.attributes['Strength']}")
-    print(f"Weight: {player.weight}lbs")
     # fmt: on
     return player

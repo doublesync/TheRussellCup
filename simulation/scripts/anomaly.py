@@ -5,6 +5,7 @@ import random
 # These are anomaly methods that are called when an anomaly is received
 def height_anomaly(player):
     player.height += 3
+    player.anomaly = True
     return player
 
 
@@ -17,12 +18,11 @@ anomalies = {
 
 
 # Rolls for an anomaly
-def anomalyRoll(player: any):
+def anomaly_roll(player: any):
     received_anomaly = random.random() < anomaly_chances
     if received_anomaly:
         anomaly_chosen = random.choice(list(anomalies.keys()))
         anomaly_player = anomalies[anomaly_chosen](player)
-        anomaly_player.anomaly = anomaly_chosen
         return anomaly_player
     else:
         return player

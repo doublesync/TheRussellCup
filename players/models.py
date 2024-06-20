@@ -1,4 +1,4 @@
-# Python imports
+# Django imports
 from django.db import models
 
 # Local imports
@@ -7,6 +7,11 @@ import simulation.scripts.animation as animation
 import simulation.scripts.utility as utility
 
 # fmt:off
+
+# Custom field to disable validation on choice fields
+class ChoiceFieldNoValidation(models.CharField):
+    def validate(self):
+        return
 
 # Create your models here.
 class Player(models.Model):
@@ -18,17 +23,20 @@ class Player(models.Model):
         max_length=2, choices=[(x, x) for x in default.position_choices]
     )
     number = models.IntegerField()
+    country = models.CharField(max_length=64, choices=[(x, x) for x in default.country_choices])
+    college = models.CharField(max_length=64, choices=[(x, x) for x in default.college_choices])
     # Randomly generated fields
-    height = models.IntegerField()
+    height = models.IntegerField(default=0)
     height_imperial = models.CharField(max_length=4, default="N/A")
     weight = models.IntegerField(default=0)
-    wingspan = models.IntegerField()
+    wingspan = models.IntegerField(default=0)
     jumpshot = models.CharField(default="N/A", max_length=32)
     anomaly = models.BooleanField(default=False)
     # Server defined fields
     attributes = models.JSONField(default=default.default_attributes)
     badges = models.JSONField(default=default.default_badges)
-    sim_rating = models.IntegerField(default=0)
+    tendencies = models.JSONField(default=default.default_tendencies, null=True, blank=True)
+    sim_rating = models.FloatField(default=0.00)
     # Foreign key fields
     user = models.ForeignKey("accounts.CustomUser", on_delete=models.CASCADE, null=True, blank=True)
     team = models.ForeignKey("teams.Team", on_delete=models.CASCADE, null=True, blank=True)

@@ -1,3 +1,7 @@
+# User configuration
+CONFIG_USER = {
+    "MAX_PLAYERS": 9999,
+}
 # Player configuration
 CONFIG_PLAYER = {
     "SP_DEFAULT": 1000,

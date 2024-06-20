@@ -1,6 +1,6 @@
-# Django model choices
-position_choices = ["PG", "SG", "SF", "PF", "C"]
-country_choices = [
+import { faker } from 'https://esm.sh/@faker-js/faker';
+
+const countries = [
     "Afghanistan",
     "Albania",
     "Algeria",
@@ -247,7 +247,7 @@ country_choices = [
     "Zambia",
     "Zimbabwe",
 ]
-college_choices = [
+const colleges = [
     "N/A",
     "Other",
     "University of Alabama",
@@ -318,137 +318,22 @@ college_choices = [
     "University of Wisconsin-Madison",
     "Xavier University",
     "Yale University",
-]
+];
+const positions = ["PG", "SG", "SF", "PF", "C"];
 
+const populate_data_button = document.getElementById("populate_data_button");
+const player_first_name = document.getElementById("id_first_name");
+const player_last_name = document.getElementById("id_last_name");
+const player_position = document.getElementById("id_position");
+const player_number = document.getElementById("id_number");
+const player_country = document.getElementById("id_country");
+const player_college = document.getElementById("id_college");
 
-# Callable for attributes
-def default_attributes():
-    return {
-        "Driving Layup": 55,
-        "Post Fade": 55,
-        "Post Hook": 55,
-        "Post Moves": 55,
-        "Draw Foul": 55,
-        "Close Shot": 55,
-        "Midrange Shot": 55,
-        "3pt Shot": 55,
-        "Free Throw": 55,
-        "Ball Control": 55,
-        "Passing IQ": 55,
-        "Pass Accuracy": 55,
-        "Offensive Rebound": 55,
-        "Standing Dunk": 55,
-        "Driving Dunk": 55,
-        "Shot IQ": 55,
-        "Passing Vision": 55,
-        "Hands": 55,
-        "Defensive Rebound": 55,
-        "Interior Defense": 55,
-        "Perimeter Defense": 55,
-        "Block": 55,
-        "Steal": 55,
-        "Lateral Quickness": 55,
-        "Speed with Ball": 55,
-        "Hustle": 55,
-        "Pass Perception": 55,
-        "Defensive Consistency": 55,
-        "Help Defense IQ": 55,
-        "Offensive Consistency": 55,
-        "Intangibles": 55,
-        "Speed": 55,
-        "Acceleration": 55,
-        "Vertical": 55,
-        "Strength": 55,
-    }
-
-
-# Callable for badges
-def default_badges():
-    return {
-        # Shooting badges
-        "Agent 3": 0,
-        "Blinders": 0,
-        "Catch & Shoot": 0,
-        "Claymore": 0,
-        "Comeback Kid": 0,
-        "Corner Specialist": 0,
-        "Deadeye": 0,
-        "Free Points": 0,
-        "Green Machine": 0,
-        "Guard Up": 0,
-        "Limitless Range": 0,
-        "Middy Magician": 0,
-        "Open Looks": 0,
-        "Post Fade Phenom": 0,
-        "Slippery Off-Ball": 0,
-        "Space Creator": 0,
-        "Spot Finder": 0,
-        # Playmaking badges
-        "Ankle Breaker": 0,
-        "Bail Out": 0,
-        "Blow-By": 0,
-        "Break Starter": 0,
-        "Dimer": 0,
-        "Handles for Days": 0,
-        "Hyperdrive": 0,
-        "Killer Combos": 0,
-        "Needle Threader": 0,
-        "Physical Handles": 0,
-        "Post Playmaker": 0,
-        "Relay Passer": 0,
-        "Special Delivery": 0,
-        "Speed Booster": 0,
-        "Touch Passer": 0,
-        "Triple Spike": 0,
-        "Unpluckable": 0,
-        # Finishing badges
-        "Acrobat": 0,
-        "Aerial Wizard": 0,
-        "Backdown Punisher": 0,
-        "Big Driver": 0,
-        "Bulldozer": 0,
-        "Bunny": 0,
-        "Dream Shake": 0,
-        "Dropstepper": 0,
-        "Fast Twitch": 0,
-        "Fearless Finisher": 0,
-        "Float Game": 0,
-        "Giant Slayer": 0,
-        "Hook Specialist": 0,
-        "Masher": 0,
-        "Post Spin Technician": 0,
-        "Posterizer": 0,
-        "Precision Dunker": 0,
-        "Pro Touch": 0,
-        "Rise Up": 0,
-        "Scooper": 0,
-        "Slithery": 0,
-        "Spin Cycle": 0,
-        "Two Step": 0,
-        "Whistle": 0,
-        #  Defensive badges
-        "94 Feet": 0,
-        "Anchor": 0,
-        "Ankle Braces": 0,
-        "Boxout Beast": 0,
-        "Brick Wall": 0,
-        "Challenger": 0,
-        "Chase Down Artist": 0,
-        "Clamps": 0,
-        "Fast Feet": 0,
-        "Glove": 0,
-        "Interceptor": 0,
-        "Immovable Enforcer": 0,
-        "Off-Ball Pest": 0,
-        "Pick Dodger": 0,
-        "Pogo Stick": 0,
-        "Post Lockdown": 0,
-        "Rebound Chaser": 0,
-        "Right Stick Ripper": 0,
-        "Work Horse": 0,
-    }
-
-
-# Callable for tendencies
-def default_tendencies():
-    return {}
+populate_data_button.addEventListener("click", () => {
+    player_first_name.value = faker.name.firstName("male");
+    player_last_name.value = faker.name.lastName();
+    player_position.value = faker.helpers.arrayElement(positions);
+    player_number.value = faker.number.int({ min: 0, max: 99 });
+    player_country.value = faker.helpers.arrayElement(countries);
+    player_college.value = faker.helpers.arrayElement(colleges)
+});

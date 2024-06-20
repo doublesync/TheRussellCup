@@ -5,4 +5,6 @@ from django.urls import path
 from players import views
 
 # Create your urls here.
-urlpatterns = []
+urlpatterns = [
+    path("create-player/", views.PlayerFormView.as_view(), name="create_player")
+]

@@ -1,0 +1,52 @@
+{% extends '_base.html' %}
+{% load static %}
+
+{% load style_filters %}
+
+{% block title %}Create Player{% endblock %}
+
+{% block content %}
+    <div class="container-fluid p-2">
+        <div class="alert alert-primary" role="alert">
+            <h4 class="alert-heading">Create Player</h4>
+            <ul>
+                <li>Height, weight, wingspan, and jumpshot are randomly generated.</li>
+                <li>Jumpshots can be re-rolled later with XP.</li>
+                <li>All attributes start at (55) fifty-five.</li>
+                <li>All badges start at unequipped.</li>
+            </ul>
+            <a href="https://github.com/doublesync/TheRussellCup/wiki/Creation" target="_blank">Read More</a>
+        </div>
+        <div class="card p-3 mb-3">
+            <form method="post">
+                <div class="mb-2 d-flex justify-content-between">
+                    <h5>Player Info</h5>
+                    <p><small class="text-muted">Updated, 6/19/2024</small></p>
+                </div>
+                <div class="mb-2">
+                    {% for field in form %}
+                        <div class="form-group">
+                            {{ field.label_tag }}<br>
+                            {% if field.help_text %}
+                                <small class="form-text text-muted">{{ field.help_text }}</small>
+                            {% endif %}<br>
+                            {{ field|add_class:"form-control mb-2" }}
+                            {% for error in field.errors %}
+                                <small class="form-text text-danger">{{ error }}</small>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                </div>
+                {% csrf_token %}
+                <div class="mb-2 d-flex justify-content-between">
+                    <button id="populate_data_button" type="button" class="mt-2 btn btn-sm btn-dark">Populate Data</button>
+                    <button type="submit" class="mt-2 btn btn-sm btn-success">Create Player</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/players/fake_data.js' %}" type="module"></script>
+{% endblock %}

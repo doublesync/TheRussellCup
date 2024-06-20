@@ -76,6 +76,16 @@
   </nav>
 
   <div class="container mt-4">
+    {% if messages %}
+    <div class="container-fluid pr-2 pl-2">
+      <div class="alert alert-dark mb-0" role="alert">
+        <p class="mb-0 fw-bold">Error</p>
+        {% for message in messages %}
+        {{ message }}
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
     {% block content %}
     {% endblock content %}
   </div>

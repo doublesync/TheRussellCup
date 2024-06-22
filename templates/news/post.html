@@ -6,13 +6,18 @@
 
 {% block content %}
 <div class="container-fluid">
-    <img class="img-fluid" src="{{ post.image }}" alt="{{ post.title }}">
-    <h1 class="mt-4">{{ post.title }}</h1>
-    <a href="{% url 'user' post.user.id %}" class="bg-dark badge badge-dark">{{ post.user }}</a>
-    <p class="bg-primary badge badge-primary">{{ post.created }}</p>
-    <!-- <p class="bg-success badge badge-success"><i class="fa-regular fa-thumbs-up"></i> {{ likes }}</p> -->
-    <hr>
-    <p>{{ post.content|convert_to_markdown|safe }}</p>
-    <hr>
+    <div class="card">
+        <div class="card-header p-4">
+            <h2>{{ post.title }}</h2>
+            <p class="bg-dark badge badge-dark">{{ post.user }}</p>
+            <p class="bg-primary badge badge-primary">{{ post.created }}</p>
+        </div>
+        <div class="card-body">
+            <p>{{ post.content|convert_to_markdown|safe }}</p>
+        </div>
+        <div class="card-footer">
+            Created by <a href="{% url 'user' post.user.id %}">{{ post.user }}</a>
+        </div>
+    </div>
 </div>
 {% endblock %}

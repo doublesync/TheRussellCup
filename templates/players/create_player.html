@@ -6,7 +6,7 @@
 {% block title %}Create Player{% endblock %}
 
 {% block content %}
-    <div class="container-fluid p-2">
+    <div class="container-fluid">
         <div class="alert alert-primary" role="alert">
             <h4 class="alert-heading">Create Player</h4>
             <ul>
@@ -30,7 +30,7 @@
                             {% if field.help_text %}
                                 <small class="form-text text-muted">{{ field.help_text }}</small>
                             {% endif %}<br>
-                            {{ field|add_class:"form-control mb-2" }}
+                            {{ field|add_class:"form-control bg-dark text-light mb-2" }}
                             {% for error in field.errors %}
                                 <small class="form-text text-danger">{{ error }}</small>
                             {% endfor %}
@@ -49,4 +49,7 @@
 
 {% block scripts %}
 <script src="{% static 'js/players/fake_data.js' %}" type="module"></script>
+{% endblock %}
+
+{% block styles %}
 {% endblock %}

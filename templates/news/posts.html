@@ -4,18 +4,33 @@
 
 {% block content %}
 <div class="container-fluid">
-    <h1 class="mt-4">Recent Posts</h1><hr>
-    {% for post in posts %}
-    <div class="card mb-2">
+    <div class="card">
         <div class="card-header">
-            <h5>{{ post.title }}</h5>
-            <small>Posted on {{ post.created }} by <a href="{% url 'user' post.user.id %}">{{ post.user }}</a></small>
+            <h3 class="card-title"><i class="fa-solid fa-envelope"></i> Posts</h3>
+            <p>Recent posts from the news section</p>
         </div>
-        <div class="card-body text-truncate">
-            <p style="white-space: pre-line;">{{ post.content|truncatechars:200 }}</p>
-            <a href="{% url 'post' post.id %}" class="btn btn-sm btn-success">View post</a>
+        <div class="card-body">
+            <div class="row">
+                {% for post in posts %}
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">{{ post.title }}</h3>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <li class="list-group-item">
+                            <p>{{ post.content|truncatechars:100 }}</p>
+                            <a href="{% url 'post' post.id %}">Read more</a>
+                        </li>
+                    </div>
+                    <div class="card-footer">
+                        Created by <a href="{% url 'user' post.user.id %}">{{ post.user }}</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
         </div>
     </div>
-    {% endfor %}
 </div>
 {% endblock %}

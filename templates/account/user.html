@@ -34,7 +34,7 @@
             <ul class="list-style-none">
                 {% for player in user.player_set.all %}
                 <div class="ms-2 me-auto">
-                    <a href="#">{{ player.first_name }} {{ player.last_name }}</a>
+                    <a href="{% url 'player_page' player.id %}">{{ player.first_name }} {{ player.last_name }}</a>
                 </div>
                 {% endfor %}
             </ul>

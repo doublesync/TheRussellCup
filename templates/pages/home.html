@@ -4,23 +4,84 @@
 {% block title %}Home Page{% endblock title %}
 
 {% block content %}
-<div style="height: 100%" class="container-fluid">
+<div class="container-fluid">
     <div class="row">
-        <div class="col-md-6">
-            <img class="img-fluid" src="https://cdn.vox-cdn.com/thumbor/iIb88hYpT0F80GQnuUOxrEQqFqg=/0x0:5200x3467/1200x800/filters:focal(1908x508:2740x1340)/cdn.vox-cdn.com/uploads/chorus_image/image/73377923/usa_today_23401501.0.jpg" alt="Home page image">
+        <div class="col-md-6 gx-3 gy-3">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h2><i class="fa-solid fa-home"></i> Home</h2>
+                </div>
+                <div class="card-body">
+                    <p>Hey, {{ user.username }}!</p>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">We're currently in development. Be on the lookout for updates in the future!</li>
+                    </ul>
+                </div>
+                <div class="card-footer p-3">
+                    <a href="https://github.com/doublesync/TheRussellCup/wiki" class="btn btn-sm btn-dark"><i class="fa-brands fa-github"></i> Compendium</a>
+                    <a href="https://discord.com/invite/hCn3uSfDWX" class="btn btn-sm btn-primary"><i class="fa-brands fa-discord"></i> Discord</a>
+                </div>
+            </div>
         </div>
-        <div class="col-md-6">
-            <h1 class="mt-4">Hey there, {{ user.username }}!</h1>
-            <p>This is our league portal that was built to provide league members with an easy-to-use management tool.</p>
-            <p class="fw-bold mb-0">Quick Links</p>
-            <ul class="list-unstyled">
-                <li><a href="{% url 'posts' %}">News Posts</a></li>
-                <li><a href="{% url 'create_player' %}">Create Player</a></li>
-            </ul><hr>
-            <a href="https://github.com/doublesync/TheRussellCup/wiki" class="btn btn-sm btn-dark"><i class="fa-brands fa-github"></i> Compendium</a>
-            <a href="https://discord.com/invite/hCn3uSfDWX" class="btn btn-sm btn-primary"><i class="fa-brands fa-discord"></i> Discord</a>
+        <div class="col-md-6 gx-3 gy-3">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h2><i class="fa-solid fa-inbox"></i> Inbox</h2>
+                </div>
+                <div class="card-body">
+                    <p>You have no messages in your inbox.</p>
+                </div>
+                <div class="card-footer p-3">
+                    <a href="#" class="btn btn-sm btn-warning"><i class="fa-solid fa-envelope"></i> Go to inbox</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 gx-3 gy-3">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h2><i class="fa-solid fa-file"></i> Files</h2>
+                </div>
+                <div class="card-body">
+                    {% if player_files %}
+                        {% for player in player_files %}
+                            <div class="d-flex justify-content-between align-items-center">
+                                <a href="{% url 'player_page' player.id %}" class="text-decoration-none">{{ player.first_name }} {{ player.last_name }}</a>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p>You don't have any files.</p>
+                    {% endif %}
+                </div>
+                <div class="card-footer p-3">
+                    <a href="{% url 'create_player' %}" class="btn btn-sm btn-info"><i class="fa-solid fa-user-plus"></i> Create Player</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 gx-3 gy-3">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h2><i class="fa-solid fa-briefcase"></i> Jobs</h2>
+                </div>
+                <div class="card-body">
+                    <p>You don't have any jobs.</p>
+                </div>
+                <div class="card-footer p-3">
+                    <a href="#" class="btn btn-sm btn-success"><i class="fa-solid fa-dollar"></i> Apply to jobs</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 gx-3 gy-3">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h2><i class="fa-solid fa-paperclip"></i> Quick Access</h2>
+                </div>
+                <div class="card-body">
+                    <p>Quickly access the most important parts of the league.</p>
+                </div>
+                <div class="card-footer p-3">
+                </div>
+            </div>
         </div>
     </div>
-    <hr>
 </div>
 {% endblock content %}

@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
 
 <head>
   <meta charset="utf-8">
@@ -46,7 +46,7 @@
             <a class="nav-link" href="#">Stats</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'posts' %}">News</a>
+            <a class="nav-link" href="{% url 'posts' %}">Posts</a>
           </li>
           {% if user.is_authenticated %}
           <li class="nav-item dropdown">
@@ -75,20 +75,21 @@
     </div>
   </nav>
 
-  <div class="container mt-4">
+  <div class="container-fluid mt-4">
     {% if messages %}
     <div class="container-fluid pr-2 pl-2">
       <div class="alert alert-dark mb-0" role="alert">
-        <p class="mb-0 fw-bold">Error</p>
         {% for message in messages %}
         {{ message }}
         {% endfor %}
       </div>
     </div>
     {% endif %}
+
     {% block content %}
     {% endblock content %}
   </div>
+
 
   {% block javascript %}
   <!-- Bootstrap JavaScript -->

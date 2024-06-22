@@ -1,5 +1,6 @@
 # Django imports
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.views.generic.edit import FormView
@@ -11,17 +12,16 @@ import simulation.webhook as webhook
 
 
 # A view to get a post
-def post(request, pk):
-    # Check if post exists
-    post_exists = Post.objects.filter(pk=pk).exists()
-    # If post exists, render the post
-    if post_exists:
-        likes = Like.objects.filter(post=pk).count()
-        return render(
-            request, "news/post.html", {"post": Post.objects.get(pk=pk), "likes": likes}
-        )
-    else:
-        return render(request, "500.html", {"reason": "Post does not exist"})
+def post(request, id):
+    post = get_object_or_404(Post, id=id)
+    return render(
+        request,
+        "news/post.html",
+        {
+            "post": post,
+            "likes": Like.objects.filter(post=id).count(),
+        },
+    )
 
 
 # A view to get all posts

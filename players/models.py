@@ -25,6 +25,7 @@ class Player(models.Model):
     number = models.IntegerField()
     country = models.CharField(max_length=64, choices=[(x, x) for x in default.country_choices])
     college = models.CharField(max_length=64, choices=[(x, x) for x in default.college_choices])
+    image = models.URLField(default="https://www.blythspartans.com/wp-content/uploads/2020/01/blank.png")
     # Randomly generated fields
     height = models.IntegerField(default=0)
     height_imperial = models.CharField(max_length=4, default="N/A")

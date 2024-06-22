@@ -106,12 +106,12 @@ if DEBUG:
 else:
     DATABASES = {
         "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": "d2uf11g2ouslk8",
-            "USER": "ugd4hc1qk31er",
-            "PASSWORD": "p117813df5ef4809410d158d312b81eb39923a35e240de9925ce9527b59627818",
-            "HOST": "c5p86clmevrg5s.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com",
-            "PORT": 5432,
+            "ENGINE": os.getenv("DB_ENGINE"),
+            "NAME": os.getenv("DB_NAME"),
+            "USER": os.getenv("DB_USER"),
+            "PASSWORD": os.getenv("DB_PASSWORD"),
+            "HOST": os.getenv("DB_HOST"),
+            "PORT": os.getenv("DB_PORT"),
         }
     }
 

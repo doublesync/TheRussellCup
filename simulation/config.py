@@ -4,7 +4,7 @@ CONFIG_USER = {
 }
 # Player configuration
 CONFIG_PLAYER = {
-    "SP_DEFAULT": 1000,
-    "SP_ANOMALY_BONUS": 250,
-    "XP_DEFAULT": 2500,
+    "SP_DEFAULT": 5000,
+    "SP_ANOMALY_BONUS": 1250,
+    "XP_DEFAULT": 8500,
 }

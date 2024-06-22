@@ -1,0 +1,147 @@
+{% extends '_base.html' %}
+{% load static %}
+{% load style_filters %}
+
+{% block title %}{{ player.first_name }} {{ player.last_name }}{% endblock %}
+
+{% block styles %}
+<style>
+    input[type="radio"] {
+        margin: 0 10px 0 1px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <h3 class="card-title">{{ player.first_name }} {{ player.last_name }}</h3>
+                <h3 class="card-title">{{ player.sim_rating }}</h3>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row gx-4 gy-4">
+                <!-- Currency column -->
+                <div class="col-12">
+                    <h4>Currency</h4>
+                    <ul class="list-group">
+                        <li class="list-group-item"><i class="fa-solid fa-coins"></i> {{ player.user.sp }} SP</li>
+                        <li class="list-group-item"><i class="fa-regular fa-star-half-stroke"></i> {{ player.user.xp }} XP</li>
+                    </ul>
+                </div>
+                <!-- Cart column -->
+                <div class="col-12">
+                    <h4>Cart</h4>
+                    <ul class="list-group">
+                    </ul>
+                </div>
+                <!-- Attributes column -->
+                <div class="col-md-6">
+                    <h4>Attributes</h4>
+                    <ul class="list-group">
+                        <div class="input-group m-1">
+                            <div class="form-check m-1">
+                                <input type="radio" id="show_all_attributes" name="shown_attributes" class="form-check-input" checked>
+                                <label for="show_all_attributes">Show All</label>
+                            </div>
+                            <div class="form-check m-1">
+                                <input type="radio" id="show_finishing_attributes" name="shown_attributes" class="form-check-input">
+                                <label for="show_finishing_attributes">Finishing</label>
+                            </div>
+                            <div class="form-check m-1">
+                                <input type="radio" id="show_shooting_attributes" name="shown_attributes" class="form-check-input">
+                                <label for="show_shooting_attributes">Shooting</label>
+                            </div>
+                            <div class="form-check m-1">
+                                <input type="radio" id="show_playmaking_attributes" name="shown_attributes" class="form-check-input">
+                                <label for="show_playmaking_attributes">Playmaking</label>
+                            </div>
+                            <div class="form-check m-1">
+                                <input type="radio" id="show_defensive_attributes" name="shown_attributes" class="form-check-input">
+                                <label for="show_defensive_attributes">Defensive</label>
+                            </div>
+                            <div class="form-check m-1">
+                                <input type="radio" id="show_physical_attributes" name="shown_attributes" class="form-check-input">
+                                <label for="show_physical_attributes">Physical</label>
+                            </div>
+                        </div>
+                        <hr>
+                        <div id="attribute_list" class="row">
+                            {% for k, v in attributes.items %}
+                            <div class="col-lg-6" data-category="{{ k|add_attribute_category }}">
+                                <p class="m-1">
+                                    <div style="{{ v|add_attribute_color }}" class="badge">
+                                        <div class="value-control">
+                                            <button class="btn btn-sm attribute-plus"><i class="fa-solid fa-plus"></i></button>
+                                            <span id="value_{{ k }}" class="p-2 attribute-value" style="font-size: 12px;" data-original="{{ v }}">{{ v }}</span>
+                                            <button class="btn btn-sm attribute-minus"><i class="fa-solid fa-minus"></i></button>
+                                        </div>
+                                    </div>
+                                    <span id="label_{{ k }}">{{ k }}</span>
+                                </p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </ul>
+                </div>
+                <!-- Badges column -->
+                <div class="col-md-6">
+                    <h4>Badges</h4>
+                    <ul class="list-group">
+                        <div class="input-group m-1">
+                            <div class="form-check m-1">
+                                <input type="radio" id="show_all_badges" name="shown_badges" class="form-check-input" checked>
+                                <label for="show_all_badges">Show All</label>
+                            </div>
+                            <div class="form-check m-1">
+                                <input type="radio" id="show_finishing_badges" name="shown_badges" class="form-check-input">
+                                <label for="show_finishing_badges">Finishing</label>
+                            </div>
+                            <div class="form-check m-1">
+                                <input type="radio" id="show_shooting_badges" name="shown_badges" class="form-check-input">
+                                <label for="show_shooting_badges">Shooting</label>
+                            </div>
+                            <div class="form-check m-1">
+                                <input type="radio" id="show_playmaking_badges" name="shown_badges" class="form-check-input">
+                                <label for="show_playmaking_badges">Playmaking</label>
+                            </div>
+                            <div class="form-check m-1">
+                                <input type="radio" id="show_defensive_badges" name="shown_badges" class="form-check-input">
+                                <label for="show_defensive_badges">Defensive</label>
+                            </div>
+                        </div>
+                        <hr>
+                        <div id="badge_list" class="row">
+                            {% for k, v in badges.items %}
+                            <div class="col-lg-6" data-category="{{ k|add_badge_category }}">
+                                <p class="m-1">
+                                    <div style="{{ v|add_badge_color }}" class="badge">
+                                        <div class="value-control">
+                                            <button class="btn btn-sm badge-plus"><i class="fa-solid fa-plus"></i></button>
+                                            <span id="value_{{ k }}" class="p-2 badge-value" style="font-size: 12px;" data-original="{{ v }}">{{ v }}</span>
+                                            <button class="btn btn-sm badge-minus"><i class="fa-solid fa-minus"></i></button>
+                                        </div>
+                                    </div>
+                                    <span id="label_{{ k }}">{{ k }}</span>
+                                </p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const attribute_categories = {{ attribute_categories|safe }};
+    const badge_categories = {{ badge_categories|safe }};
+</script>
+<script src="{% static 'js/players/filter_data.js' %}" type="text/javascript"></script>
+<script src="{% static 'js/players/upg_utils.js' %}" type="text/javascript"></script>
+{% endblock %}

@@ -25,6 +25,8 @@ def add_attribute_color(attribute):
         return "background-color: darkgreen"
     elif attribute >= 90:
         return "background-color: #800080"
+    else:
+        return "background-color: #212121"
 
 
 @register.filter
@@ -37,6 +39,8 @@ def add_badge_color(badge):
         return "background-color: #886300"
     elif badge == 4:
         return "background-color: #800080"
+    else:
+        return "background-color: #212121"
 
 
 @register.filter

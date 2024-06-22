@@ -4,6 +4,7 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.views.generic.edit import FormView
@@ -12,6 +13,7 @@ from django.views.generic.edit import FormView
 from players.models import Player
 from players.forms import PlayerForm
 import simulation.create as create
+import simulation.upgrade as upgrade
 import simulation.webhook as webhook
 import simulation.scripts.attribute as attribute
 import simulation.scripts.badge as badge
@@ -53,18 +55,54 @@ class PlayerFormView(FormView):
 @login_required
 def player_page(request, id):
     # fmt:off
-    player_exists = Player.objects.filter(id=id).exists()
-    if player_exists:
-        player = Player.objects.get(id=id)
+    player = get_object_or_404(Player, id=id)
+    sorted_attributes = dict(sorted(player.attributes.items(), key=lambda x: x[1], reverse=True))
+    sorted_badges = dict(sorted(player.badges.items(), key=lambda x: x[1], reverse=True))
+    return render(request, "players/player_page.html", {
+        "player": player, 
+        "attributes": sorted_attributes, 
+        "badges": sorted_badges,
+        "attribute_categories": attribute.attribute_categories,
+        "badge_categories": badge.badge_categories
+    })
+    # fmt:on
+
+
+# This is a class based view that will render the form to upgrade a player
+class UpgradeFormView(FormView):
+
+    # TODO: Implement the upgrade form
+
+    template_name = "players/upgrade_player.html"
+    form_class = PlayerForm
+
+    def get(self, request, *args, **kwargs):
+        player_id = self.kwargs.get("id")
+        player = get_object_or_404(Player, id=player_id)
+        if player.user != request.user:
+            return render(request, "500.html", {"reason": "You do not own this player"})
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        # fmt:off
+        context = super().get_context_data(**kwargs)
+        player_id = self.kwargs.get("id")
+        player = get_object_or_404(Player, id=player_id)
         sorted_attributes = dict(sorted(player.attributes.items(), key=lambda x: x[1], reverse=True))
         sorted_badges = dict(sorted(player.badges.items(), key=lambda x: x[1], reverse=True))
-        return render(request, "players/player_page.html", {
-            "player": player, 
-            "attributes": sorted_attributes, 
-            "badges": sorted_badges,
-            "attribute_categories": attribute.attribute_categories,
-            "badge_categories": badge.badge_categories
-        })
-    else:
-        return render(request, "500.html", {"reason": "Player does not exist"})
-    # fmt:on
+        context.update(
+            {
+                "player": player,
+                "attributes": sorted_attributes,
+                "badges": sorted_badges,
+                "attribute_categories": attribute.attribute_categories,
+                "badge_categories": badge.badge_categories,
+            }
+        )
+        return context
+        # fmt:on
+
+    def form_valid(self, form):
+        # Get the data from the form
+        cleaned_data = form.cleaned_data
+        print(cleaned_data)

@@ -1,15 +1,14 @@
 # Python imports
 
 # Local imports
+from players.models import Player
 import simulation.config as config
 import simulation.webhook as webhook
-import simulation.scripts.height as height
-import simulation.scripts.wingspan as wingspan
 import simulation.scripts.animation as animation
 import simulation.scripts.anomaly as anomaly
+import simulation.scripts.height as height
 import simulation.scripts.physical as physical
-
-from players.models import Player
+import simulation.scripts.wingspan as wingspan
 
 
 # Class that holds methods that take us through the player creation process

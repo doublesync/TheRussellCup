@@ -2,8 +2,8 @@
 
 # Local imports
 import simulation.config as config
+import simulation.webhook as webhook
 import simulation.scripts.height as height
-import simulation.scripts.weight as weight
 import simulation.scripts.wingspan as wingspan
 import simulation.scripts.animation as animation
 import simulation.scripts.anomaly as anomaly
@@ -13,7 +13,7 @@ from players.models import Player
 
 
 # Class that holds methods that take us through the player creation process
-class CreatePlayer:
+class PlayerCreator:
     def __init__(self, first_name, last_name, position, number, country, college, user):
         # Instantiate the player object
         self.object = Player(
@@ -62,6 +62,11 @@ class CreatePlayer:
         # Return the player
         return self.object
 
+    def send_webhook(self):
+        title = f"{self.object.first_name} {self.object.last_name} has been created!"
+        body = f"**{self.object.first_name} {self.object.last_name}** is a **{self.object.height_imperial}, {self.object.weight}lbs {self.object.position}** from **{self.object.country}** who attended **{self.object.college}**. He wears **{self.object.number}** and has a wingspan of **{self.object.wingspan}/100**. His jumpshot rolled to **{self.object.jumpshot}**, and his anomaly status is **{self.object.anomaly}**."
+        webhook.send_webhook(url="new_players", title=title, body=body)
+
     def create(self):
         # Validate the user
         validation = self.validate()
@@ -75,5 +80,7 @@ class CreatePlayer:
         # Save the player and user
         player.save()
         player.user.save()
+        # Send the webhook
+        self.send_webhook()
         # Return the player
         return player

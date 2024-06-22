@@ -5,7 +5,7 @@ import random
 from faker import Faker
 
 # Local imports
-from simulation.create import CreatePlayer
+from simulation.create import PlayerCreator
 from simulation.scripts.default import (
     position_choices,
     country_choices,
@@ -18,7 +18,7 @@ from accounts.models import CustomUser
 def run():
     user = CustomUser.objects.get(pk=1)
     first_name, last_name = Faker().name().split()
-    player = CreatePlayer(
+    player = PlayerCreator(
         first_name=first_name,
         last_name=last_name,
         position=random.choice(position_choices),

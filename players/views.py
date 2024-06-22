@@ -12,6 +12,7 @@ from django.views.generic.edit import FormView
 from players.models import Player
 from players.forms import PlayerForm
 import simulation.create as create
+import simulation.webhook as webhook
 import simulation.scripts.attribute as attribute
 import simulation.scripts.badge as badge
 
@@ -26,11 +27,10 @@ class PlayerFormView(FormView):
     success_url = "/"
 
     def form_valid(self, form):
-
-        print(self.request.user)
-
+        # Get the data from the form
         data = form.cleaned_data
-        seed = create.CreatePlayer(
+        # Create the player seed (instance)
+        seed = create.PlayerCreator(
             first_name=data["first_name"],
             last_name=data["last_name"],
             position=data["position"],
@@ -39,11 +39,13 @@ class PlayerFormView(FormView):
             college=data["college"],
             user=self.request.user,
         )
+        # Create the player (or return an error message if the player is invalidated)
         player = seed.create()
         if type(player) == str:
             messages.error(self.request, player)
             return render(self.request, self.template_name, {"form": form})
         else:
+            # Redirect to the player page
             return redirect(player_page, id=player.id)
 
 

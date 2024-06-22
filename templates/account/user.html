@@ -17,13 +17,13 @@
                 <!-- Let's only do the last five posts -->
                 {% if user.post_set.count > 5 %}
                     {% for post in user.post_set.all|slice:":5" %}
-                    <li class="p-3 list-group-item ">
+                    <li class="list-group-item ">
                         <a href="{% url 'post' post.id %}">{{ post.title }}</a>
                     </li>
                     {% endfor %}
                 {% else %}
                     {% for post in user.post_set.all %}
-                    <li class="p-3 list-group-item ">
+                    <li class="list-group-item ">
                         <a href="{% url 'post' post.id %}">{{ post.title }}</a>
                     </li>
                     {% endfor %}

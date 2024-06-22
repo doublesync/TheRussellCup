@@ -68,7 +68,7 @@
                             <small id="upgrade_notes_status">No notes exist.</small>
                             <input type="hidden" id="player_id" value="{{ player.id }}">
                             <textarea style="font-size: 12px;" class="form-control text-light" id="upgrade_notes" name="upgrade_notes" row="4"></textarea>
-                            <button type="submit" id="submit_upgrade_notes" class="btn btn-sm btn-primary mt-2">Save Plan</button>
+                            <button type="submit" id="submit_upgrade_notes" class="btn btn-sm btn-dark mt-2">Save Plan</button>
                         </li>
                     </ul>
                 </div>
@@ -79,6 +79,7 @@
                         <li class="list-group-item"><i class="fa-solid fa-coins"></i> {{ player.user.sp }} SP</li>
                         <li class="list-group-item"><i class="fa-regular fa-star-half-stroke"></i> {{ player.user.xp }} XP</li>
                     </ul>
+                    <a href="{% url 'upgrade_page' player.id %}" class="btn btn-sm btn-dark mt-2">Upgrade Player</a>
                 </div>
                 <!-- Attributes column -->
                 <div class="col-md-6">

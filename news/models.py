@@ -12,7 +12,6 @@ from accounts.models import CustomUser
 # Create your models here.
 class Post(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    image = models.URLField()
     title = models.CharField(max_length=50)
     content = models.TextField()
     created = models.DateTimeField(auto_now_add=True)

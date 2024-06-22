@@ -1,5 +1,4 @@
 {% extends '_base.html' %}
-
 {% block title %}News Posts{% endblock %}
 
 {% block content %}
@@ -8,9 +7,10 @@
         <div class="card-header">
             <h3 class="card-title"><i class="fa-solid fa-envelope"></i> Posts</h3>
             <p>Recent posts from the news section</p>
+            <a href="{% url 'create_post' %}" class="btn btn-sm btn-info">Create Post</a>
         </div>
         <div class="card-body">
-            <div class="row">
+            <div class="row gx-3 gy-3">
                 {% for post in posts %}
                 <div class="col-md-4">
                     <div class="card">

@@ -1,0 +1,43 @@
+<h4>Cart</h4>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Start</th>
+            <th>New</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% if cart.attributes or cart.badges %}
+            {% for attribute, data in cart.attributes.items %}
+            <tr>
+                <td>{{ attribute }}</td>
+                <td>{{ data.price }}</td>
+                <td>{{ data.start }}</td>
+                <td>{{ data.new }}</td>
+            </tr>
+            {% endfor %}
+            {% for badge, data in cart.badges.items %}
+            <tr>
+                <td>{{ badge }}</td>
+                <td>{{ data.price }}</td>
+                <td>{{ data.start }}</td>
+                <td>{{ data.new }}</td>
+            </tr>
+            {% endfor %}
+        {% else %}
+        <tr>
+            <td>Example Item</td>
+            <td>100</td>
+            <td>55</td>
+            <td>60</td>
+        {% endif %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <td>Total</td>
+            <td><i class="fa-solid fa-coins"> {{ cart.total }}</td>
+        </tr>
+    </tfoot>
+</table>

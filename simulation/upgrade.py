@@ -3,6 +3,7 @@
 # Local imports
 import simulation.scripts.attribute as attribute
 import simulation.scripts.badge as badge
+from logs.models import UpgradeLog
 
 # An example of data that will be passed to the upgrade creator
 example_data = {
@@ -97,9 +98,9 @@ class UpgradeCreator:
         return [True, self.cart]
 
     def purchase(self):
-        # TODO: Add transaction logs to the player
         # Format the data
         self.format()
+        # Validate the user, price, and upgrades
         validate_user = self.validate_user()
         validate_price = self.validate_price()
         validate_upgrades = self.validate_upgrades()
@@ -114,6 +115,8 @@ class UpgradeCreator:
                 self.player.badges[b] = data["new"]
             self.player.sp_spent += self.cart["total"]
             self.player.save()
+            # Log the upgrades
+            UpgradeLog.objects.create(player=self.player, total=self.cart["total"], upgrades=self.cart)
             # Return a success message
             return [True, "Upgrades applied successfully."]
         else:

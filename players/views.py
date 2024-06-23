@@ -12,6 +12,7 @@ from django.shortcuts import redirect
 from django.template.loader import render_to_string
 from django.views.generic.edit import FormView
 from django.views.generic.base import View
+from django.views.generic.list import ListView
 
 # Local imports
 from players.models import Player
@@ -124,3 +125,15 @@ class UpgradeFormView(FormView):
             return redirect("upgrade_page", id=player.id)
 
     # fmt: on
+
+
+# This is a list based view that will render the player list
+class PlayerListView(ListView):
+
+    model = Player
+    template_name = "players/player_list.html"
+    context_object_name = "players"
+    paginate_by = 20
+
+    def get_queryset(self):
+        return Player.objects.filter(user=self.request.user).order_by("-sim_rating")

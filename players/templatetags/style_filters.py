@@ -16,6 +16,16 @@ def add_class(field, css):
 
 
 @register.filter
+def add_attr(field, attr):
+    return field.as_widget(attrs=attr)
+
+
+@register.filter
+def add_style(field, style):
+    return field.as_widget(attrs={"style": style})
+
+
+@register.filter
 def add_attribute_color(attribute):
     if attribute < 70 and attribute > 55:
         return "background-color: #1d2e68"
@@ -45,6 +55,7 @@ def add_badge_color(badge):
 
 @register.filter
 def add_attribute_category(a):
+    a = a.replace("attribute_", "")
     for k, v in attribute.attribute_categories.items():
         if a in v:
             return k

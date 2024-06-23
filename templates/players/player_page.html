@@ -60,6 +60,10 @@
                             {{ player.team }}
                         </li>
                         <li class="list-group-item">
+                            <small style="display: block;"><i class="fa-solid fa-calendar"></i> Total Spent</small>
+                            {{ player.sp_spent }} SP, {{ player.xp_spent }} XP
+                        </li>
+                        <li class="list-group-item">
                             <small style="display: block;"><i class="fa-solid fa-user"></i> User</small>
                             <a href="{% url 'user' player.user.id %}">{{ player.user.username }}</a>
                         </li>

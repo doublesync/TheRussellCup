@@ -1,24 +1,26 @@
 # Python imports
+import json
 
 # Django imports
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.http import HttpResponse
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.shortcuts import redirect
+from django.template.loader import render_to_string
 from django.views.generic.edit import FormView
+from django.views.generic.base import View
 
 # Local imports
 from players.models import Player
-from players.forms import PlayerForm
+from players.forms import PlayerForm, UpgradeForm
 import simulation.create as create
 import simulation.upgrade as upgrade
 import simulation.webhook as webhook
 import simulation.scripts.attribute as attribute
 import simulation.scripts.badge as badge
-
-# Create your views here.
 
 
 # This is a class based view that will render the form to create a player
@@ -29,9 +31,7 @@ class PlayerFormView(FormView):
     success_url = "/"
 
     def form_valid(self, form):
-        # Get the data from the form
         data = form.cleaned_data
-        # Create the player seed (instance)
         seed = create.PlayerCreator(
             first_name=data["first_name"],
             last_name=data["last_name"],
@@ -71,10 +71,10 @@ def player_page(request, id):
 # This is a class based view that will render the form to upgrade a player
 class UpgradeFormView(FormView):
 
-    # TODO: Implement the upgrade form
+    # fmt: off
 
     template_name = "players/upgrade_player.html"
-    form_class = PlayerForm
+    form_class = UpgradeForm
 
     def get(self, request, *args, **kwargs):
         player_id = self.kwargs.get("id")
@@ -84,7 +84,6 @@ class UpgradeFormView(FormView):
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
-        # fmt:off
         context = super().get_context_data(**kwargs)
         player_id = self.kwargs.get("id")
         player = get_object_or_404(Player, id=player_id)
@@ -93,6 +92,7 @@ class UpgradeFormView(FormView):
         context.update(
             {
                 "player": player,
+                "form": UpgradeForm(player=player),
                 "attributes": sorted_attributes,
                 "badges": sorted_badges,
                 "attribute_categories": attribute.attribute_categories,
@@ -100,9 +100,27 @@ class UpgradeFormView(FormView):
             }
         )
         return context
-        # fmt:on
 
     def form_valid(self, form):
-        # Get the data from the form
-        cleaned_data = form.cleaned_data
-        print(cleaned_data)
+        # Initialize some objects
+        player = get_object_or_404(Player, id=form.data["player_id"])
+        upg = upgrade.UpgradeCreator(user=self.request.user, player=player, data=form.data)
+        # If the user updated their cart (we send an HX request)
+        if self.request.headers.get("HX-Request") == "true":
+            cart = upg.validate_price(validate=False)[1]
+            html = render_to_string("players/fragments/cart_fragment.html", {"cart": cart})
+            return HttpResponse(html)
+        # If the user submitted the form (we send a POST request without HX)
+        else:
+            purchase_status, purchase_response = upg.purchase()
+            # If the purchase was successful, display a success message
+            if purchase_status:
+                messages.success(self.request, purchase_response)
+            else:
+                # If there are errors, display them all
+                for error in purchase_response:
+                    messages.error(self.request, error)
+            # Redirect to the player page
+            return redirect("upgrade_page", id=player.id)
+
+    # fmt: on

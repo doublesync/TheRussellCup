@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     "news",
     "players",
     "teams",
+    "logs",
 ]
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#middleware

@@ -136,4 +136,4 @@ class PlayerListView(ListView):
     paginate_by = 20
 
     def get_queryset(self):
-        return Player.objects.filter(user=self.request.user).order_by("-sim_rating")
+        return Player.objects.all().order_by("-sim_rating")

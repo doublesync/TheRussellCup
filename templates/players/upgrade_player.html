@@ -41,6 +41,7 @@
                     <input type="hidden" name="player_id" value="{{ player.id }}">
                     <!-- Currency column -->
                     <div class="col-12">
+                        <a href="{% url 'player_page' player.id %}" class="btn btn-sm btn-info mb-4"><i class="fa-solid fa-arrow-left"></i> Back to Player</a>
                         <h4>Currency</h4>
                         <ul class="list-group">
                             <li class="list-group-item"><i class="fa-solid fa-coins"></i> {{ player.user.sp }} SP</li>

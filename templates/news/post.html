@@ -9,6 +9,14 @@
             <h2>{{ post.title }}</h2>
             <p class="bg-dark badge badge-dark">{{ post.user }}</p>
             <p class="bg-primary badge badge-primary">{{ post.created }}</p>
+            <div style="display: inline;" id="like-section">
+                <form style="display: inline;">
+                    {% csrf_token %}
+                    <a class="btn btn-sm bg-info badge badge-info" hx-post="{% url 'create_like' post.id %}" hx-trigger="click" hx-swap="innerHTML" hx-target="#likes">
+                        <i class="fa-solid fa-thumbs-up"></i> <span id="likes">{{ likes }}</span>
+                    </a>
+                </form>
+            </div>
         </div>
         <div class="card-body">
             <p>{{ post.content|convert_to_markdown|safe }}</p>

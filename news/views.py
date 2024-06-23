@@ -1,5 +1,6 @@
 # Django imports
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.shortcuts import redirect
@@ -48,3 +49,17 @@ class PostFormView(FormView):
             )
             new_post.save()
             return redirect(post, new_post.id)
+
+
+# A view to create a like
+def htmx_create_like(request, id):
+    # Create the like if one doesn't exist
+    like_exists = Like.objects.filter(user=request.user, post=id).exists()
+    if like_exists:
+        Like.objects.filter(user=request.user, post=id).delete()
+    else:
+        new_like = Like(user=request.user, post=Post.objects.get(id=id))
+        new_like.save()
+    # Return the fragment to update the like count
+    html = f'{Like.objects.filter(post=id).count()}'
+    return HttpResponse(html)

@@ -1,0 +1,35 @@
+{% extends '_base.html' %}
+{% load static %}
+
+{% block title %}Upgrade Log{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row gx-5 gy-5 mb-4">
+            <div class="col-md-12">
+                <h1>Upgrade Log #{{ log.id }}</h1>
+                <a href="{% url 'view_logs' log.player.id %}" class="btn btn-sm btn-info"><i class="fa-solid fa-arrow-left"></i> Back to Logs</a>
+            </div>
+        </div>
+        <div class="row gx-5 gy-5">
+            <div class="col-md-12">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th><i class="fa-solid fa-coins"></i> Payment</th>
+                            <th><i class="fa-solid fa-calendar"></i> Date</th>
+                            <th><i class="fa-solid fa-person"></i> Staff</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ log.payment }}</td>
+                            <td>{{ log.created }}</td>
+                            <td>{{ log.staff.username }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

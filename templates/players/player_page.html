@@ -84,6 +84,7 @@
                         <li class="list-group-item"><i class="fa-regular fa-star-half-stroke"></i> {{ player.user.xp }} XP</li>
                     </ul>
                     <a href="{% url 'upgrade_page' player.id %}" class="btn btn-sm btn-dark mt-2">Upgrade Player</a>
+                    <a href="{% url 'view_logs' player.id %}" class="btn btn-sm btn-dark mt-2">View Logs</a>
                 </div>
                 <!-- Attributes column -->
                 <div class="col-md-6">

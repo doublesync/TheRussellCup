@@ -1,0 +1,81 @@
+{% extends '_base.html' %}
+{% load static %}
+
+{% block title %}Upgrade Log{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row gx-5 gy-5 mb-4">
+            <div class="col-md-12">
+                <h1>Upgrade Log #{{ log.id }}</h1>
+                <a href="{% url 'view_logs' log.player.id %}" class="btn btn-sm btn-info"><i class="fa-solid fa-arrow-left"></i> Back to Logs</a>
+            </div>
+        </div>
+        <div class="row gx-5 gy-5">
+            <div class="col-md-12">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th><i class="fa-solid fa-coins"></i> Total</th>
+                            <th><i class="fa-solid fa-calendar"></i> Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ log.total }}</td>
+                            <td>{{ log.created }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- Attributes -->
+            <div class="col-md-6">
+                <h2>Attributes</h2>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th><i class="fa-solid fa-arrow-up-1-9"></i> Attribute</th>
+                            <th><i class="fa-solid fa-coins"></i> Price</th>
+                            <th><i class="fa-solid fa-cart-shopping"></i> Start</th>
+                            <th><i class="fa-solid fa-cart-shopping"></i> New</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for attribute, data in log.upgrades.attributes.items %}
+                            <tr>
+                                <td>{{ attribute }}</td>
+                                <td>{{ data.price }}</td>
+                                <td>{{ data.start }}</td>
+                                <td>{{ data.new }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <!-- Badges -->
+            <div class="col-md-6">
+                <h2>Badges</h2>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th><i class="fa-solid fa-arrow-up-1-9"></i> Badge</th>
+                            <th><i class="fa-solid fa-coins"></i> Price</th>
+                            <th><i class="fa-solid fa-cart-shopping"></i> Start</th>
+                            <th><i class="fa-solid fa-cart-shopping"></i> New</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for badge, data in log.upgrades.badges.items %}
+                            <tr>
+                                <td>{{ badge }}</td>
+                                <td>{{ data.price }}</td>
+                                <td>{{ data.start }}</td>
+                                <td>{{ data.new }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

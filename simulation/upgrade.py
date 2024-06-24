@@ -52,6 +52,8 @@ class UpgradeCreator:
                 self.cart["badges"][b] = {}
                 self.cart["badges"][b]["start"] = self.player.badges[b]
                 self.cart["badges"][b]["new"] = int(value)
+        if not self.cart["attributes"] and not self.cart["badges"]:
+            return [False, "You have not selected any upgrades."]
 
     def validate_user(self):
         # Check if the user owns the player

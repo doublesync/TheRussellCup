@@ -52,8 +52,11 @@ class UpgradeCreator:
                 self.cart["badges"][b] = {}
                 self.cart["badges"][b]["start"] = self.player.badges[b]
                 self.cart["badges"][b]["new"] = int(value)
+        # Return an error message if the user has not selected any upgrades
         if not self.cart["attributes"] and not self.cart["badges"]:
             return [False, "You have not selected any upgrades."]
+        # Return a success message
+        return [True, self.cart]
 
     def validate_user(self):
         # Check if the user owns the player
@@ -101,12 +104,12 @@ class UpgradeCreator:
 
     def purchase(self):
         # Format the data
-        self.format()
+        validate_format = self.format()
         # Validate the user, price, and upgrades
         validate_user = self.validate_user()
         validate_price = self.validate_price()
         validate_upgrades = self.validate_upgrades()
-        if validate_price[0] and validate_upgrades[0] and validate_user[0]:
+        if validate_format[0] and validate_price[0] and validate_upgrades[0] and validate_user[0]:
             # Apply the price to the user
             self.user.sp -= self.cart["total"]
             self.user.save()
@@ -123,6 +126,7 @@ class UpgradeCreator:
             return [True, "Upgrades applied successfully."]
         else:
             errors = []
+            if not validate_format[0]: errors.append(validate_format[1])
             if not validate_user[0]: errors.append(validate_user[1])
             if not validate_price[0]: errors.append(validate_price[1])
             if not validate_upgrades[0]: errors.append(validate_upgrades[1])

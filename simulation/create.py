@@ -74,8 +74,8 @@ class PlayerCreator:
         # Generate the player's random fields
         player = self.generate()
         # Set starting skill points and experience points
-        self.object.user.sp += config.CONFIG_PLAYER["SP_DEFAULT"]
-        self.object.user.xp += config.CONFIG_PLAYER["XP_DEFAULT"]
+        self.object.user.sp = config.CONFIG_PLAYER["SP_DEFAULT"]
+        self.object.user.xp = config.CONFIG_PLAYER["XP_DEFAULT"]
         # Save the player and user
         player.save()
         player.user.save()

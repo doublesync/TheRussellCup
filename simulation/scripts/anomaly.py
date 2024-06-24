@@ -23,7 +23,9 @@ def height_anomaly(player):
     player.attributes["Acceleration"] = min(99, player.attributes["Acceleration"] + acceleration_boost)
     player.attributes["Strength"] = min(99, player.attributes["Strength"] + strength_boost)
     player.attributes["Vertical"] = min(99, player.attributes["Vertical"] + vertical_boost)
-    # Save the player
+    # Save the user
+    player.user.save()
+    # Return the player (we'll need to save this later)
     return player
 
 

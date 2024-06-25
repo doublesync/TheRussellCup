@@ -4,6 +4,8 @@ const face_status = document.getElementById("face-status");
 const randomize_button = document.getElementById("randomize");
 const save_button = document.getElementById("save");
 const player_face = document.getElementById("player-appearance");
+const csrf_token = document.getElementById("csrfmiddlewaretoken").getAttribute("data-token");
+const edit_appearance_url = document.getElementById("edit-appearance-url").getAttribute("data-url");
 
 // Generation function
 const generateFace = (overrides) => {
@@ -95,7 +97,6 @@ randomize_button.addEventListener("click", () => {
 
 // Saving of face generations
 save_button.addEventListener("click", () => {
-    const edit_appearance_url = "{% url 'edit_appearance' player.id %}";
     htmx.ajax(
         'POST', 
         edit_appearance_url, 
@@ -103,7 +104,7 @@ save_button.addEventListener("click", () => {
             target: '#player-appearance',
             swap: 'innerHTML',
             headers: { 
-                'X-CSRFToken': '{{ csrf_token }}'
+                'X-CSRFToken': csrf_token,
             },
             values: { face: document.getElementById("player-appearance").innerHTML }
         }

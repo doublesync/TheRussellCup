@@ -6,6 +6,8 @@
 {% block content %}
 <div class="container-fluid p-5">
     <h1>Edit Appearance</h1>
+    <input type="hidden" id="csrfmiddlewaretoken" data-token="{{ csrf_token }}"> <!-- CSRF token for AJAX request -->
+    <input type="hidden" id="edit-appearance-url" data-url="{% url 'edit_appearance' player.id %}"> <!-- URL for AJAX request -->
     <small class="text-muted">All credit goes to <a href="https://github.com/zengm-games/facesjs">dumbmatter</a> for his faces.js library.</small>
     <div class="row mt-4">
         <div class="col-12">

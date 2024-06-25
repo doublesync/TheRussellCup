@@ -51,9 +51,35 @@
                         <button type="submit" class="mt-2 btn btn-sm btn-dark">Purchase Cart</button>
                     </div>
                     <!-- Cart column -->
-                    <div class="col-12" id="cart-table">
+                    <div style="min-height: 300px;" class="col-12" id="cart-table">
                         {{ cart }}
                         {% include 'players/fragments/cart_fragment.html' %}
+                    </div>
+                    <div class="col-12">
+                        <h4>Upgrade Step</h4>
+                        <small class="text-muted">Upgrade Step is how much the plus and minus buttons add or subtract.</small>
+                        <div id="upgrade_step_list" class="input-group m-1">
+                            <div class="form-check m-1">
+                                <input type="radio" name="upgrade-step" class="form-check-input" data-step=1 checked>
+                                <label for="upgrade_step_1">1</label>
+                            </div>
+                            <div class="form-check m-1">
+                                <input type="radio" name="upgrade-step" class="form-check-input" data-step=2>
+                                <label for="upgrade_step_2">2</label>
+                            </div>
+                            <div class="form-check m-1">
+                                <input type="radio" name="upgrade-step" class="form-check-input" data-step=3>
+                                <label for="upgrade_step_3">3</label>
+                            </div>
+                            <div class="form-check m-1">
+                                <input type="radio" name="upgrade-step" class="form-check-input" data-step=4>
+                                <label for="upgrade_step_4">4</label>
+                            </div>
+                            <div class="form-check m-1">
+                                <input type="radio" name="upgrade-step" class="form-check-input" data-step=5>
+                                <label for="upgrade_step_5">5</label>
+                            </div>
+                        </div>
                     </div>
                     <!-- Attributes column -->
                     <div class="col-md-6">

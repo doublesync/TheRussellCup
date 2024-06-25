@@ -86,7 +86,7 @@ const generateFace = (overrides) => {
 const svg_selects = document.querySelectorAll(".svg-select");
 svg_selects.forEach((select) => {
     select.addEventListener("change", () => {
-        generateFace();
+        generateFace(true);
     });
 });
 

@@ -117,9 +117,9 @@
                                     <p class="m-1">
                                         <div style="{{ field.value|add_attribute_color }}" class="badge">
                                             <div class="value-control d-flex justify-content-center align-items-center">
-                                                <button type="button" class="btn btn-sm attribute-plus" hx-post="{% url 'upgrade_page' player.id %}" hx-trigger="click throttle:1s queue:none" hx-target="#cart-table" hx-swap="innerHTML"><i class="fa-solid fa-plus"></i></button>
+                                                <button type="button" class="btn btn-sm attribute-plus" hx-post="{% url 'upgrade_page' player.id %}" hx-trigger="click throttle:1s" hx-target="#cart-table" hx-swap="innerHTML"><i class="fa-solid fa-plus"></i></button>
                                                 {{ field }}
-                                                <button type="button" class="btn btn-sm attribute-minus" hx-post="{% url 'upgrade_page' player.id %}" hx-trigger="click throttle:1s queue:none" hx-target="#cart-table" hx-swap="innerHTML"><i class="fa-solid fa-minus"></i></button>
+                                                <button type="button" class="btn btn-sm attribute-minus" hx-post="{% url 'upgrade_page' player.id %}" hx-trigger="click throttle:1s" hx-target="#cart-table" hx-swap="innerHTML"><i class="fa-solid fa-minus"></i></button>
                                             </div>
                                         </div>
                                         {{ field.label }}
@@ -166,9 +166,9 @@
                                     <p class="m-1">
                                         <div style="{{ field.value|add_badge_color }}" class="badge">
                                             <div class="value-control d-flex justify-content-center align-items-center">
-                                                <button type="button" class="btn btn-sm badge-plus" hx-post="{% url 'upgrade_page' player.id %}" hx-trigger="click throttle:1s queue:none" hx-target="#cart-table" hx-swap="innerHTML"><i class="fa-solid fa-plus"></i></button>
+                                                <button type="button" class="btn btn-sm badge-plus" hx-post="{% url 'upgrade_page' player.id %}" hx-trigger="click throttle:1s" hx-target="#cart-table" hx-swap="innerHTML"><i class="fa-solid fa-plus"></i></button>
                                                 {{ field }}
-                                                <button type="button" class="btn btn-sm badge-minus" hx-post="{% url 'upgrade_page' player.id %}" hx-trigger="click throttle:1s queue:none" hx-target="#cart-table" hx-swap="innerHTML"><i class="fa-solid fa-minus"></i></button>
+                                                <button type="button" class="btn btn-sm badge-minus" hx-post="{% url 'upgrade_page' player.id %}" hx-trigger="click throttle:1s" hx-target="#cart-table" hx-swap="innerHTML"><i class="fa-solid fa-minus"></i></button>
                                             </div>
                                         </div>
                                         {{ field.label }}
@@ -226,9 +226,9 @@
                                 <p class="m-1">
                                     <div style="{{ field.value|add_attribute_color }}" class="badge">
                                         <div class="value-control d-flex justify-content-center align-items-center">
-                                            <button type="button" class="btn btn-sm tendency-plus" hx-post="{% url 'upgrade_page' player.id %}" hx-trigger="click throttle:1s queue:none" hx-target="#cart-table" hx-swap="innerHTML"><i class="fa-solid fa-plus"></i></button>
+                                            <button type="button" class="btn btn-sm tendency-plus" hx-post="{% url 'upgrade_page' player.id %}" hx-trigger="click throttle:1s" hx-target="#cart-table" hx-swap="innerHTML"><i class="fa-solid fa-plus"></i></button>
                                             {{ field }}
-                                            <button type="button" class="btn btn-sm tendency-minus" hx-post="{% url 'upgrade_page' player.id %}" hx-trigger="click throttle:1s queue:none" hx-target="#cart-table" hx-swap="innerHTML"><i class="fa-solid fa-minus"></i></button>
+                                            <button type="button" class="btn btn-sm tendency-minus" hx-post="{% url 'upgrade_page' player.id %}" hx-trigger="click throttle:1s" hx-target="#cart-table" hx-swap="innerHTML"><i class="fa-solid fa-minus"></i></button>
                                         </div>
                                     </div>
                                     {{ field.label }}

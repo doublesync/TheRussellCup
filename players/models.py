@@ -25,7 +25,7 @@ class Player(models.Model):
     number = models.IntegerField()
     country = models.CharField(max_length=64, choices=[(x, x) for x in default.country_choices])
     college = models.CharField(max_length=64, choices=[(x, x) for x in default.college_choices])
-    image = models.URLField(default="https://www.blythspartans.com/wp-content/uploads/2020/01/blank.png")
+    svg_image = models.TextField(default="", blank=True, null=True)
     sp_spent = models.IntegerField(default=0)
     xp_spent = models.IntegerField(default=0)
     # Randomly generated fields

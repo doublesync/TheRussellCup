@@ -138,3 +138,29 @@ class PlayerListView(ListView):
 
     def get_queryset(self):
         return Player.objects.all().order_by("-sim_rating")
+    
+# This is a class based view that will render the edit appearance page
+class EditAppearanceView(View):
+
+    def get(self, request, id):
+        # Grab the player
+        player = get_object_or_404(Player, id=id)
+        # Check if the player belongs to the user
+        if player.user != request.user:
+            return render(request, "500.html", {"reason": "You do not own this player"})
+        # Render the page
+        return render(request, "players/edit_appearance.html", {"player": player})
+    
+    def post(self, request, id):
+        # Grab the player
+        player = get_object_or_404(Player, id=id)
+        # Check if the player belongs to the user
+        if player.user != request.user:
+            return render(request, "500.html", {"reason": "You do not own this player"})
+        # Update the player's appearance
+        svg_image = request.POST.get("face")
+        player.svg_image = svg_image
+        player.save()
+        # Redirect to the player page
+        # HX-REDIRECT
+        return HttpResponse("Successful! Redirecting...", headers={"HX-Redirect": f"/players/player/{player.id}/"})

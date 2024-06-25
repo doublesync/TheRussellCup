@@ -1,4 +1,5 @@
 # Django imports
+from django.contrib.auth.decorators import login_required
 from django.urls import path
 
 # Local imports
@@ -11,5 +12,6 @@ urlpatterns = [
     path("player/<int:id>/", views.player_page, name="player_page"),
     path("player/<int:id>/upgrade/", views.UpgradeFormView.as_view(), name="upgrade_page"),
     path("list/", views.PlayerListView.as_view(), name="player_list"),
+    path("player/<int:id>/appearance/", login_required(views.EditAppearanceView.as_view()), name="edit_appearance"),
     # fmt:on
 ]

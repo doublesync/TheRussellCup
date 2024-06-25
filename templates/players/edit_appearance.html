@@ -1,0 +1,262 @@
+{% extends '_base.html' %}
+{% load static %}
+
+{% block title %}Edit Appearance{% endblock %}
+
+{% block content %}
+<div class="container-fluid p-5">
+    <h1>Edit Appearance</h1>
+    <small class="text-muted">All credit goes to <a href="https://github.com/zengm-games/facesjs">dumbmatter</a> for his faces.js library.</small>
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <!-- SVG view -->
+                    <div class="p-2">
+                        <div class="d-flex flex-column">
+                            <small id="face-status" class="text-muted mb-2"><a style="text-decoration: none;" href="{% url 'player_page' player.id %}"><i class="fa-solid fa-arrow-left"></i> Back to player page</a></small>
+                            <div style="height: 150px; width: 250px;" id="player-appearance">
+                                {{ player.svg_image|safe }}
+                            </div>
+                        </div>
+                        <hr>
+                    </div>
+                    <!-- Options view -->
+                    <h2>Options</h2>
+                    <div class="form-group text-light row">
+                        <div class="col-md-3 col-sm-6 col-xs-6">
+                            <label for="race">Race</label>
+                            <select style="width: 100%" class="form-control form-control-sm svg-select" id="race">
+                                <option value="white">White</option>
+                                <option value="black">Black</option>
+                                <option value="asian">Asian</option>
+                                <option value="brown">Brown</option>
+                            </select>   
+                        </div>
+                        <div class="col-md-3 col-sm-6 col-xs-6">
+                            <label for="skin">Skin</label>
+                            <select style="width: 100%" class="form-control form-control-sm svg-select" id="skin">
+                                <option value="#211714">Skin 1</option>
+                                <option value="#4d2a22">Skin 2</option>
+                                <option value="#bb876f">Skin 3</option>
+                                <option value="#aa816f">Skin 4</option>
+                                <option value="#a67358">Skin 5</option>
+                                <option value="#fedac7">Skin 6</option>
+                                <option value="#f0c5a3">Skin 7</option>
+                                <option value="#eab687">Skin 8</option>
+                                <option value="#f2d6cb">Skin 9</option>
+                                <option value="#ddb7a0">Skin 10</option>
+                            </select>      
+                        </div>
+                        <div class="col-md-3 col-sm-6 col-xs-6">
+                            <label for="body">Body</label>
+                            <select style="width: 100%" class="form-control form-control-sm svg-select" id="body">
+                                <option value="body">Body</option>
+                                <option value="body2">Body 2</option>
+                                <option value="body3">Body 3</option>
+                                <option value="body4">Body 4</option>
+                                <option value="body5">Body 5</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 col-sm-6 col-xs-6">
+                            <label for="ear">Ear</label>
+                            <select style="width: 100%" class="form-control form-control-sm svg-select" id="ear">
+                                <option value="ear1">Ear 1</option>
+                                <option value="ear2">Ear 2</option>
+                                <option value="ear3">Ear 3</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 col-sm-6 col-xs-6">
+                            <label for="eye">Eye</label>
+                            <select style="width: 100%" class="form-control form-control-sm svg-select" id="eye">
+                                <option value="eye1">Eye 1</option>
+                                <option value="eye2">Eye 2</option>
+                                <option value="eye3">Eye 3</option>
+                                <option value="eye4">Eye 4</option>
+                                <option value="eye5">Eye 5</option>
+                                <option value="eye6">Eye 6</option>
+                                <option value="eye7">Eye 7</option>
+                                <option value="eye8">Eye 8</option>
+                                <option value="eye9">Eye 9</option>
+                                <option value="eye10">Eye 10</option>
+                                <option value="eye11">Eye 11</option>
+                                <option value="eye12">Eye 12</option>
+                                <option value="eye13">Eye 13</option>
+                                <option value="eye14">Eye 14</option>
+                                <option value="eye15">Eye 15</option>
+                                <option value="eye16">Eye 16</option>
+                                <option value="eye17">Eye 17</option>
+                                <option value="eye18">Eye 18</option>
+                                <option value="eye19">Eye 19</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 col-sm-6 col-xs-6">
+                            <label for="eyebrow">Eyebrow</label>
+                            <select style="width: 100%" class="form-control form-control-sm svg-select" id="eyebrow">
+                                <option value="eyebrow1">Eyebrow 1</option>
+                                <option value="eyebrow2">Eyebrow 2</option>
+                                <option value="eyebrow3">Eyebrow 3</option>
+                                <option value="eyebrow4">Eyebrow 4</option>
+                                <option value="eyebrow5">Eyebrow 5</option>
+                                <option value="eyebrow6">Eyebrow 6</option>
+                                <option value="eyebrow7">Eyebrow 7</option>
+                                <option value="eyebrow8">Eyebrow 8</option>
+                                <option value="eyebrow9">Eyebrow 9</option>
+                                <option value="eyebrow10">Eyebrow 10</option>
+                                <option value="eyebrow11">Eyebrow 11</option>
+                                <option value="eyebrow12">Eyebrow 12</option>
+                                <option value="eyebrow13">Eyebrow 13</option>
+                                <option value="eyebrow14">Eyebrow 14</option>
+                                <option value="eyebrow15">Eyebrow 15</option>
+                                <option value="eyebrow16">Eyebrow 16</option>
+                                <option value="eyebrow17">Eyebrow 17</option>
+                                <option value="eyebrow18">Eyebrow 18</option>
+                                <option value="eyebrow19">Eyebrow 19</option>
+                                <option value="eyebrow20">Eyebrow 20</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 col-sm-6 col-xs-6">
+                            <label for="facialHair">Facial Hair</label>
+                            <select style="width: 100%" class="form-control form-control-sm svg-select" id="facialHair">
+                                <option value="none">None</option>
+                                <option value="beard1">Beard 1</option>
+                                <option value="beard2">Beard 2</option>
+                                <option value="beard3">Beard 3</option>
+                                <option value="beard4">Beard 4</option>
+                                <option value="beard5">Beard 5</option>
+                                <option value="chin-strap">Chin Strap</option>
+                                <option value="fullgoatee">Full Goatee</option>
+                                <option value="fullgoatee2">Full Goatee 2</option>
+                                <option value="fullgoatee3">Full Goatee 3</option>
+                                <option value="fullgoatee4">Full Goatee 4</option>
+                                <option value="fullgoatee5">Full Goatee 5</option> 
+                                <option value="fullgoatee6">Full Goatee 6</option> 
+                            </select>
+                        </div>
+                        <div class="col-md-3 col-sm-6 col-xs-6">
+                            <label for="hair">Hair</label>
+                            <select style="width: 100%" class="form-control form-control-sm svg-select" id="hair">
+                                <option value="afro">Afro</option>
+                                <option value="afro2">Afro 2</option>
+                                <option value="bald">Bald</option>
+                                <option value="blowoutFade">Blowout Fade</option>
+                                <option value="cornrows">Cornrows</option>
+                                <option value="crop-fade">Crop Fade</option>
+                                <option value="crop-fade2">Crop Fade 2</option>
+                                <option value="crop">Crop</option>
+                                <option value="curly">Curly</option>
+                                <option value="curly2">Curly 2</option>
+                                <option value="curly3">Curly 3</option>
+                                <option value="curlyFade1">Curly Fade 1</option>
+                                <option value="curlyFade2">Curly Fade 2</option>
+                                <option value="dreads">Dreads</option>
+                                <option value="emo">Emo</option>
+                                <option value="faux-hawk">Faux Hawk</option>
+                                <option value="fauxhawk-fade">Fauxhawk Fade</option>
+                                <option value="high">High</option>
+                                <option value="juice">Juice</option>
+                                <option value="longHair">Long Hair</option>
+                                <option value="messy-short">Messy Short</option>
+                                <option value="messy">Messy</option>
+                                <option value="shaggy1">Shaggy 1</option>
+                                <option value="shaggy2">Shaggy 2</option>
+                                <option value="short-bald">Short Bald</option>
+                                <option value="short-fade">Short Fade</option>
+                                <option value="short">Short</option>
+                                <option value="short2">Short 2</option>
+                                <option value="short3">Short 3</option>
+                                <option value="tall-fade">Tall Fade</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 col-sm-6 col-xs-6">
+                            <label for="hairColor">Hair Color</label>
+                            <select style="width: 100%" class="form-control form-control-sm svg-select" id="hairColor">
+                                <option value="#272421">Black</option>
+                                <option value="#3D2314">Brown</option>
+                                <option value="#5A3825">Light Brown</option>
+                                <option value="#CC9966">Blonde</option>
+                                <option value="#2C1608">Dark Brown</option>
+                                <option value="#B55239">Red</option>
+                                <option value="#e9c67b">Blonde</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 col-sm-6 col-xs-6">
+                            <label for="head">Head</label>
+                            <select style="width: 100%" class="form-control form-control-sm svg-select" id="head">
+                                <option value="head1">Head 1</option>
+                                <option value="head2">Head 2</option>
+                                <option value="head3">Head 3</option>
+                                <option value="head4">Head 4</option>
+                                <option value="head5">Head 5</option>
+                                <option value="head6">Head 6</option>
+                                <option value="head7">Head 7</option>
+                                <option value="head8">Head 8</option>
+                                <option value="head9">Head 9</option>
+                                <option value="head10">Head 10</option>
+                                <option value="head11">Head 11</option>
+                                <option value="head12">Head 12</option>
+                                <option value="head13">Head 13</option>
+                                <option value="head14">Head 14</option>
+                                <option value="head15">Head 15</option>
+                                <option value="head16">Head 16</option>
+                                <option value="head17">Head 17</option>
+                                <option value="head18">Head 18</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 col-sm-6 col-xs-6">
+                            <label for="mouth">Mouth</label>
+                            <select style="width: 100%" class="form-control form-control-sm svg-select" id="mouth">
+                                <option value="angry">Angry</option>
+                                <option value="closed">Closed</option>
+                                <option value="mouth">Mouth</option>
+                                <option value="mouth2">Mouth 2</option>
+                                <option value="mouth3">Mouth 3</option>
+                                <option value="mouth4">Mouth 4</option>
+                                <option value="mouth5">Mouth 5</option>
+                                <option value="mouth6">Mouth 6</option>
+                                <option value="mouth7">Mouth 7</option>
+                                <option value="mouth8">Mouth 8</option>
+                                <option value="side">Side</option>
+                                <option value="smile-closed">Smile Closed</option>
+                                <option value="smile">Smile</option>
+                                <option value="smile2">Smile 2</option>
+                                <option value="smile3">Smile 3</option>
+                                <option value="smile4">Smile 4</option>
+                                <option value="straight">Straight</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 col-sm-6 col-xs-6">
+                            <label for="nose">Nose</label>
+                            <select style="width: 100%;" class="form-control form-control-sm svg-select" id="nose">
+                                <option value="nose1">Nose 1</option>
+                                <option value="nose2">Nose 2</option>
+                                <option value="nose3">Nose 3</option>
+                                <option value="nose4">Nose 4</option>
+                                <option value="nose5">Nose 5</option>
+                                <option value="nose6">Nose 6</option>
+                                <option value="nose7">Nose 7</option>
+                                <option value="nose8">Nose 8</option>
+                                <option value="nose9">Nose 9</option>
+                                <option value="nose10">Nose 10</option>
+                                <option value="nose11">Nose 11</option>
+                                <option value="nose12">Nose 12</option>
+                                <option value="nose13">Nose 13</option>
+                                <option value="nose14">Nose 14</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <!-- Randomize & save -->
+                <div class="card-footer p-3">
+                    <button id="randomize" class="btn btn-sm btn-primary">Randomize</button>
+                    <button id="save" class="btn btn-sm btn-info">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/players/edit_appearance.js' %}" type="module"></script>
+{% endblock %}

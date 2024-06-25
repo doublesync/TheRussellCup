@@ -23,6 +23,14 @@
         </div>
         <div class="card-body">
             <div class="row gx-4 gy-4">
+                <div class="p-2">
+                    <div class="d-flex flex-column">
+                        <small id="face-status" class="text-muted"><a style="text-decoration: none;" href="{% url 'edit_appearance' player.id %}"><i class="fa-solid fa-brush"></i> Edit Appearance</a></span></small>
+                        <div style="height: 150px; width: 250px;" id="player-appearance">
+                            {{ player.svg_image|safe }}
+                        </div>
+                    </div>
+                </div>
                 <!-- Details column -->
                 <div class="col-12">
                     <h4>Details</h4>

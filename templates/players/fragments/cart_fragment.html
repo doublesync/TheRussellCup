@@ -3,17 +3,19 @@
     <thead>
         <tr>
             <th>Name</th>
-            <th>Price</th>
+            <th>Price (SP)</th>
+            <th>Price (XP)</th>
             <th>Start</th>
             <th>New</th>
         </tr>
     </thead>
     <tbody>
-        {% if cart.attributes or cart.badges %}
+        {% if cart.attributes or cart.badges or cart.tendencies %}
             {% for attribute, data in cart.attributes.items %}
             <tr>
                 <td>{{ attribute }}</td>
                 <td>{{ data.price }}</td>
+                <td>0</td>
                 <td>{{ data.start }}</td>
                 <td>{{ data.new }}</td>
             </tr>
@@ -21,6 +23,16 @@
             {% for badge, data in cart.badges.items %}
             <tr>
                 <td>{{ badge }}</td>
+                <td>{{ data.price }}</td>
+                <td>0</td>
+                <td>{{ data.start }}</td>
+                <td>{{ data.new }}</td>
+            </tr>
+            {% endfor %}
+            {% for tendency, data in cart.tendencies.items %}
+            <tr>
+                <td>{{ tendency }}</td>
+                <td>0</td>
                 <td>{{ data.price }}</td>
                 <td>{{ data.start }}</td>
                 <td>{{ data.new }}</td>
@@ -30,14 +42,19 @@
         <tr>
             <td>Example Item</td>
             <td>100</td>
+            <td>0</td>
             <td>55</td>
             <td>60</td>
         {% endif %}
     </tbody>
     <tfoot>
         <tr>
-            <td>Total</td>
-            <td><i class="fa-solid fa-coins"> {{ cart.total }}</td>
+            <td>Total SP</td>
+            <td><i class="fa-solid fa-coins"> {{ cart.total_sp }}</td>
+        </tr>
+        <tr>
+            <td>Total XP</td>
+            <td><i class="fa-solid fa-coins"> {{ cart.total_xp }}</td>
         </tr>
     </tfoot>
 </table>

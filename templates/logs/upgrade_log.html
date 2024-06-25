@@ -16,13 +16,15 @@
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th><i class="fa-solid fa-coins"></i> Total</th>
+                            <th><i class="fa-solid fa-coins"></i> Total (SP)</th>
+                            <th><i class="fa-solid fa-coins"></i> Total (XP)</th>
                             <th><i class="fa-solid fa-calendar"></i> Date</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>{{ log.total }}</td>
+                            <td>{{ log.total_sp }} SP</td>
+                            <td>{{ log.total_xp }} XP</td>
                             <td>{{ log.created }}</td>
                         </tr>
                     </tbody>
@@ -35,7 +37,7 @@
                     <thead>
                         <tr>
                             <th><i class="fa-solid fa-arrow-up-1-9"></i> Attribute</th>
-                            <th><i class="fa-solid fa-coins"></i> Price</th>
+                            <th><i class="fa-solid fa-coins"></i> Price (SP)</th>
                             <th><i class="fa-solid fa-cart-shopping"></i> Start</th>
                             <th><i class="fa-solid fa-cart-shopping"></i> New</th>
                         </tr>
@@ -59,7 +61,7 @@
                     <thead>
                         <tr>
                             <th><i class="fa-solid fa-arrow-up-1-9"></i> Badge</th>
-                            <th><i class="fa-solid fa-coins"></i> Price</th>
+                            <th><i class="fa-solid fa-coins"></i> Price (SP)</th>
                             <th><i class="fa-solid fa-cart-shopping"></i> Start</th>
                             <th><i class="fa-solid fa-cart-shopping"></i> New</th>
                         </tr>
@@ -68,6 +70,30 @@
                         {% for badge, data in log.upgrades.badges.items %}
                             <tr>
                                 <td>{{ badge }}</td>
+                                <td>{{ data.price }}</td>
+                                <td>{{ data.start }}</td>
+                                <td>{{ data.new }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <!-- Tendencies -->
+            <div class="col-12">
+                <h2>Tendencies</h2>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th><i class="fa-solid fa-arrow-up-1-9"></i> Tendency</th>
+                            <th><i class="fa-solid fa-coins"></i> Price (XP)</th>
+                            <th><i class="fa-solid fa-cart-shopping"></i> Start</th>
+                            <th><i class="fa-solid fa-cart-shopping"></i> New</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for tendency, data in log.upgrades.tendencies.items %}
+                            <tr>
+                                <td>{{ tendency }}</td>
                                 <td>{{ data.price }}</td>
                                 <td>{{ data.start }}</td>
                                 <td>{{ data.new }}</td>

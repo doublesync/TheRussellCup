@@ -11,7 +11,7 @@
         margin: 0 10px 0 1px;
     }
     /* Stops input elements from being focused on or clicked into */
-    input.attribute-value, input.badge-value{
+    input.attribute-value, input.badge-value, input.tendency-value{
         pointer-events: none;
         outline: none;
         box-shadow: none;
@@ -153,6 +153,65 @@
                             </div>
                         </ul>
                     </div>
+                    <!-- Tendencies column -->
+                     <div class="col-12">
+                        <h4>Tendencies</h4>
+                        <!-- Catagory selector -->
+                        <div class="input-group m-1">
+                            <div class="form-check m-1">
+                                <input type="radio" id="show_all_tendencies" name="shown_tendencies" class="form-check-input" checked>
+                                <label for="show_all_tendencies">Show All</label>
+                            </div>
+                            <div class="form-check m-1">
+                                <input type="radio" id="show_finishing_tendencies" name="shown_tendencies" class="form-check-input">
+                                <label for="show_finishing_tendencies">Finishing</label>
+                            </div>
+                            <div class="form-check m-1">
+                                <input type="radio" id="show_shooting_tendencies" name="shown_tendencies" class="form-check-input">
+                                <label for="show_shooting_tendencies">Shooting</label>
+                            </div>
+                            <div class="form-check m-1">
+                                <input type="radio" id="show_playmaking_tendencies" name="shown_tendencies" class="form-check-input">
+                                <label for="show_playmaking_tendencies">Playmaking</label>
+                            </div>
+                            <div class="form-check m-1">
+                                <input type="radio" id="show_defensive_tendencies" name="shown_tendencies" class="form-check-input">
+                                <label for="show_defensive_tendencies">Defensive</label>
+                            </div>
+                            <div class="form-check m-1">
+                                <input type="radio" id="show_isolation_tendencies" name="shown_tendencies" class="form-check-input">
+                                <label for="show_isolation_tendencies">Isolation</label>
+                            </div>
+                            <div class="form-check m-1">
+                                <input type="radio" id="show_post_tendencies" name="shown_tendencies" class="form-check-input">
+                                <label for="show_post_tendencies">Post</label>
+                            </div>
+                            <div class="form-check m-1">
+                                <input type="radio" id="show_freelance_tendencies" name="shown_tendencies" class="form-check-input">
+                                <label for="show_freelance_tendencies">Freelance</label>
+                            </div>
+                        </div>
+                        <hr>
+                        <!-- Tendencies -->
+                        <div id="tendency_list" class="row" >
+                            {% for field in form %}
+                            {% if field.field.widget.attrs.data_type == 'tendency' %}
+                            <div class="col-lg-6" data-category="{{ field.label|add_tendency_category }}">
+                                <p class="m-1">
+                                    <div style="{{ field.value|add_attribute_color }}" class="badge">
+                                        <div class="value-control d-flex justify-content-center align-items-center">
+                                            <button type="button" class="btn btn-sm tendency-plus" hx-post="{% url 'upgrade_page' player.id %}" hx-trigger="click" hx-target="#cart-table" hx-swap="innerHTML"><i class="fa-solid fa-plus"></i></button>
+                                            {{ field }}
+                                            <button type="button" class="btn btn-sm tendency-minus" hx-post="{% url 'upgrade_page' player.id %}" hx-trigger="click" hx-target="#cart-table" hx-swap="innerHTML"><i class="fa-solid fa-minus"></i></button>
+                                        </div>
+                                    </div>
+                                    {{ field.label }}
+                                </p>
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                     </div>
                 <form>
             </div>
         </div>
@@ -164,6 +223,7 @@
 <script>
     const attribute_categories = {{ attribute_categories|safe }};
     const badge_categories = {{ badge_categories|safe }};
+    const tendency_categories = {{ tendency_categories|safe }};
 </script>
 <script src="{% static 'js/players/filter_data.js' %}" type="text/javascript"></script>
 <script src="{% static 'js/players/upg_utils.js' %}" type="text/javascript"></script>

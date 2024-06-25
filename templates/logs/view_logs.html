@@ -35,7 +35,7 @@
                         {% for log in upgrade_logs %}
                         <tr>
                             <td><a href="{% url 'upgrade_log' log.id %}" class="btn btn-sm btn-info"><i class="fa-solid fa-eye"></i> View</a></td>
-                            <td>{{ log.total }}</td>
+                            <td>{{ log.total_sp }} SP, {{ log.total_xp }} XP</td>
                             <td>{{ log.created }}</td>
                         </tr>
                         {% endfor %}

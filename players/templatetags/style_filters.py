@@ -4,6 +4,7 @@ from django import template
 # Local imports
 import simulation.scripts.attribute as attribute
 import simulation.scripts.badge as badge
+import simulation.scripts.tendency as tendency
 
 # Create your tags here.
 register = template.Library()
@@ -65,6 +66,12 @@ def add_attribute_category(a):
 def add_badge_category(b):
     for k, v in badge.badge_categories.items():
         if b in v:
+            return k
+        
+@register.filter
+def add_tendency_category(t):
+    for k, v in tendency.tendency_categories.items():
+        if t in v:
             return k
 
 

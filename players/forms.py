@@ -62,6 +62,7 @@ class UpgradeForm(forms.Form):
 
         # fmt: off
         if player:
+            # Add attribute fields to the form
             for key, value in player.attributes.items():
                 if not key in banned["attributes"]:
                     self.fields[key] = forms.IntegerField(
@@ -78,6 +79,7 @@ class UpgradeForm(forms.Form):
                             }
                         ),
                     )
+            # Add badge fields to the form
             for key, value in player.badges.items():
                 # Filter out lower badge levels
                 badge_labels = config.CONFIG_PLAYER["BADGE_LABELS"]
@@ -97,6 +99,22 @@ class UpgradeForm(forms.Form):
                             "class": "badge-value text-light border-0 bg-transparent p-0 m-0 text-body",
                             "min": "0", 
                             "max": "4"
+                        }
+                    ),
+                )
+            # Add tendency choices to the field
+            for key, value in player.tendencies.items():
+                self.fields[key] = forms.IntegerField(
+                    label=key,
+                    initial=value,
+                    widget=forms.NumberInput(
+                        attrs={
+                            "style": "font-size: 0.8rem;",
+                            "data_type": "tendency",
+                            "data-original": value,
+                            "class": "tendency-value text-light border-0 bg-transparent p-0 m-0 text-body",
+                            "min": "0", 
+                            "max": "100"
                         }
                     ),
                 )

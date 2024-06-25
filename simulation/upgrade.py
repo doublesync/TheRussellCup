@@ -52,7 +52,7 @@ class UpgradeCreator:
                 self.cart["badges"][b]["new"] = int(value)
         for t, value in self.data.items():
             if not t in self.player_tendencies: continue
-            if int(value) > self.player_tendencies[t]:
+            if int(value) != self.player_tendencies[t]:
                 self.cart["tendencies"][t] = {}
                 self.cart["tendencies"][t]["start"] = self.player_tendencies[t]
                 self.cart["tendencies"][t]["new"] = int(value)

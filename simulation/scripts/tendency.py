@@ -117,6 +117,9 @@ tendency_prices = {
 def check_tendency_price(start_level, end_level):
     cost = 0
     start, end = (start_level + 1), (end_level + 1)
+    # If the user lowered the tendency, return 0
+    if (start == end) or (start > end):
+        return cost
     for i in range(start, end):
         for price_range in tendency_prices:
             if i in price_range:

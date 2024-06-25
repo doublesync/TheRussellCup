@@ -22,25 +22,39 @@ class UpgradeCreator:
             "tendencies": {},
         }
 
+    
+    def compile_data(self):
+        if type(self.player) == dict:
+            self.player_attributes = self.player["attributes"]
+            self.player_badges = self.player["badges"]
+            self.player_tendencies = self.player["tendencies"]
+        else:
+            self.player_attributes = self.player.attributes
+            self.player_badges = self.player.badges
+            self.player_tendencies = self.player.tendencies
+
     # Remove attributes and badges that are the same as the players
     def format(self):
+        # HTMX requests send a dictionary, Django sends a QueryDict
+        self.compile_data()
+        # Loop through the data and add the upgrades to the cart object if they have been changed
         for a, value in self.data.items():
-            if not a in self.player.attributes: continue
-            if int(value) > self.player.attributes[a]:
+            if not a in self.player_attributes: continue
+            if int(value) > self.player_attributes[a]:
                 self.cart["attributes"][a] = {}
-                self.cart["attributes"][a]["start"] = self.player.attributes[a]
+                self.cart["attributes"][a]["start"] = self.player_attributes[a]
                 self.cart["attributes"][a]["new"] = int(value)
         for b, value in self.data.items():
-            if not b in self.player.badges: continue
-            if int(value) > self.player.badges[b]:
+            if not b in self.player_badges: continue
+            if int(value) > self.player_badges[b]:
                 self.cart["badges"][b] = {}
-                self.cart["badges"][b]["start"] = self.player.badges[b]
+                self.cart["badges"][b]["start"] = self.player_badges[b]
                 self.cart["badges"][b]["new"] = int(value)
         for t, value in self.data.items():
-            if not t in self.player.tendencies: continue
-            if int(value) > self.player.tendencies[t]:
+            if not t in self.player_tendencies: continue
+            if int(value) > self.player_tendencies[t]:
                 self.cart["tendencies"][t] = {}
-                self.cart["tendencies"][t]["start"] = self.player.tendencies[t]
+                self.cart["tendencies"][t]["start"] = self.player_tendencies[t]
                 self.cart["tendencies"][t]["new"] = int(value)
         # Return an error message if the user has not selected any upgrades
         if not self.cart["attributes"] and not self.cart["badges"] and not self.cart["tendencies"]:

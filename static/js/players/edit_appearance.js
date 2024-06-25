@@ -1,6 +1,5 @@
 // Use 'https://cdn.skypack.dev/' + 'npm package name' + '@version its optional'
 import { generate, display } from "https://cdn.skypack.dev/facesjs@3.8.1";
-const face_status = document.getElementById("face-status");
 const randomize_button = document.getElementById("randomize");
 const save_button = document.getElementById("save");
 const player_face = document.getElementById("player-appearance");

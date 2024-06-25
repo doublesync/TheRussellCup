@@ -38,7 +38,11 @@
             <div class="row gx-4 gy-4">
                 <form method="post" class="row gx-4 gy-4">
                     {% csrf_token %}
+                    <input type="hidden" id="htmx-cart-url" data-url="{% url 'upgrade_page' player.id %}">
                     <input type="hidden" name="player_id" value="{{ player.id }}">
+                    <input type="hidden" name="original_attributes" value="{{ player.attributes }}">
+                    <input type="hidden" name="original_badges" value="{{ player.badges }}">
+                    <input type="hidden" name="original_tendencies" value="{{ player.tendencies }}">
                     <!-- Currency column -->
                     <div class="col-12">
                         <a href="{% url 'player_page' player.id %}" class="btn btn-sm btn-info mb-4"><i class="fa-solid fa-arrow-left"></i> Back to Player</a>
@@ -117,9 +121,9 @@
                                     <p class="m-1">
                                         <div style="{{ field.value|add_attribute_color }}" class="badge">
                                             <div class="value-control d-flex justify-content-center align-items-center">
-                                                <button type="button" class="btn btn-sm attribute-plus" hx-post="{% url 'upgrade_page' player.id %}" hx-trigger="click" hx-target="#cart-table" hx-swap="innerHTML"><i class="fa-solid fa-plus"></i></button>
+                                                <button type="button" class="btn btn-sm attribute-plus request-cart" hx-post="{% url 'upgrade_page' player.id %}" hx-trigger="click throttle:1s" hx-target="#cart-table" hx-swap="innerHTML"><i class="fa-solid fa-plus"></i></button>
                                                 {{ field }}
-                                                <button type="button" class="btn btn-sm attribute-minus" hx-post="{% url 'upgrade_page' player.id %}" hx-trigger="click" hx-target="#cart-table" hx-swap="innerHTML"><i class="fa-solid fa-minus"></i></button>
+                                                <button type="button" class="btn btn-sm attribute-minus request-cart" hx-post="{% url 'upgrade_page' player.id %}" hx-trigger="click throttle:1s" hx-target="#cart-table" hx-swap="innerHTML"><i class="fa-solid fa-minus"></i></button>
                                             </div>
                                         </div>
                                         {{ field.label }}
@@ -166,9 +170,9 @@
                                     <p class="m-1">
                                         <div style="{{ field.value|add_badge_color }}" class="badge">
                                             <div class="value-control d-flex justify-content-center align-items-center">
-                                                <button type="button" class="btn btn-sm badge-plus" hx-post="{% url 'upgrade_page' player.id %}" hx-trigger="click" hx-target="#cart-table" hx-swap="innerHTML"><i class="fa-solid fa-plus"></i></button>
+                                                <button type="button" class="btn btn-sm badge-plus request-cart" hx-post="{% url 'upgrade_page' player.id %}" hx-trigger="click throttle:1s" hx-target="#cart-table" hx-swap="innerHTML"><i class="fa-solid fa-plus"></i></button>
                                                 {{ field }}
-                                                <button type="button" class="btn btn-sm badge-minus" hx-post="{% url 'upgrade_page' player.id %}" hx-trigger="click" hx-target="#cart-table" hx-swap="innerHTML"><i class="fa-solid fa-minus"></i></button>
+                                                <button type="button" class="btn btn-sm badge-minus request-cart" hx-post="{% url 'upgrade_page' player.id %}" hx-trigger="click throttle:1s" hx-target="#cart-table" hx-swap="innerHTML"><i class="fa-solid fa-minus"></i></button>
                                             </div>
                                         </div>
                                         {{ field.label }}
@@ -226,9 +230,9 @@
                                 <p class="m-1">
                                     <div style="{{ field.value|add_attribute_color }}" class="badge">
                                         <div class="value-control d-flex justify-content-center align-items-center">
-                                            <button type="button" class="btn btn-sm tendency-plus" hx-post="{% url 'upgrade_page' player.id %}" hx-trigger="click" hx-target="#cart-table" hx-swap="innerHTML"><i class="fa-solid fa-plus"></i></button>
+                                            <button type="button" class="btn btn-sm tendency-plus request-cart" hx-post="{% url 'upgrade_page' player.id %}" hx-trigger="click throttle:1s" hx-target="#cart-table" hx-swap="innerHTML"><i class="fa-solid fa-plus"></i></button>
                                             {{ field }}
-                                            <button type="button" class="btn btn-sm tendency-minus" hx-post="{% url 'upgrade_page' player.id %}" hx-trigger="click" hx-target="#cart-table" hx-swap="innerHTML"><i class="fa-solid fa-minus"></i></button>
+                                            <button type="button" class="btn btn-sm tendency-minus request-cart" hx-post="{% url 'upgrade_page' player.id %}" hx-trigger="click throttle:1s" hx-target="#cart-table" hx-swap="innerHTML"><i class="fa-solid fa-minus"></i></button>
                                         </div>
                                     </div>
                                     {{ field.label }}
@@ -247,9 +251,14 @@
 
 {% block scripts %}
 <script>
-    const attribute_categories = {{ attribute_categories|safe }};
-    const badge_categories = {{ badge_categories|safe }};
-    const tendency_categories = {{ tendency_categories|safe }};
+    var player_attributes = {{ player.attributes|safe }};
+    var player_badges = {{ player.badges|safe }};
+    var player_tendencies = {{ player.tendencies|safe }};
+    var player = {
+        attributes: player_attributes,
+        badges: player_badges,
+        tendencies: player_tendencies,
+    }
 </script>
 <script src="{% static 'js/players/filter_data.js' %}" type="text/javascript"></script>
 <script src="{% static 'js/players/upg_utils.js' %}" type="text/javascript"></script>

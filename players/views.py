@@ -1,5 +1,7 @@
 # Python imports
 import json
+import types
+from collections import namedtuple
 
 # Django imports
 from django.contrib.auth.decorators import login_required
@@ -104,16 +106,27 @@ class UpgradeFormView(FormView):
         return context
 
     def form_valid(self, form):
-        # Initialize some objects
-        player = get_object_or_404(Player, id=form.data["player_id"])
-        upg = upgrade.UpgradeCreator(user=self.request.user, player=player, data=form.data)
         # If the user updated their cart (we send an HX request)
         if self.request.headers.get("HX-Request") == "true":
+            # Initialize some objects
+            original_attributes = json.loads(self.request.POST.get("original_attributes").replace("'", '"'))
+            original_badges = json.loads(self.request.POST.get("original_badges").replace("'", '"'))
+            original_tendencies = json.loads(self.request.POST.get("original_tendencies").replace("'", '"'))
+            original_player = {
+                "attributes": original_attributes,
+                "badges": original_badges,
+                "tendencies": original_tendencies,
+            }
+            # Get 'validate_price's return cart dictionary and render the cart fragment
+            upg = upgrade.UpgradeCreator(user=self.request.user, player=original_player, data=form.data)
             cart = upg.validate_price(validate=False)[1]
             html = render_to_string("players/fragments/cart_fragment.html", {"cart": cart})
             return HttpResponse(html)
         # If the user submitted the form (we send a POST request without HX)
         else:
+            # Initialize some objects
+            player = get_object_or_404(Player, id=form.data["player_id"])
+            upg = upgrade.UpgradeCreator(user=self.request.user, player=player, data=form.data)
             purchase_status, purchase_response = upg.purchase()
             # If the purchase was successful, display a success message
             if purchase_status:

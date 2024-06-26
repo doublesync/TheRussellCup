@@ -9,7 +9,9 @@ urlpatterns = [
     path("players/", include("players.urls")),
     path("news/", include("news.urls")),
     path("logs/", include("logs.urls")),
+    path("stafftools/", include("stafftools.urls")),
     path("", include("pages.urls")),
+    
 ]
 
 if settings.DEBUG:

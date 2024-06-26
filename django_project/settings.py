@@ -27,7 +27,7 @@ SECRET_KEY = "django-insecure-0peo@#x9jur3!h$ryje!$879xww8y1y66jx!%*#ymhg&jkozs2
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#debug
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 DEV_MODE = os.getenv("DEV_MODE", "True") == "True"
 # DEBUG_TOOLBAR_CONFIG = {
 #     # ...

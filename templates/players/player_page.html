@@ -9,6 +9,9 @@
     input[type="radio"] {
         margin: 0 10px 0 1px;
     }
+    input::placeholder {
+        color: gray!important;
+    }
 </style>
 {% endblock %}
 
@@ -94,6 +97,42 @@
                     <a href="{% url 'upgrade_page' player.id %}" class="btn btn-sm btn-dark mt-2">Upgrade Player</a>
                     <a href="{% url 'view_logs' player.id %}" class="btn btn-sm btn-dark mt-2">View Logs</a>
                 </div>
+                <!-- Staff column -->
+                {% if user.is_staff %}
+                    <div class="row">
+                        <div class="col-md-3 mt-4">
+                            <div class="card">
+                                <!-- Pay this player form -->
+                                <form id="pay-user-form">
+                                    {% csrf_token %}
+                                    <input type="hidden" id="player-id" value="{{ player.id }}">
+                                    <div class="card-header text-center">Pay User</div>
+                                    <div class="card-body">
+                                        <div lass="d-flex flex-column justify-content-center align-items-center">
+                                            <input type="number" name="pay-amount" class="form-control text-light" placeholder="Choose amount"/>
+                                            <select name="pay-currency" class="form-control text-light" placeholder="Currency">
+                                                <option class="text-dark" value="SP" selected>Skill Points</option>
+                                                <option class="text-dark" value="XP">Experience Points</option>
+                                            </select>
+                                            <select name="pay-reason" class="form-control text-light" placeholder="Reason for payment">
+                                                <option class="text-dark" value="media" selected>Media Job</option>
+                                                <option class="text-dark" value="manager">Coach Pay</option>
+                                                <option class="text-dark" value="scout">Website Pay</option>
+                                                <option class="text-dark" value="trainer">Promo Pay</option>
+                                                <option class="text-dark" value="coach">Other Pay</option>
+                                            </select>
+                                            <select name="pay-type" class="form-control text-light" placeholder="Type of payment">
+                                                <option class="text-dark" value="add" selected>Add</option>
+                                                <option class="text-dark" value="take">Take</option>
+                                            </select>
+                                            <a href="#" style="width: 100%;" class="btn btn-sm btn-info mt-2" hx-trigger="click throttle:1s" hx-target="#pay-user-form" hx-swap="innerHTML" hx-post="{% url 'pay_user' player.id %}">Pay User</a>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
                 <!-- Attributes column -->
                 <div class="col-md-6">
                     <h4>Attributes</h4>

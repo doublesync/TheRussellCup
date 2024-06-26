@@ -64,6 +64,7 @@ def player_page(request, id):
     sorted_badges = dict(sorted(player.badges.items(), key=lambda x: x[1], reverse=True))
     sorted_tendencies = dict(sorted(player.tendencies.items(), key=lambda x: x[1], reverse=True))
     return render(request, "players/player_page.html", {
+        "user": request.user,
         "player": player, 
         "attributes": sorted_attributes, 
         "badges": sorted_badges,

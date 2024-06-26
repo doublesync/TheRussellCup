@@ -19,6 +19,7 @@ class PaymentLog(models.Model):
     staff = models.ForeignKey("accounts.CustomUser", on_delete=models.CASCADE)
     player = models.ForeignKey("players.Player", on_delete=models.CASCADE)
     payment = models.IntegerField()
+    reason = models.CharField(max_length=255)
     week = models.IntegerField(default=config.CONFIG_SEASON["CURRENT_WEEK"])
     season = models.IntegerField(default=config.CONFIG_SEASON["CURRENT_SEASON"])
     created = models.DateTimeField(auto_now_add=True)

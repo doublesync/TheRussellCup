@@ -21,7 +21,7 @@ SECRET_KEY = "django-insecure-0peo@#x9jur3!h$ryje!$879xww8y1y66jx!%*#ymhg&jkozs2
 
 # Custom debug toolbar (for testing purposes on heroku server)
 def show_toolbar(request):
-    return request.user.is_staff
+    return True
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#debug
 # SECURITY WARNING: don't run with debug turned on in production!

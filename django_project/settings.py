@@ -120,7 +120,7 @@ else:
             "PORT": os.getenv("DB_PORT"),
         }
     }
-    django_heroku.settings(locals())
+    django_heroku.settings(locals(), staticfiles=False)
 
 # Password validation
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-password-validators

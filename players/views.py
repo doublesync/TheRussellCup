@@ -59,7 +59,7 @@ class PlayerFormView(FormView):
 @login_required
 def player_page(request, id):
     # fmt:off
-    player = get_object_or_404(Player, id=id)
+    player = Player.objects.get(pk=id)
     sorted_attributes = dict(sorted(player.attributes.items(), key=lambda x: x[1], reverse=True))
     sorted_badges = dict(sorted(player.badges.items(), key=lambda x: x[1], reverse=True))
     sorted_tendencies = dict(sorted(player.tendencies.items(), key=lambda x: x[1], reverse=True))
@@ -85,7 +85,7 @@ class UpgradeFormView(FormView):
 
     def get(self, request, *args, **kwargs):
         player_id = self.kwargs.get("id")
-        player = get_object_or_404(Player, id=player_id)
+        player = Player.objects.get(pk=player_id)
         if player.user != request.user:
             return render(request, "500.html", {"reason": "You do not own this player"})
         return super().get(request, *args, **kwargs)
@@ -93,7 +93,7 @@ class UpgradeFormView(FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         player_id = self.kwargs.get("id")
-        player = get_object_or_404(Player, id=player_id)
+        player = Player.objects.get(pk=player_id)
         context.update(
             {
                 "player": player,
@@ -125,7 +125,7 @@ class UpgradeFormView(FormView):
         # If the user submitted the form (we send a POST request without HX)
         else:
             # Initialize some objects
-            player = get_object_or_404(Player, id=form.data["player_id"])
+            player = Player.objects.get(pk=form.data["player_id"])
             upg = upgrade.UpgradeCreator(user=self.request.user, player=player, data=form.data)
             purchase_status, purchase_response = upg.purchase()
             # If the purchase was successful, display a success message
@@ -157,7 +157,7 @@ class EditAppearanceView(View):
 
     def get(self, request, id):
         # Grab the player
-        player = get_object_or_404(Player, id=id)
+        player = Player.objects.get(pk=id)
         # Check if the player belongs to the user
         if player.user != request.user:
             return render(request, "500.html", {"reason": "You do not own this player"})
@@ -166,7 +166,7 @@ class EditAppearanceView(View):
     
     def post(self, request, id):
         # Grab the player
-        player = get_object_or_404(Player, id=id)
+        player = Player.objects.get(pk=id)
         # Check if the player belongs to the user
         if player.user != request.user:
             return render(request, "500.html", {"reason": "You do not own this player"})

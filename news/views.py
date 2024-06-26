@@ -14,7 +14,7 @@ import simulation.webhook as webhook
 
 # A view to get a post
 def post(request, id):
-    post = get_object_or_404(Post, id=id)
+    post = Post.objects.get(pk=id)
     return render(
         request,
         "news/post.html",

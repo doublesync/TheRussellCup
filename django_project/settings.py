@@ -25,7 +25,7 @@ def show_toolbar(request):
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#debug
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 DEV_MODE = os.getenv("DEV_MODE", "True") == "True"
 DEBUG_TOOLBAR_CONFIG = {
     # ...

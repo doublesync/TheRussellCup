@@ -29,7 +29,7 @@ DEBUG = True
 DEV_MODE = os.getenv("DEV_MODE", "True") == "True"
 DEBUG_TOOLBAR_CONFIG = {
     # ...
-    'SHOW_TOOLBAR_CALLBACK': 'project.settings.show_toolbar',
+    'SHOW_TOOLBAR_CALLBACK': 'django_project.settings.show_toolbar',
 }
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts

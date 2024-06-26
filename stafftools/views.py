@@ -21,6 +21,14 @@ def pay_user(request, id):
         currency = request.POST.get("pay-currency")
         reason = request.POST.get("pay-reason")
         _type = request.POST.get("pay-type")
+        # Update the player's balance
+        if amount and currency == "SP":
+            amount = int(amount) if _type == "add" else (0 - abs(int(amount)))
+            player.user.sp += amount
+        if amount and currency == "XP":
+            amount = int(amount) if _type == "add" else (0 - abs(int(amount)))
+            player.user.xp += amount
+        player.user.save()
         # Create the payment log
         PaymentLog.objects.create(
             staff=request.user,
@@ -28,11 +36,5 @@ def pay_user(request, id):
             payment=amount,
             reason=reason,
         )
-        # Update the player's balance
-        if amount and currency == "SP":
-            player.user.sp += int(amount) if _type == "add" else -int(amount)
-        if amount and currency == "XP":
-            player.user.xp += int(amount) if _type == "add" else -int(amount)
-        player.user.save()
         # Return the response
         return HttpResponse("✅ Payment successful.")

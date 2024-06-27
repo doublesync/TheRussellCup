@@ -12,6 +12,7 @@ class UpgradeLog(models.Model):
     upgrades = models.JSONField()
     week = models.IntegerField(default=config.CONFIG_SEASON["CURRENT_WEEK"])
     season = models.IntegerField(default=config.CONFIG_SEASON["CURRENT_SEASON"])
+    complete = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
 
 # A model to store the payment logs

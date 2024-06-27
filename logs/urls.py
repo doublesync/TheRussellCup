@@ -9,5 +9,7 @@ from logs import views
 urlpatterns = [
     path("log/upgrade/<int:id>/", views.upgrade_log, name="upgrade_log"),
     path("log/payment/<int:id>/", views.payment_log, name="payment_log"),
-    path("logs/<int:id>/", views.view_logs, name="view_logs"),
+    path("log/<int:id>/", views.view_logs, name="view_logs"),
+    path("upgrades/incomplete/", views.IncompleteLogs.as_view(), name="incomplete_logs"),
+    path("upgrade/<int:id>/complete/", views.mark_upgrade_complete, name="mark_upgrade_complete"),
 ]

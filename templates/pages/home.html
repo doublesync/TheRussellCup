@@ -63,7 +63,17 @@
                     <h2><i class="fa-solid fa-briefcase"></i> Jobs</h2>
                 </div>
                 <div class="card-body">
-                    <p>You don't have any jobs.</p>
+                    <p>Here are your current jobs.</p>
+                    {% if user.can_pay_players %}
+                    <div class="d-flex justify-content-between align-items-center mt-2">
+                        <a href="#" class="text-decoration-none"><i class="fa-solid fa-coins"></i> Pay Players</a>
+                    </div>
+                    {% endif %}
+                    {% if user.can_mark_upgrades %}
+                    <div class="d-flex justify-content-between align-items-center mt-2">
+                        <a href="{% url 'incomplete_logs' %}" class="text-decoration-none"><i class="fa-solid fa-marker"></i> Mark Upgrades</a>
+                    </div>
+                    {% endif %}
                 </div>
                 <div class="card-footer p-3">
                     <a href="#" class="btn btn-sm btn-success"><i class="fa-solid fa-dollar"></i> Apply to jobs</a>

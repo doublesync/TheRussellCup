@@ -13,7 +13,7 @@ from players.models import Player
 def pay_user(request, id):
     if request.method == "POST":
         # Check staff status
-        if not request.user.is_staff:
+        if not request.user.can_pay_players:
             return HttpResponse("You are not authorized to pay users.")
         # Grab the form data
         player = Player.objects.get(pk=id)

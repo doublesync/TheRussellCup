@@ -27,4 +27,4 @@ class PaymentLog(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.staff.username} paid {self.player.user.username} ${self.payment} for {self.reason}"
+        return f"{self.staff.username} paid {self.player.user.username} ${self.payment} {self.type} for {self.reason}"

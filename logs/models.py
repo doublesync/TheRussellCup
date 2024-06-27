@@ -25,3 +25,6 @@ class PaymentLog(models.Model):
     week = models.IntegerField(default=config.CONFIG_SEASON["CURRENT_WEEK"])
     season = models.IntegerField(default=config.CONFIG_SEASON["CURRENT_SEASON"])
     created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.staff.username} paid {player.user.username} ${self.payment} for {self.reason}"

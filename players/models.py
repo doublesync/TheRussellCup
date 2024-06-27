@@ -34,6 +34,9 @@ class Player(models.Model):
     weight = models.IntegerField(default=0)
     wingspan = models.IntegerField(default=0)
     jumpshot = models.CharField(default="N/A", max_length=32)
+    # jumpshot_release_1 = models.CharField(default="N/A", max_length=32)
+    # jumpshot_release_2 = models.CharField(default="N/A", max_length=32)
+    # jumpshot_blending = models.IntegerField()
     anomaly = models.BooleanField(default=False)
     # Server defined fields
     attributes = models.JSONField(default=default.default_attributes)

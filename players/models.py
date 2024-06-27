@@ -37,6 +37,7 @@ class Player(models.Model):
     # jumpshot_release_1 = models.CharField(default="N/A", max_length=32)
     # jumpshot_release_2 = models.CharField(default="N/A", max_length=32)
     # jumpshot_blending = models.IntegerField()
+    # jumpshot_free_throw = models.CharField(default="N/A", max_length=32)
     anomaly = models.BooleanField(default=False)
     # Server defined fields
     attributes = models.JSONField(default=default.default_attributes)

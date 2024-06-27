@@ -23,7 +23,7 @@ def pay_user(request, id):
         _type = request.POST.get("pay-type")
         # Validate the form data
         if _type not in ["SP", "XP"]:
-            return HttpResponse("❌ Invalid currency type.")
+            return HttpResponse(f"❌ Invalid currency type? {_type}")
         # Update the player's balance
         if amount and currency == "SP":
             amount = int(amount) if _type == "add" else (0 - abs(int(amount)))

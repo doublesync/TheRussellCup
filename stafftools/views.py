@@ -35,6 +35,7 @@ def pay_user(request, id):
             player=player,
             payment=amount,
             reason=reason,
+            type=_type,
         )
         # Return the response
         return HttpResponse("✅ Payment successful.")

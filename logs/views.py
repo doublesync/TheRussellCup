@@ -15,7 +15,7 @@ def view_logs(request, id):
     current_week = config.CONFIG_SEASON["CURRENT_WEEK"]
     current_season = config.CONFIG_SEASON["CURRENT_SEASON"]
     upgrade_logs = UpgradeLog.objects.filter(player=player, week=current_week, season=current_season)
-    payment_logs = PaymentLog.objects.filter(player=player, week=current_week, season=current_season)
+    payment_logs = PaymentLog.objects.filter(player=player, week=current_week, season=current_season, type="SP")
     payment_sum_week = payment_logs.aggregate(models.Sum("payment"))["payment__sum"]
     payment_sum_season = PaymentLog.objects.filter(player=player, season=current_season).aggregate(models.Sum("payment"))["payment__sum"]
     return render(request, template_name="logs/view_logs.html", context={

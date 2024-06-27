@@ -6,6 +6,8 @@ from collections import namedtuple
 # Django imports
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.core.paginator import Paginator
+from django.db.models import Q
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
@@ -152,7 +154,34 @@ class PlayerListView(ListView):
 
     def get_queryset(self):
         return Player.objects.all().order_by("-sim_rating")
-    
+
+
+# This is a function based view that will render a filtered player list
+def htmx_search_players(request):
+    # Get the page
+    page = request.GET.get("page")
+    # Check search_query (if it exists)
+    search_query = request.POST.get("search-query")
+    if search_query:
+        player_list = Player.objects.filter(Q(first_name__icontains=search_query) | Q(last_name__icontains=search_query))
+    else:
+        player_list = Player.objects.all()
+    # Check sortQuery (if it exists)
+    sort_query = request.POST.get("sort-query")
+    if sort_query:
+        sort_field, sort_direction = sort_query.split(":")
+        player_list = player_list.order_by(
+            f"{'-' if sort_direction == 'desc' else ''}{sort_field}"
+        )
+    # Paginate the page
+    paginator = Paginator(player_list, 20)
+    players = paginator.get_page(page)
+    # Return the page
+    context: dict = {"page_obj": players}
+    html: str = render_to_string("players/fragments/list_fragment.html", context)
+    return HttpResponse(html)
+
+
 # This is a class based view that will render the edit appearance page
 class EditAppearanceView(View):
 

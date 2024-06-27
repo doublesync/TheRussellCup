@@ -1,6 +1,6 @@
 # User configuration
 CONFIG_USER = {
-    "MAX_PLAYERS": 1,
+    "MAX_PLAYERS": 999,
 }
 
 # Season configuration

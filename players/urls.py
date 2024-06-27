@@ -13,5 +13,6 @@ urlpatterns = [
     path("player/<int:id>/upgrade/", views.UpgradeFormView.as_view(), name="upgrade_page"),
     path("list/", views.PlayerListView.as_view(), name="player_list"),
     path("player/<int:id>/appearance/", login_required(views.EditAppearanceView.as_view()), name="edit_appearance"),
+    path("player/list/search/", views.htmx_search_players, name="htmx_search_players"),
     # fmt:on
 ]

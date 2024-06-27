@@ -28,5 +28,4 @@ def run():
         user=user,
     )
     player = player.create()
-    for key, value in player.__dict__.items():
-        print(f"{key}: {value}")
+    print(player)

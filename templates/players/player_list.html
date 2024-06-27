@@ -3,62 +3,57 @@
 
 {% block title %}Players{% endblock %}
 
+{% block styles %}
+<style>
+    input::placeholder {
+        color: gray!important;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container-fluid p-md-5">
     <small class="text-muted">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</small>
     <h1>Player List</h1>
-    <div class="table-responsive">
-        <table class="table table-dark table-striped">
-            <thead>
-                <tr>
-                    <th><i class="fas fa-user"></i> Player</th>
-                    <th><i class="fas fa-star"></i> Rating</th>
-                    <th><i class="fas fa-basketball-ball"></i> Team</th>
-                    <th><i class="fas fa-user-tag"></i> Position</th>
-                    <th><i class="fas fa-ruler-vertical"></i> Height</th>
-                    <th><i class="fas fa-weight"></i> Weight</th>
-                </tr>
-            </thead>
-            <tbody class="table table-dark table-hover">
-                {% for player in players %}
-                    {% if player.anomaly %}
-                        <tr class="table-info fw-bold">
-                    {% else %}
-                        <tr>
-                    {% endif %}
-                        <td><a style="height: 100%; width: 100%;" href="{% url 'player_page' player.id %}">{{ player.first_name }} {{ player.last_name }}</a></td>
-                        <td>{{ player.sim_rating }}</td>
-                        <td>{{ player.team }}</td>
-                        <td>{{ player.position }}</td>
-                        <td>{{ player.height_imperial }}</td>
-                        <td>{{ player.weight }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
+    <form>
+        {% csrf_token %}
+        <div class="form-group pull-right col-lg-4">
+            <input name="search-query" id="search-query" class="search form-control mb-2" type="text" placeholder="Search for players" hx-post="{% url 'htmx_search_players' %}" hx-trigger="input changed delay:500ms, search" hx-target="#search-table" hx-swap="innerHTML"/>
+            <!-- Search query -->
+            <select name="sort-query" id="sort-query" class="form-select mb-2" hx-post="{% url 'htmx_search_players' %}" hx-trigger="change" hx-target="#search-table" hx-swap="innerHTML">
+                <optgroup label="Name">
+                    <option value="first_name:asc">First Name (A-Z)</option>
+                    <option value="first_name:desc">First Name (Z-A)</option>
+                    <option value="last_name:asc">Last Name (A-Z)</option>
+                    <option value="last_name:desc">Last Name (Z-A)</option>
+                </optgroup>
+                <optgroup label="Physical Attributes">
+                    <option value="height:asc">Height (lowest)</option>
+                    <option value="height:desc">Height (highest)</option>
+                    <option value="weight:asc">Weight (lowest)</option>
+                    <option value="weight:desc">Weight (highest)</option>
+                    <option value="wingspan:asc">Wingspan (lowest)</option>
+                    <option value="wingspan:desc">Wingspan (highest)</option>
+                </optgroup>
+                <optgroup label="Other">
+                    <option value="sp_spent:asc">SP Spent (lowest)</option>
+                    <option value="sp_spent:desc">SP Spent (highest)</option>
+                    <option value="xp_spent:asc">XP Spent (lowest)</option>
+                    <option value="xp_spent:desc">XP Spent (highest)</option>
+                    <option value="sim_rating:asc">Sim Rating (lowest)</option>
+                    <option value="sim_rating:desc">Sim Rating (highest)</option>
+                    <option value="position:asc">Position (A-Z)</option>
+                    <option value="position:desc">Position (Z-A)</option>
+                    <option value="anomaly:asc">Anomaly (A-Z)</option>
+                    <option value="anomaly:desc">Anomaly (Z-A)</option>
+                </optgroup>
+            </select>
         </div>
-    </div>
-</div>
-
-<div class="container-fluid ">
-    <ul class="pagination">
-        {% if page_obj.has_previous %}
-            <li class="page-item m-1"><a class="btn btn-sm" href="?page=1">First</a></li>
-            <li class="page-item m-1"><a class="btn btn-sm" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
-        {% endif %}
-
-        {% for num in page_obj.paginator.page_range %}
-            {% if page_obj.number == num %}
-                <li class="active m-1"><span class="btn btn-sm">{{ num }} <span class="sr-only">(current)</span></span></li>
-            {% else %}
-                <li class=" m-1"><a class="btn btn-sm" href="?page={{ num }}">{{ num }}</a></li>
-            {% endif %}
-        {% endfor %}
-
-        {% if page_obj.has_next %}
-            <li class="page-item m-1"><a class="btn btn-sm" href="?page={{ page_obj.next_page_number }}">Next</a></li>
-            <li class="page-item m-1"><a class="btn btn-sm" href="?page={{ page_obj.paginator.num_pages }}">Last</a></li>
-        {% endif %}
-    </ul>
+        <span class="counter pull-right"></span>
+        <div id="search-table">
+            {% include 'players/fragments/list_fragment.html' %}
+        </div>
+    </form>
 </div>
 
 {% endblock %}

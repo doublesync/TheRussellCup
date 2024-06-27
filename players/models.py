@@ -1,3 +1,6 @@
+# Python imports
+import random
+
 # Django imports
 from django.db import models
 
@@ -33,11 +36,13 @@ class Player(models.Model):
     height_imperial = models.CharField(max_length=4, default="N/A")
     weight = models.IntegerField(default=0)
     wingspan = models.IntegerField(default=0)
+    # Randomly generated jumpshot fields & anomaly field
     jumpshot = models.CharField(default="N/A", max_length=32)
-    # jumpshot_release_1 = models.CharField(default="N/A", max_length=32)
-    # jumpshot_release_2 = models.CharField(default="N/A", max_length=32)
-    # jumpshot_blending = models.IntegerField()
-    # jumpshot_free_throw = models.CharField(default="N/A", max_length=32)
+    jumpshot_release_1 = models.CharField(default="N/A", max_length=32)
+    jumpshot_release_2 = models.CharField(default="N/A", max_length=32)
+    jumpshot_blending = models.IntegerField(default=-1)
+    jumpshot_timing = models.CharField(default="N/A", max_length=32)
+    jumpshot_free_throw = models.CharField(default="N/A", max_length=32)
     anomaly = models.BooleanField(default=False)
     # Server defined fields
     attributes = models.JSONField(default=default.default_attributes)
@@ -59,12 +64,9 @@ class Player(models.Model):
         # Set the imperial height based on the height
         self.height_imperial = utility.imperial_height(self.height)
         # Set a random jumpshot if it is not set
-        if self.jumpshot == "N/A":
-            self.jumpshot = animation.jumpshot_roll(self.height)
+        if self.jumpshot == "N/A": animation.generate_jumpshot(self)
         # Calculate the lateral quickness after potential upgrades
-        self.attributes["Lateral Quickness"] = (
-            self.attributes["Speed"] + self.attributes["Perimeter Defense"]
-        ) // 2
+        self.attributes["Lateral Quickness"] = (self.attributes["Speed"] + self.attributes["Perimeter Defense"]) // 2
         # Calculate the overall rating after potential upgrades
         self.sim_rating = round((sum(self.attributes.values()) / len(self.attributes)), 2)
         # Call the parent save method

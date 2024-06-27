@@ -54,9 +54,9 @@ class PlayerCreator:
         self.object.height = height.height_roll(self.object.position)
         # [X] self.object.weight = weight.weight_roll(self.height) <= This is set in 'set_starting_physicals'
         self.object.wingspan = wingspan.wingspan_roll()
-        self.object.jumpshot = animation.jumpshot_roll(self.object.height)
-        # Set starting physicals and anomalies
+        # Set starting attributes, physicals, animations, and anomaly
         self.object = physical.set_starting_physicals(self.object)
+        self.object = animation.generate_jumpshot(self.object)
         self.object = anomaly.anomaly_roll(self.object)
         # Return the player
         return self.object

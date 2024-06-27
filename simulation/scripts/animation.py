@@ -191,7 +191,6 @@ jumpshot_list = {
         "Delon Wright",
     ],
     real_range(77, 81): [
-        "Default Big",
         "Santi Aldama",
         "Thanasis Antetokounmpo",
         "Oshae Brissett",
@@ -200,7 +199,6 @@ jumpshot_list = {
         "Ousmane Dieng",
         "Robert Covington",
         "Tyler Cook",
-        "Danilo Gallinari",
         "Usman Garuba",
         "Montrezi Harrell",
         "JaMychal Green",
@@ -573,12 +571,32 @@ free_throw_list = [
     "Free Throw WNBA 2",
 ]
 
+jumpshot_timing_list = ["Very Slow", "Slow", "Normal", "Quick", "Very Quick"]
+
 # Gets a random jumpshot based on the height then returns the jumpshot
 def jumpshot_roll(height):
     for height_range, jumpshots in jumpshot_list.items():
         if height in height_range:
             return random.choice(jumpshots)
 
+# Gets a random jumpshot timing from 0 to 100
+def timing_roll():
+    return random.choice(jumpshot_timing_list)
+
+# Gets a random jumpshot blending from 0 to 100
+def blending_roll():
+    return random.randint(0, 100)
+
 # Gets a random free throw from the free throw list
 def free_throw_roll():
     return random.choice(free_throw_list)
+
+# Returns a player with randomly generated jumpshot fields
+def generate_jumpshot(player):
+    player.jumpshot = jumpshot_roll(player.height)
+    player.jumpshot_release_1 = jumpshot_roll(player.height)
+    player.jumpshot_release_2 = jumpshot_roll(player.height)
+    player.jumpshot_blending = blending_roll()
+    player.jumpshot_timing = timing_roll()
+    player.jumpshot_free_throw = free_throw_roll()
+    return player

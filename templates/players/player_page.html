@@ -98,7 +98,7 @@
                     <a href="{% url 'view_logs' player.id %}" class="btn btn-sm btn-dark mt-2">View Logs</a>
                 </div>
                 <!-- Staff column -->
-                {% if user.is_staff %}
+                {% if user.can_pay_players %}
                     <div class="row">
                         <div class="col-md-3 mt-4">
                             <div class="card">

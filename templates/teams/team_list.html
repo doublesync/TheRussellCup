@@ -29,7 +29,7 @@
                     <tbody class="table table-dark table-hover">
                         {% for team in teams %}
                             <tr>
-                                <td><a href="{% url 'team_page' team.id %}">{{ team.name }}</a></td>
+                                <td><a href="{% url 'team_page' team.id %}">{{ team.city }} {{ team.name }}</a></td>
                                 <td><a href="{% url 'user' team.manager.id %}">{{ team.manager }}</a></td>
                             </tr>
                         {% endfor %}

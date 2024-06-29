@@ -3,34 +3,7 @@ from simulation.scripts.utility import real_range
 
 # Tendency categories
 tendency_categories = {
-    "Finishing": [
-        "Standing Dunk Tendency",
-        "Driving Dunk Tendency",
-        "Flashy Dunk",
-        "Alley-Oop",
-        "Putback Dunk",
-        "Crash",
-        "Driving Layup Tendency",
-        "Spin Layup",
-        "Hop Step Layup",
-        "Euro Step Layup",
-        "Floater",
-        "Drive",
-        "Spot Up Drive",
-        "Off Screen Drive",
-        "Drive Right",
-        "Driving Crossover",
-        "Driving Spin",
-        "Driving Step Back",
-        "Driving Half Spin",
-        "Driving Double Crossover",
-        "Driving Behind The Back",
-        "Driving Dribble Hesitation",
-        "Driving In And Out",
-        "No Driving Dribble Move",
-        "Attack Strong On Drive",
-    ],
-    "Shooting": [
+    "Jump Shooting": [
         "Step Through Shot",
         "Shot Under Basket",
         "Shot Close",
@@ -53,21 +26,20 @@ tendency_categories = {
         "Drive Pull Up Mid",
         "Use Glass",
     ],
-    "Playmaking": [
-        "Dish To Open Man",
-        "Flashy Pass",
-        "Alley Oop Pass",
+    "Layups & Dunks": [
+        "Driving Layup Tendency",
+        "Standing Dunk Tendency",
+        "Driving Dunk Tendency",
+        "Flashy Dunk",
+        "Alley-Oop",
+        "Putback Dunk",
+        "Crash",
+        "Spin Layup",
+        "Hop Step Layup",
+        "Euro Step Layup",
+        "Floater",
     ],
-    "Defensive": [
-        "Pass Interception",
-        "Take Charge",
-        "On Ball Steal",
-        "Contest Shot",
-        "Block Shot",
-        "Foul",
-        "Hard Foul",
-    ],
-    "Isolation": [
+    "Drive Setup": [
         "Triple Threat Pump Fake",
         "Triple Threat Jab Step",
         "Triple Threat Idle",
@@ -76,7 +48,28 @@ tendency_categories = {
         "Setup With Hesitation",
         "No Setup Dribble", 
     ],
-    "Post": [
+    "Driving": [
+        "Drive",
+        "Spot Up Drive",
+        "Off Screen Drive",
+        "Drive Right",
+        "Driving Crossover",
+        "Driving Spin",
+        "Driving Step Back",
+        "Driving Half Spin",
+        "Driving Double Crossover",
+        "Driving Behind The Back",
+        "Driving Dribble Hesitation",
+        "Driving In And Out",
+        "No Driving Dribble Move",
+        "Attack Strong On Drive",
+    ],
+    "Passing": [
+        "Dish To Open Man",
+        "Flashy Pass",
+        "Alley Oop Pass",
+    ],
+    "Post Game": [
         "Post Up",
         "Post Shimmy Shot",
         "Post Face Up",
@@ -105,6 +98,15 @@ tendency_categories = {
         "Iso Vs Average Defender",
         "Iso Vs Poor Defender",
         "Play Discipline"
+    ],
+    "Defense": [
+        "Pass Interception",
+        "Take Charge",
+        "On Ball Steal",
+        "Contest Shot",
+        "Block Shot",
+        "Foul",
+        "Hard Foul",
     ],
 }
 

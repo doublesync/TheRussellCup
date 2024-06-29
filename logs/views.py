@@ -36,10 +36,17 @@ def view_logs(request, id):
 
 # A function based view that will be used to display the upgrade log
 def upgrade_log(request, id):
+    # Get the upgrade log
     log = UpgradeLog.objects.get(id=id)
+    # Get the categories for the attributes, badges, and tendencies
     attribute_categories = attribute.attribute_categories
     badge_categories = badge.badge_categories
     tendency_categories = tendency.tendency_categories
+    # Let's order the attributes, badges, and tendencies by their categories
+    log.upgrades["attributes"] = {category: {attribute: log.upgrades["attributes"][attribute] for attribute in log.upgrades["attributes"] if attribute in attribute_categories[category]} for category in attribute_categories}
+    log.upgrades["badges"] = {category: {badge: log.upgrades["badges"][badge] for badge in log.upgrades["badges"] if badge in badge_categories[category]} for category in badge_categories}
+    log.upgrades["tendencies"] = {category: {tendency: log.upgrades["tendencies"][tendency] for tendency in log.upgrades["tendencies"] if tendency in tendency_categories[category]} for category in tendency_categories}
+    # Render the upgrade log
     return render(request, template_name="logs/upgrade_log.html", context={"log": log})
     
 # A function based view that will be used to display the payment log

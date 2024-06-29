@@ -4,6 +4,7 @@
 {% block title %}Upgrade Log{% endblock %}
 
 {% block content %}
+
     <div class="container">
         <div class="row gx-5 gy-5 mb-4">
             <div class="col-md-12">
@@ -43,13 +44,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for attribute, data in log.upgrades.attributes.items %}
+                        {% for category, data in log.upgrades.attributes.items %}
+                            {% for attribute, data in data.items %}
                             <tr>
+                                <td>{{ category }}</td>
                                 <td>{{ attribute }}</td>
                                 <td>{{ data.price }}</td>
-                                <td>{{ data.start }}</td>
-                                <td>{{ data.new }}</td>
+                                <td>{{ data.start }} <i class="fa-solid fa-arrow-right"></i> {{ data.new }}</td>
                             </tr>
+                            {% endfor %}
                         {% endfor %}
                     </tbody>
                 </table>
@@ -67,13 +70,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for badge, data in log.upgrades.badges.items %}
+                        {% for category, data in log.upgrades.badges.items %}
+                            {% for badge, data in data.items %}
                             <tr>
+                                <td>{{ category }}</td>
                                 <td>{{ badge }}</td>
                                 <td>{{ data.price }}</td>
-                                <td>{{ data.start }}</td>
-                                <td>{{ data.new }}</td>
+                                <td>{{ data.start }} <i class="fa-solid fa-arrow-right"></i> {{ data.new }}</td>
                             </tr>
+                            {% endfor %}
                         {% endfor %}
                     </tbody>
                 </table>
@@ -84,20 +89,22 @@
                 <table class="table table-striped">
                     <thead>
                         <tr>
+                            <th><i class="fa-solid fa-list"></i> Category</th>
                             <th><i class="fa-solid fa-arrow-up-1-9"></i> Tendency</th>
                             <th><i class="fa-solid fa-coins"></i> Price (XP)</th>
-                            <th><i class="fa-solid fa-cart-shopping"></i> Start</th>
-                            <th><i class="fa-solid fa-cart-shopping"></i> New</th>
+                            <th><i class="fa-solid fa-cart-shopping"></i> Change</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for tendency, data in log.upgrades.tendencies.items %}
+                        {% for category, data in log.upgrades.tendencies.items %}
+                            {% for tendency, data in data.items %}
                             <tr>
+                                <td>{{ category }}</td>
                                 <td>{{ tendency }}</td>
                                 <td>{{ data.price }}</td>
-                                <td>{{ data.start }}</td>
-                                <td>{{ data.new }}</td>
+                                <td>{{ data.start }} <i class="fa-solid fa-arrow-right"></i> {{ data.new }}</td>
                             </tr>
+                            {% endfor %}
                         {% endfor %}
                     </tbody>
                 </table>

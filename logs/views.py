@@ -7,6 +7,9 @@ from django.views import View
 
 # Local imports
 import simulation.config as config
+import simulation.scripts.attribute as attribute
+import simulation.scripts.badge as badge
+import simulation.scripts.tendency as tendency
 from logs.models import UpgradeLog, PaymentLog
 from players.models import Player
 
@@ -34,6 +37,9 @@ def view_logs(request, id):
 # A function based view that will be used to display the upgrade log
 def upgrade_log(request, id):
     log = UpgradeLog.objects.get(id=id)
+    attribute_categories = attribute.attribute_categories
+    badge_categories = badge.badge_categories
+    tendency_categories = tendency.tendency_categories
     return render(request, template_name="logs/upgrade_log.html", context={"log": log})
     
 # A function based view that will be used to display the payment log

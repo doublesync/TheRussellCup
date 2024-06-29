@@ -109,19 +109,9 @@ tendency_categories = {
 }
 
 # A dictionary that contains the prices of tendencies
-tendency_prices = {
-    real_range(0, 100): 25,
-}
+tendency_price = 25
 
 # A function to check the price of a tendency
 def check_tendency_price(start_level, end_level):
-    cost = 0
-    start, end = (start_level + 1), (end_level + 1)
-    # If the user lowered the tendency, return 0
-    if (start == end) or (start > end):
-        return cost
-    for i in range(start, end):
-        for price_range in tendency_prices:
-            if i in price_range:
-                cost += tendency_prices[price_range]
+    cost = abs(end_level - start_level) * tendency_price
     return cost

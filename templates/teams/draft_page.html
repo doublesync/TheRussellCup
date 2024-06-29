@@ -60,7 +60,7 @@
                                 {% for order in draft_order %}
                                     <tr>
                                         <td>{{ order.order }}</td>
-                                        <td>{{ order.team.city }} {{ order.team.name }}</td>
+                                        <td><a href="{% url 'team_page' order.team.id %}" class="text-decoration-none">{{ order.team.city }} {{ order.team.name }}</a></td>
                                     </tr>
                                 {% endfor %}
                             </tbody>

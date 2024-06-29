@@ -1,0 +1,75 @@
+{% extends '_base.html' %}
+
+{% load static %}
+
+{% block title %}Draft Page{% endblock %}
+
+{% block content %}
+    <div class="container-fluid p-4">
+        <h1>Draft Page</h1>
+        <p class="fw-bold">Draft for <span class="text-warning">Season {{ draft.season }}</span></p>
+        <hr>
+        <h2>Draft Results</h2>
+        <div class="row">
+            <!-- Draft results table -->
+            <div class="col-md-6">
+                <div id="draft-results-table">
+                    <div class="table-responsive">
+                        <table class="table table-dark table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Pick</th>
+                                    <th>Team</th>
+                                    <th>Player</th>
+                                    <th>Position</th>
+                                    <th>Height</th>
+                                    <th>Weight</th>
+                                    <th>Wingspan</th>
+                                </tr>
+                            </thead>
+                            <tbody class="table table-dark table-hover">
+                                {% for draft_pick in draft.draftpick_set.all %}
+                                    <tr>
+                                        <td>R{{ draft_pick.round }} - P{{ draft_pick.pick }}</td>
+                                        <td>{{ draft_pick.team.name }}</td>
+                                        <td>{{ draft_pick.player.first_name }} {{ draft_pick.player.last_name }}</td>
+                                        <td>{{ draft_pick.player.position }}</td>
+                                        <td>{{ draft_pick.player.height_imperial }}</td>
+                                        <td>{{ draft_pick.player.weight }}lbs</td>
+                                        <td>{{ draft_pick.player.wingspan }}/100</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>            
+            </div>
+            <!-- Draft order table -->
+            <div class="col-md-6">
+                <div id="draft-order-table">
+                    <div class="table-responsive">
+                        <table class="table table-dark table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Order</th>
+                                    <th>Team</th>
+                                </tr>
+                            </thead>
+                            <tbody class="table table-dark table-hover">
+                                {% for order in draft_order %}
+                                    <tr>
+                                        <td>{{ order.order }}</td>
+                                        <td>{{ order.team.city }} {{ order.team.name }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

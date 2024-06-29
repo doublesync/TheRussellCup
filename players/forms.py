@@ -57,6 +57,7 @@ class UpgradeForm(forms.Form):
         banned = {
             "attributes": attribute.physical_attributes + ["Intangibles"],
             "badges": [],
+            "tendencies": ["Touches"],
         }
         super().__init__(*args, **kwargs)
 
@@ -104,18 +105,19 @@ class UpgradeForm(forms.Form):
                 )
             # Add tendency choices to the field
             for key, value in player.tendencies.items():
-                self.fields[key] = forms.IntegerField(
-                    label=key,
-                    initial=value,
-                    widget=forms.NumberInput(
-                        attrs={
-                            "style": "font-size: 0.8rem;",
-                            "data_type": "tendency",
-                            "data-original": value,
-                            "class": "tendency-value text-light border-0 bg-transparent p-0 m-0 text-body",
-                            "min": "0", 
-                            "max": "100"
-                        }
-                    ),
-                )
+                if not key in banned["tendencies"]:
+                    self.fields[key] = forms.IntegerField(
+                        label=key,
+                        initial=value,
+                        widget=forms.NumberInput(
+                            attrs={
+                                "style": "font-size: 0.8rem;",
+                                "data_type": "tendency",
+                                "data-original": value,
+                                "class": "tendency-value text-light border-0 bg-transparent p-0 m-0 text-body",
+                                "min": "0", 
+                                "max": "100"
+                            }
+                        ),
+                    )
                 # fmt: on

@@ -57,7 +57,7 @@ class UpgradeForm(forms.Form):
         banned = {
             "attributes": attribute.physical_attributes + ["Intangibles"],
             "badges": [],
-            "tendencies": ["Touches"],
+            "tendencies": ["Touches", "Foul", "Hard Foul"],
         }
         super().__init__(*args, **kwargs)
 

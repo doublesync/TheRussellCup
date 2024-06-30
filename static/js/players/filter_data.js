@@ -19,13 +19,14 @@ const hide_map = {
     'show_playmaking_badges': 'Playmaking',
     'show_defensive_badges': 'Defensive',
     // Tendencies
-    'show_finishing_tendencies': 'Finishing',
-    'show_shooting_tendencies': 'Shooting',
-    'show_playmaking_tendencies': 'Playmaking',
-    'show_defensive_tendencies': 'Defensive',
-    'show_isolation_tendencies': 'Isolation',
-    'show_post_tendencies': 'Post',
+    'show_jumpshooting_tendencies': 'Jump Shooting',
+    'show_layupdunk_tendencies': 'Layups & Dunks',
+    'show_drivesetup_tendencies': 'Drive Setup',
+    'show_driving_tendencies': 'Driving',
+    'show_passing_tendencies': 'Passing',
+    'show_postgame_tendencies': 'Post Game',
     'show_freelance_tendencies': 'Freelance',
+    'show_defense_tendencies': 'Defense',
 }
 
 shown_attributes.forEach((element) => {

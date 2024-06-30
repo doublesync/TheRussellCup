@@ -240,8 +240,11 @@ def purchase_modification(request, id):
     if mod.item in existing_mods:
         return HttpResponse("❌ You already own this modification")
     # Purchase the modification
+    if player.modifications:
+        player.modifications[mod.item] = True
+    else:
+        player.modifications = {mod.item: True}
     user.xp -= mod.xp_price
-    player.modifications[mod.item] = True
     player.save()
     user.save()
     # Return a success message

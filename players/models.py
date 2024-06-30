@@ -56,6 +56,7 @@ class Player(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     # Miscanellous fields
     retired = models.BooleanField(default=False)
+    on_roster = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"

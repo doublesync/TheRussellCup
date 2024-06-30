@@ -245,6 +245,7 @@ def purchase_modification(request, id):
     else:
         player.modifications = {mod.item: True}
     user.xp -= mod.xp_price
+    player.xp_spent += mod.xp_price
     player.save()
     user.save()
     # Return a success message

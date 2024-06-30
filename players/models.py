@@ -57,6 +57,7 @@ class Player(models.Model):
     # Miscanellous fields
     retired = models.BooleanField(default=False)
     on_roster = models.BooleanField(default=False)
+    modifications = models.JSONField(default=default.default_modifications, null=True, blank=True)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
@@ -73,5 +74,17 @@ class Player(models.Model):
         # Call the parent save method
         super(Player, self).save(*args, **kwargs)
 
+
+class Modification(models.Model):
+
+    # User defined fields
+    item = models.CharField(max_length=64)
+    xp_price = models.IntegerField()
+    expired = models.BooleanField(default=False)
+    # Timestamp fields
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.item} - {self.xp_price} XP"
 
 # fmt:on

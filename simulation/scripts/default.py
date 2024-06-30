@@ -550,3 +550,8 @@ def default_tendencies():
         "No Driving Dribble Move": 50,
         "Attack Strong On Drive": 50
     }
+
+
+# Callable for modifications
+def default_modifications():
+    return {}

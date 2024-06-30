@@ -1,7 +1,7 @@
 # Python imports
+from collections import namedtuple
 import json
 import types
-from collections import namedtuple
 
 # Django imports
 from django.contrib.auth.decorators import login_required
@@ -19,7 +19,7 @@ from django.views.generic.base import View
 from django.views.generic.list import ListView
 
 # Local imports
-from players.models import Player
+from players.models import Player, Modification
 from players.forms import PlayerForm, UpgradeForm
 import simulation.create as create
 import simulation.upgrade as upgrade
@@ -207,3 +207,42 @@ class EditAppearanceView(View):
         # Redirect to the player page
         # HX-REDIRECT
         return HttpResponse("Successful! Redirecting...", headers={"HX-Redirect": f"/players/player/{player.id}/"})
+
+
+# This is a class based view that will render the modifications list
+class ModificationsListView(ListView):
+
+    model = Player
+    template_name = "players/modifications_list.html"
+    context_object_name = "modifications"
+    paginate_by = 10
+
+    def get_context_data(self, **kwargs):
+        kwargs["players"] = Player.objects.filter(user=self.request.user)
+        return super().get_context_data(**kwargs)
+
+    def get_queryset(self):
+        return Modification.objects.filter(expired=False).order_by("created")
+    
+# This is a function based view that will allow the user to purchase a modification
+def purchase_modification(request, id):
+    # Get the modification
+    user = request.user
+    mod = Modification.objects.get(pk=id)
+    player_id = request.POST.get("mod-player")
+    player = Player.objects.get(pk=player_id)
+    existing_mods = player.modifications
+    # Validate some conditions
+    if player.user != user: 
+        return None
+    if user.xp < mod.xp_price:
+        return HttpResponse("❌ You do not have enough XP to purchase this modification")
+    if mod.item in existing_mods:
+        return HttpResponse("❌ You already own this modification")
+    # Purchase the modification
+    user.xp -= mod.xp_price
+    player.modifications[mod.item] = True
+    player.save()
+    user.save()
+    # Return a success message
+    return HttpResponse("✅ Modification purchased successfully")

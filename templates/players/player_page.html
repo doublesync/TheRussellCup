@@ -79,6 +79,16 @@
                             <a href="{% url 'user' player.user.id %}">{{ player.user.username }}</a>
                         </li>
                         <li class="list-group-item">
+                            <small style="display: block;"><i class="fa-solid fa-gear"></i> Modifications</small>
+                            {% for mod in player.modifications %}
+                                {% if forloop.last %}
+                                    {{ mod }}
+                                {% else %}
+                                    {{ mod }},
+                                {% endif %}
+                            {% endfor %}
+                        </li>
+                        <li class="list-group-item">
                             <small style="display: block;" for="upgrade_notes"><i class="fa-solid fa-chess-rook"></i> Plan</small>
                             <small id="upgrade_notes_status">No notes exist.</small>
                             <input type="hidden" id="player_id" value="{{ player.id }}">

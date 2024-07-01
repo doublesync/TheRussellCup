@@ -119,20 +119,13 @@
                                     <div class="card-header text-center">Pay User</div>
                                     <div class="card-body">
                                         <div lass="d-flex flex-column justify-content-center align-items-center">
-                                            <input type="number" name="pay-amount" class="form-control text-light" placeholder="Choose amount"/>
-                                            <select name="pay-currency" class="form-control text-light" placeholder="Currency">
+                                            <input type="number" name="pay-amount" class="form-control text-light" placeholder="Choose amount" required/>
+                                            <select name="pay-currency" class="form-control text-light" placeholder="Currency" required>
                                                 <option class="text-dark" value="SP" selected>Skill Points</option>
                                                 <option class="text-dark" value="XP">Experience Points</option>
                                             </select>
-                                            <select name="pay-reason" class="form-control text-light" placeholder="Reason for payment">
-                                                <option class="text-dark" value="media" selected>Media Job</option>
-                                                <option class="text-dark" value="coach">Coach Pay</option>
-                                                <option class="text-dark" value="website">Website Pay</option>
-                                                <option class="text-dark" value="promo">Promo Pay</option>
-                                                <option class="text-dark" value="other">Other Pay</option>
-                                                <option class="text-dark" value="refund">Refund</option>
-                                            </select>
-                                            <select name="pay-type" class="form-control text-light" placeholder="Type of payment">
+                                            <input name="pay-reason" class="form control text-light" placeholder="Enter payment reason..." required/>
+                                            <select name="pay-type" class="form-control text-light" placeholder="Type of payment" required>
                                                 <option class="text-dark" value="add" selected>Add</option>
                                                 <option class="text-dark" value="take">Take</option>
                                             </select>

@@ -14,6 +14,31 @@
         </div>
         <div class="row gx-5 gy-5">
             <div class="col-md-12">
+                <h3>Vitals</h3>
+                <ul class="list-style-none">
+                    <li>Set name to {{ log.player.first_name }} {{ log.player.last_name }}</li>
+                    <li>Set number to #{{ log.player.number }}</li>
+                    <li>Set nickname to none</li>
+                </ul>
+                <h3 for="body-list" class="form-label">Body</h3>
+                <ul id="body-list" class="list-style-none">
+                    <li>Set weight to {{ log.player.height_imperial }}</li>
+                    <li>Set weight to {{ log.player.weight }}lbs</li>
+                    <li>Set wingspan to {{ log.player.wingspan }}/100</li>
+                    <li>Remove player's nickname</li>
+                </ul>
+                <h3 for="signature-list" class="form-label">Signature</h3>
+                <ul id="signature-list" class="list-style-none">
+                    <li>{{ log.player.jumpshot }} Base</li>
+                    <li>{{ log.player.jumpshot_release_1 }} Release 1</li>
+                    <li>{{ log.player.jumpshot_release_2 }} Release 2</li>
+                    <li>{{ log.player.jumpshot_blending }}% Blending</li>
+                </ul>
+            </div>
+        </div>
+        <hr>
+        <div class="row gx-5 gy-5">
+            <div class="col-md-12">
                 <table class="table table-striped">
                     <thead>
                         <tr>

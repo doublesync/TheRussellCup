@@ -115,5 +115,9 @@ tendency_price = 25
 
 # A function to check the price of a tendency
 def check_tendency_price(start_level, end_level):
-    cost = abs(end_level - start_level) * tendency_price
+    cost = 0
+    if end_level < start_level:
+        cost = abs(end_level - start_level) * (tendency_price / 5)
+    else:
+        cost = abs(end_level - start_level) * tendency_price
     return cost

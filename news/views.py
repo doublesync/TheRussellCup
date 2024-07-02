@@ -28,7 +28,7 @@ def post(request, id):
 # A view to get all posts
 def posts(request):
     # Get all posts (pagination is not implemented yet)
-    posts = Post.objects.all()
+    posts = Post.objects.all().order_by("-created")
     # Render posts
     return render(request, "news/posts.html", {"posts": posts})
 

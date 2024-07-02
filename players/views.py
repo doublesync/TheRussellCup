@@ -237,7 +237,7 @@ def purchase_modification(request, id):
         return None
     if user.xp < mod.xp_price:
         return HttpResponse("❌ You do not have enough XP to purchase this modification")
-    if mod.item in existing_mods:
+    if existing_mods and mod.item in existing_mods:
         return HttpResponse("❌ You already own this modification")
     # Purchase the modification
     if player.modifications:

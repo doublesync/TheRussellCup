@@ -15,6 +15,7 @@ from teams.models import Team
 class Game(models.Model):
 
     # Defined fields
+    game_type = models.CharField(max_length=100)
     winner = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="winner", blank=True, null=True)
     home_team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="home_team")
     away_team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="away_team")
@@ -37,10 +38,11 @@ class Game(models.Model):
         self.winner = self.get_winner()
         super(Game, self).save(*args, **kwargs)
 
-
 class TeamGameStats(models.Model):
 
     # Defined fields
+    team = models.ForeignKey(Team, on_delete=models.CASCADE)
+    game = models.ForeignKey(Game, on_delete=models.CASCADE)
     points = models.IntegerField()
     field_goals_made = models.IntegerField()
     field_goals_attempted = models.IntegerField()

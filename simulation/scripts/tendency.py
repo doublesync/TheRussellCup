@@ -112,12 +112,13 @@ tendency_categories = {
 
 # A dictionary that contains the prices of tendencies
 tendency_price = 25
+tendency_lower_price = 5
 
 # A function to check the price of a tendency
 def check_tendency_price(start_level, end_level):
     cost = 0
     if end_level < start_level:
-        cost = abs(end_level - start_level) * (tendency_price / 5)
+        cost = abs(end_level - start_level) * tendency_lower_price
     else:
         cost = abs(end_level - start_level) * tendency_price
     return cost

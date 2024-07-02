@@ -11,6 +11,7 @@ urlpatterns = [
     path("news/", include("news.urls")),
     path("logs/", include("logs.urls")),
     path("stafftools/", include("stafftools.urls")),
+    path("stats/", include("stats.urls")),
     path("", include("pages.urls")),
     
 ]

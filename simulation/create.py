@@ -41,8 +41,11 @@ class PlayerCreator:
             if (country_length > 32) or (college_length > 32):
                 return "Country and college names must be less than 32 characters."
 
+        def validate_toggle_creation():
+            return "Player creation is currently disabled."
+
         # List of validators
-        validators = [validate_max_players, validate_background]
+        validators = [validate_max_players, validate_background, validate_toggle_creation]
         # Run validators
         for validator in validators:
             validation = validator()

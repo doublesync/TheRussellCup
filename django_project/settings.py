@@ -56,7 +56,6 @@ INSTALLED_APPS = [
     "crispy_bootstrap5",
     "debug_toolbar",
     "django_extensions",
-    "admin_searchable_dropdown",
     # Local
     "accounts",
     "pages",

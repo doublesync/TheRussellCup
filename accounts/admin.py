@@ -10,7 +10,7 @@ class CustomUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
     model = CustomUser
-    list_display = ['email', 'username', 'can_pay_players', 'can_mark_upgrades']
+    list_display = ['username', 'can_pay_players', 'can_mark_upgrades']
     fieldsets = UserAdmin.fieldsets + (
         ('Custom Fields', {'fields': ('can_pay_players', 'can_mark_upgrades')}),
     )

@@ -40,6 +40,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = [
+    "unfold",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -55,6 +56,7 @@ INSTALLED_APPS = [
     "crispy_bootstrap5",
     "debug_toolbar",
     "django_extensions",
+    "admin_searchable_dropdown",
     # Local
     "accounts",
     "pages",

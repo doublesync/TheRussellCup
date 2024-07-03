@@ -32,7 +32,7 @@ class Game(models.Model):
             return self.away_team
 
     def __str__(self):
-        return f"{self.home_team} vs. {self.away_team} | {self.home_team_score} - {self.away_team_score}"
+        return f"S{self.season}, W{self.week} | ({self.home_team_score}) {self.home_team} vs. ({self.home_team_score}) {self.away_team} |"
         
     def save(self, *args, **kwargs):
         self.winner = self.get_winner()

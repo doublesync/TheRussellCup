@@ -23,6 +23,7 @@ class Game(models.Model):
     away_team_score = models.IntegerField()
     season = models.IntegerField()
     week = models.IntegerField()
+    surge_game = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
 
     def get_winner(self):

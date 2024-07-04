@@ -13,6 +13,17 @@ from teams.models import Team
 
 
 # Create your models here.
+
+class Season(models.Model):
+    
+    # Defined fields
+    season = models.IntegerField()
+    start_date = models.DateField()
+    end_date = models.DateField(blank=True, null=True)
+
+    def __str__(self):
+        return f"Season {self.season} | {self.start_date} - {self.end_date}"
+
 class Game(models.Model):
 
     # Defined fields

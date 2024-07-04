@@ -111,7 +111,7 @@ tendency_categories = {
 }
 
 # A dictionary that contains the prices of tendencies
-tendency_price = 25
+tendency_price = 5
 tendency_lower_price = 5
 
 # A function to check the price of a tendency

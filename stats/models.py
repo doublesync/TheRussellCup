@@ -7,6 +7,7 @@ from django.db import models
 
 
 # Local imports
+import simulation.scripts.default as default
 from players.models import Player
 from teams.models import Team
 
@@ -15,7 +16,7 @@ from teams.models import Team
 class Game(models.Model):
 
     # Defined fields
-    game_type = models.CharField(max_length=100)
+    game_type = models.CharField(max_length=100, choices=[(game_type, game_type) for game_type in default.game_type_choices])
     winner = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="winner", blank=True, null=True)
     home_team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="home_team")
     away_team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="away_team")

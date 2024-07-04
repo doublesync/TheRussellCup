@@ -319,7 +319,7 @@ college_choices = [
     "Xavier University",
     "Yale University",
 ]
-
+game_type_choices = ["Regular Season", "Playoff Game", "All-Star Game", "Preseason Game", "Olympic Game", "Showcase Game"]
 
 # Callable for attributes
 def default_attributes():

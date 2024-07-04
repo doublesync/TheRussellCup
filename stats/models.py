@@ -16,15 +16,15 @@ from teams.models import Team
 class Game(models.Model):
 
     # Defined fields
+    surge_game = models.BooleanField(default=False)
     game_type = models.CharField(max_length=100, choices=[(game_type, game_type) for game_type in default.game_type_choices])
-    winner = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="winner", blank=True, null=True)
-    home_team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="home_team")
-    away_team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="away_team")
-    home_team_score = models.IntegerField()
-    away_team_score = models.IntegerField()
     season = models.IntegerField()
     week = models.IntegerField()
-    surge_game = models.BooleanField(default=False)
+    home_team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="home_team")
+    home_team_score = models.IntegerField()
+    away_team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="away_team")
+    away_team_score = models.IntegerField()
+    winner = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="winner", blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
 
     def get_winner(self):

@@ -45,7 +45,6 @@ class TeamGameStats(models.Model):
     # Defined fields
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
-    points = models.IntegerField()
     field_goals_made = models.IntegerField()
     field_goals_attempted = models.IntegerField()
     three_pointers_made = models.IntegerField()

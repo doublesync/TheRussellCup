@@ -22,14 +22,14 @@ class Season(models.Model):
     end_date = models.DateField(blank=True, null=True)
 
     def __str__(self):
-        return f"Season {self.season} | {self.start_date} - {self.end_date}"
+        return f"S{self.season}"
 
 class Game(models.Model):
 
     # Defined fields
     surge_game = models.BooleanField(default=False)
     game_type = models.CharField(max_length=100, choices=[(game_type, game_type) for game_type in default.game_type_choices])
-    season = models.IntegerField()
+    season = models.ForeignKey(Season, on_delete=models.CASCADE)
     week = models.IntegerField()
     home_team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="home_team")
     home_team_score = models.IntegerField()
@@ -45,7 +45,7 @@ class Game(models.Model):
             return self.away_team
 
     def __str__(self):
-        return f"S{self.season}, W{self.week} | {self.home_team} vs. {self.away_team} |"
+        return f"{self.season}, W{self.week} | {self.home_team} vs. {self.away_team} |"
         
     def save(self, *args, **kwargs):
         self.winner = self.get_winner()

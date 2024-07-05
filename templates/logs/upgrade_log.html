@@ -66,10 +66,10 @@
                 <table class="table table-striped">
                     <thead>
                         <tr>
+                            <th><i class="fa-solid fa-box"></i> Category</th>
                             <th><i class="fa-solid fa-arrow-up-1-9"></i> Attribute</th>
+                            <th><i class="fa-solid fa-cart-shopping"></i> Changes</th>
                             <th><i class="fa-solid fa-coins"></i> Price (SP)</th>
-                            <th><i class="fa-solid fa-cart-shopping"></i> Start</th>
-                            <th><i class="fa-solid fa-cart-shopping"></i> New</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -78,8 +78,8 @@
                             <tr>
                                 <td>{{ category }}</td>
                                 <td>{{ attribute }}</td>
-                                <td>{{ data.price }}</td>
                                 <td>{{ data.start }} <i class="fa-solid fa-arrow-right"></i> {{ data.new }}</td>
+                                <td>{{ data.price }}</td>
                             </tr>
                             {% endfor %}
                         {% endfor %}

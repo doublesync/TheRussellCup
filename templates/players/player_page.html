@@ -113,7 +113,7 @@
                         <div class="col-md-3 mt-4">
                             <div class="card">
                                 <!-- Pay this player form -->
-                                <form id="pay-user-form">
+                                <form id="pay-user-form" class="p-3">
                                     {% csrf_token %}
                                     <input type="hidden" id="player-id" value="{{ player.id }}">
                                     <div class="card-header text-center">Pay User</div>

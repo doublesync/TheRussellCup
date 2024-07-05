@@ -11,6 +11,8 @@ CONFIG_SEASON = {
     "CURRENT_SEASON": 1,
     "MAX_SP_WEEK": 90,
     "MAX_SP_SEASON": 1620,
+    "CHECKIN_SP": 25,
+    "CHECKIN_XP": 75,
 }
 
 # Player configuration

@@ -7,6 +7,7 @@ from django.shortcuts import render
 from accounts.models import CustomUser
 from logs.models import PaymentLog
 from players.models import Player
+from simulation.payment import Payment
 
 # Create your views here.
 @login_required
@@ -24,18 +25,10 @@ def pay_user(request, id):
         # Update the player's balance
         if amount and currency == "SP":
             amount = int(amount) if _type == "add" else (0 - abs(int(amount)))
-            player.user.sp += amount
         if amount and currency == "XP":
             amount = int(amount) if _type == "add" else (0 - abs(int(amount)))
-            player.user.xp += amount
-        player.user.save()
-        # Create the payment log
-        PaymentLog.objects.create(
-            staff=request.user,
-            player=player,
-            payment=amount,
-            reason=reason,
-            type=currency,
-        )
+        # Create the payment
+        payment = Payment(request.user, player, amount, reason)
+        response = payment.pay_sp() if currency == "SP" else payment.pay_xp()
         # Return the response
-        return HttpResponse("✅ Payment successful.")
+        return HttpResponse(response)

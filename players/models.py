@@ -52,6 +52,7 @@ class Player(models.Model):
     # Foreign key fields
     user = models.ForeignKey("accounts.CustomUser", on_delete=models.CASCADE, null=True, blank=True)
     team = models.ForeignKey("teams.Team", on_delete=models.CASCADE, null=True, blank=True)
+    contract = models.ForeignKey("logs.ContractLog", on_delete=models.CASCADE, null=True, blank=True, related_name="contract")
     # Timestamp fields
     created = models.DateTimeField(auto_now_add=True)
     # Miscanellous fields

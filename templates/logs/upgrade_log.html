@@ -10,6 +10,7 @@
             <div class="col-md-12">
                 <h1>Upgrade Log #{{ log.id }}</h1>
                 <a href="{% url 'view_logs' log.player.id %}" class="btn btn-sm btn-info"><i class="fa-solid fa-arrow-left"></i> Back to Logs</a>
+                <a href="{% url 'incomplete_logs' %} class="btn btn-sm btn-info"><i class="fa-solid fa-arrow-left"></i> Back to Incomplete Logs</a>
             </div>
         </div>
         <div class="row gx-5 gy-5">

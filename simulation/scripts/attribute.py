@@ -13,41 +13,39 @@ physical_attributes = [
 
 # Attribute categories
 attribute_categories = {
-    "Shooting": [
+    "Offense": [
+        "Driving Layup",
         "Post Fade",
         "Post Hook",
         "Post Moves",
+        "Draw Foul",
+        "Close Shot",
         "Midrange Shot",
         "3pt Shot",
         "Free Throw",
-        "Offensive Consistency",
-    ],
-    "Playmaking": [
         "Ball Control",
         "Passing IQ",
         "Pass Accuracy",
+        "Offensive Rebound",
+        "Standing Dunk",
+        "Driving Dunk",
         "Shot IQ",
         "Passing Vision",
         "Hands",
     ],
-    "Finishing": [
-        "Draw Foul",
-        "Driving Layup",
-        "Close Shot",
-        "Standing Dunk",
-        "Driving Dunk",
-    ],
-    "Defensive": [
-        "Offensive Rebound",
+    "Defense": [
         "Defensive Rebound",
         "Interior Defense",
         "Perimeter Defense",
         "Block",
         "Steal",
-        "Hustle",
+        "Hustle", 
+    ],
+    "Mental": [
         "Pass Perception",
         "Defensive Consistency",
         "Help Defense IQ",
+        "Offensive Consistency",
     ],
     "Physical": physical_attributes,
 }

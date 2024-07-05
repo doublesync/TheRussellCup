@@ -8,16 +8,17 @@ const tendency_list = document.getElementById('tendency_list');
 
 const hide_map = {
     // Attributes
-    'show_finishing_attributes': 'Finishing',
-    'show_shooting_attributes': 'Shooting',
-    'show_playmaking_attributes': 'Playmaking',
-    'show_defensive_attributes': 'Defensive',
+    'show_offense_attributes': 'Offense',
+    'show_defense_attributes': 'Defense',
+    'show_mental_attributes': 'Mental',
     'show_physical_attributes': 'Physical',
     // Badges
-    'show_finishing_badges': 'Finishing',
-    'show_shooting_badges': 'Shooting',
+    'show_inside_scoring_badges': 'Inside Scoring',
+    'show_outside_scoring_badges': 'Outside Scoring',
     'show_playmaking_badges': 'Playmaking',
-    'show_defensive_badges': 'Defensive',
+    'show_defense_badges': 'Defense',
+    'show_athleticism_badges': 'Athleticism',
+    'show_rebounding_badges': 'Rebounding',
     // Tendencies
     'show_jumpshooting_tendencies': 'Jump Shooting',
     'show_layupdunk_tendencies': 'Layups & Dunks',

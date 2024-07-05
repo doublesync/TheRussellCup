@@ -61,7 +61,7 @@ class IncompleteLogs(View):
         if not request.user.can_mark_upgrades:
             return render(request, template_name="500.html", context={"reason": "You do not have permission to view this page."})
         # Get all of the logs that aren't completed
-        upgrade_logs = UpgradeLog.objects.filter(complete=False)
+        upgrade_logs = UpgradeLog.objects.filter(complete=False).order_by("player__team")
         return render(request, template_name="logs/incomplete_logs.html", context={"upgrade_logs": upgrade_logs})
     
 # A function based view that will mark an upgrade as complete

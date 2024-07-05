@@ -10,6 +10,7 @@
             <div class="col-md-12">
                 <h1>Upgrade Log #{{ log.id }}</h1>
                 <a href="{% url 'view_logs' log.player.id %}" class="btn btn-sm btn-info"><i class="fa-solid fa-arrow-left"></i> Back to Logs</a>
+                <a href="{% url 'incomplete_logs' %}" class="btn btn-sm btn-info"><i class="fa-solid fa-arrow-left"></i> Back to Incomplete Logs</a>
             </div>
         </div>
         <div class="row gx-5 gy-5">
@@ -34,6 +35,7 @@
                     <li>{{ log.player.jumpshot_release_1 }} Release 1</li>
                     <li>{{ log.player.jumpshot_release_2 }} Release 2</li>
                     <li>{{ log.player.jumpshot_blending }}% Blending</li>
+                    <li>{{ log.player.jumpshot_timing }} Timing</li>
                     <li>{{ log.player.jumpshot_free_throw }} Free Throw</li>
                 </ul>
             </div>
@@ -64,10 +66,10 @@
                 <table class="table table-striped">
                     <thead>
                         <tr>
+                            <th><i class="fa-solid fa-box"></i> Category</th>
                             <th><i class="fa-solid fa-arrow-up-1-9"></i> Attribute</th>
+                            <th><i class="fa-solid fa-cart-shopping"></i> Changes</th>
                             <th><i class="fa-solid fa-coins"></i> Price (SP)</th>
-                            <th><i class="fa-solid fa-cart-shopping"></i> Start</th>
-                            <th><i class="fa-solid fa-cart-shopping"></i> New</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -76,8 +78,8 @@
                             <tr>
                                 <td>{{ category }}</td>
                                 <td>{{ attribute }}</td>
-                                <td>{{ data.price }}</td>
                                 <td>{{ data.start }} <i class="fa-solid fa-arrow-right"></i> {{ data.new }}</td>
+                                <td>{{ data.price }}</td>
                             </tr>
                             {% endfor %}
                         {% endfor %}
@@ -90,10 +92,10 @@
                 <table class="table table-striped">
                     <thead>
                         <tr>
+                            <th><i class="fa-solid fa-box"></i> Category</th>
                             <th><i class="fa-solid fa-arrow-up-1-9"></i> Badge</th>
+                            <th><i class="fa-solid fa-cart-shopping"></i> Changes</th>
                             <th><i class="fa-solid fa-coins"></i> Price (SP)</th>
-                            <th><i class="fa-solid fa-cart-shopping"></i> Start</th>
-                            <th><i class="fa-solid fa-cart-shopping"></i> New</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -102,8 +104,8 @@
                             <tr>
                                 <td>{{ category }}</td>
                                 <td>{{ badge }}</td>
-                                <td>{{ data.price }}</td>
                                 <td>{{ data.start }} <i class="fa-solid fa-arrow-right"></i> {{ data.new }}</td>
+                                <td>{{ data.price }}</td>
                             </tr>
                             {% endfor %}
                         {% endfor %}

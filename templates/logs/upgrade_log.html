@@ -9,8 +9,8 @@
         <div class="row gx-5 gy-5 mb-4">
             <div class="col-md-12">
                 <h1>Upgrade Log #{{ log.id }}</h1>
-                <a href="{% url 'view_logs' log.player.id %}" class="btn btn-sm btn-info"><i class="fa-solid fa-arrow-left"></i> Back to Logs</a>
-                <a href="{% url 'incomplete_logs' %}" class="btn btn-sm btn-info"><i class="fa-solid fa-arrow-left"></i> Back to Incomplete Logs</a>
+                <a href="{% url 'view_logs' log.player.id %}" class="btn btn-sm btn-info"><i class="fa-solid fa-arrow-left"></i> Player Logs</a>
+                <a href="{% url 'incomplete_logs' %}" class="btn btn-sm btn-info"><i class="fa-solid fa-arrow-left"></i> Incomplete Logs</a>
             </div>
         </div>
         <div class="row gx-5 gy-5">
@@ -43,101 +43,142 @@
         <hr>
         <div class="row gx-5 gy-5">
             <div class="col-md-12">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th><i class="fa-solid fa-coins"></i> Total (SP)</th>
-                            <th><i class="fa-solid fa-coins"></i> Total (XP)</th>
-                            <th><i class="fa-solid fa-calendar"></i> Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>{{ log.total_sp }} SP</td>
-                            <td>{{ log.total_xp }} XP</td>
-                            <td>{{ log.created }}</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="table-responsive table table-striped">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th><i class="fa-solid fa-coins"></i> Total (SP)</th>
+                                <th><i class="fa-solid fa-coins"></i> Total (XP)</th>
+                                <th><i class="fa-solid fa-calendar"></i> Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{ log.total_sp }} SP</td>
+                                <td>{{ log.total_xp }} XP</td>
+                                <td>{{ log.created }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
             <!-- Attributes -->
             <div class="col-md-6">
                 <h2>Attributes</h2>
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th><i class="fa-solid fa-box"></i> Category</th>
-                            <th><i class="fa-solid fa-arrow-up-1-9"></i> Attribute</th>
-                            <th><i class="fa-solid fa-cart-shopping"></i> Changes</th>
-                            <th><i class="fa-solid fa-coins"></i> Price (SP)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for category, data in log.upgrades.attributes.items %}
-                            {% for attribute, data in data.items %}
+                <div class="table-responsive table table-striped">
+                    <table class="table table-striped">
+                        <thead>
                             <tr>
-                                <td>{{ category }}</td>
-                                <td>{{ attribute }}</td>
-                                <td>{{ data.start }} <i class="fa-solid fa-arrow-right"></i> {{ data.new }}</td>
-                                <td>{{ data.price }}</td>
+                                <th><i class="fa-solid fa-box"></i> Category</th>
+                                <th><i class="fa-solid fa-arrow-up-1-9"></i> Attribute</th>
+                                <th><i class="fa-solid fa-cart-shopping"></i> Update</th>
+                                <th><i class="fa-solid fa-coins"></i> Price (SP)</th>
                             </tr>
+                        </thead>
+                        <tbody>
+                            {% for category, data in log.upgrades.attributes.items %}
+                                {% for attribute, data in data.items %}
+                                <tr>
+                                    <td>{{ category }}</td>
+                                    <td>{{ attribute }}</td>
+                                    <td class="fw-bold text-success"><i class="fa-solid fa-level-up"></i> {{ data.new }}</td>
+                                    <td>{{ data.price }}</td>
+                                </tr>
+                                {% endfor %}
                             {% endfor %}
-                        {% endfor %}
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </div>
             <!-- Badges -->
             <div class="col-md-6">
                 <h2>Badges</h2>
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th><i class="fa-solid fa-box"></i> Category</th>
-                            <th><i class="fa-solid fa-arrow-up-1-9"></i> Badge</th>
-                            <th><i class="fa-solid fa-cart-shopping"></i> Changes</th>
-                            <th><i class="fa-solid fa-coins"></i> Price (SP)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for category, data in log.upgrades.badges.items %}
-                            {% for badge, data in data.items %}
+                <div class="table-responsive table table-striped">
+                    <table class="table table-striped">
+                        <thead>
                             <tr>
-                                <td>{{ category }}</td>
-                                <td>{{ badge }}</td>
-                                <td>{{ data.start }} <i class="fa-solid fa-arrow-right"></i> {{ data.new }}</td>
-                                <td>{{ data.price }}</td>
+                                <th><i class="fa-solid fa-box"></i> Category</th>
+                                <th><i class="fa-solid fa-arrow-up-1-9"></i> Badge</th>
+                                <th><i class="fa-solid fa-cart-shopping"></i> Update</th>
+                                <th><i class="fa-solid fa-coins"></i> Price (SP)</th>
                             </tr>
+                        </thead>
+                        <tbody>
+                            {% for category, data in log.upgrades.badges.items %}
+                                {% for badge, data in data.items %}
+                                <tr>
+                                    <td>{{ category }}</td>
+                                    <td>{{ badge }}</td>
+                                    <td class="fw-bold text-success"><i class="fa-solid fa-level-up"></i> {{ data.new }}</td>
+                                    <td>{{ data.price }}</td>
+                                </tr>
+                                {% endfor %}
                             {% endfor %}
-                        {% endfor %}
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </div>
             <!-- Tendencies -->
             <div class="col-12">
                 <h2>Tendencies</h2>
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th><i class="fa-solid fa-list"></i> Category</th>
-                            <th><i class="fa-solid fa-arrow-up-1-9"></i> Tendency</th>
-                            <th><i class="fa-solid fa-coins"></i> Price (XP)</th>
-                            <th><i class="fa-solid fa-cart-shopping"></i> Change</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for category, data in log.upgrades.tendencies.items %}
-                            {% for tendency, data in data.items %}
+                <div class="table-responsive table table-striped">
+                    <table class="table table-striped">
+                        <thead>
                             <tr>
-                                <td>{{ category }}</td>
-                                <td>{{ tendency }}</td>
-                                <td>{{ data.price }}</td>
-                                <td>{{ data.start }} <i class="fa-solid fa-arrow-right"></i> {{ data.new }}</td>
+                                <th><i class="fa-solid fa-list"></i> Category</th>
+                                <th><i class="fa-solid fa-arrow-up-1-9"></i> Tendency</th>
+                                <th><i class="fa-solid fa-cart-shopping"></i> Update</th>
+                                <th><i class="fa-solid fa-coins"></i> Price (XP)</th>
                             </tr>
+                        </thead>
+                        <tbody>
+                            {% for category, data in log.upgrades.tendencies.items %}
+                                {% for tendency, data in data.items %}
+                                <tr>
+                                    <td>{{ category }}</td>
+                                    <td>{{ tendency }}</td>
+                                    <td class="fw-bold text-success"><i class="fa-solid fa-level-up"></i> {{ data.new }}</td>
+                                    <td>{{ data.price }}</td>
+                                </tr>
+                                {% endfor %}
                             {% endfor %}
-                        {% endfor %}
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </div>
+
+            <!-- Mark upgrade complete -->
+            {% if not log.complete %}
+                {% if user.can_mark_upgrades %}
+                <div class="mt-1 mb-5">
+                    <!-- A confirmation modal -->
+                    <form>
+                        {% csrf_token %}
+                        <div class="modal fade" id="markUpgradeCompleteModal" tabindex="-1" aria-labelledby="markUpgradeCompleteModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="markUpgradeCompleteModalLabel">Mark Upgrade Complete</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Are you sure you want to mark this upgrade as complete?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal">Close</button>
+                                        <a class="btn btn-sm btn-success" data-bs-dismiss="modal" hx-post="{% url 'mark_upgrade_complete' log.id %}" hx-trigger="click throttle:1s" hx-target="#marked-status" hx-swap="log_{{ log.id }}"><i class="fa-solid fa-check"></i> Mark Complete</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- The open modal button -->
+                    <div class="col-md-12" id="marked-status">
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#markUpgradeCompleteModal"><i class="fa-solid fa-check"></i> Mark Upgrade Complete</button>
+                    </div>
+                </div>
+                {% endif %}
+            {% endif %}
         </div>
     </div>
 {% endblock %}

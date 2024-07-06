@@ -38,14 +38,10 @@ def view_logs(request, id):
 def upgrade_log(request, id):
     # Get the upgrade log
     log = UpgradeLog.objects.get(id=id)
-    # Get the categories for the attributes, badges, and tendencies
-    attribute_categories = attribute.attribute_categories
-    badge_categories = badge.badge_categories
-    tendency_categories = tendency.tendency_categories
     # Let's order the attributes, badges, and tendencies by their categories
-    log.upgrades["attributes"] = {category: {attribute: log.upgrades["attributes"][attribute] for attribute in log.upgrades["attributes"] if attribute in attribute_categories[category]} for category in attribute_categories}
-    log.upgrades["badges"] = {category: {badge: log.upgrades["badges"][badge] for badge in log.upgrades["badges"] if badge in badge_categories[category]} for category in badge_categories}
-    log.upgrades["tendencies"] = {category: {tendency: log.upgrades["tendencies"][tendency] for tendency in log.upgrades["tendencies"] if tendency in tendency_categories[category]} for category in tendency_categories}
+    log.upgrades["attributes"] = attribute.order_attributes(log.upgrades["attributes"])
+    log.upgrades["badges"] = badge.order_badges(log.upgrades["badges"])
+    log.upgrades["tendencies"] = tendency.order_tendencies(log.upgrades["tendencies"])
     # Render the upgrade log
     return render(request, template_name="logs/upgrade_log.html", context={"log": log})
     

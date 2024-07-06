@@ -72,3 +72,13 @@ def check_attribute_price(start_level, end_level):
             if i in price_range:
                 cost += attribute_prices[price_range]
     return cost
+
+def order_attributes(attributes):
+    # Order the attributes by their categories
+    ordered_attributes = {}
+    for category in attribute_categories:
+        ordered_attributes[category] = {}
+        for attribute in attribute_categories[category]:
+            if attribute in attributes:
+                ordered_attributes[category][attribute] = attributes[attribute]
+    return ordered_attributes

@@ -122,3 +122,16 @@ def check_tendency_price(start_level, end_level):
     else:
         cost = abs(end_level - start_level) * tendency_price
     return cost
+
+import json
+
+def order_tendencies(tendencies):
+    # Order the tendencies by their categories
+    ordered_tendencies = {}
+    for category in tendency_categories:
+        ordered_tendencies[category] = {}
+        for tendency in tendency_categories[category]:
+            if tendency in tendencies:
+                ordered_tendencies[category][tendency] = tendencies[tendency]
+    print(json.dumps(ordered_tendencies, indent=4))
+    return ordered_tendencies

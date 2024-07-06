@@ -112,3 +112,13 @@ def check_badge_price(start_level, end_level):
 # Checks if a player is eligible for a badge at a certain level and returns the result
 def eligible_for_badge(player, badge, badge_level):
     return True
+
+def order_badges(badges):
+    # Order the badges by their categories
+    ordered_badges = {}
+    for category in badge_categories:
+        ordered_badges[category] = {}
+        for badge in badge_categories[category]:
+            if badge in badges:
+                ordered_badges[category][badge] = badges[badge]
+    return ordered_badges

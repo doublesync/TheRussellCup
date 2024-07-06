@@ -133,5 +133,4 @@ def order_tendencies(tendencies):
         for tendency in tendency_categories[category]:
             if tendency in tendencies:
                 ordered_tendencies[category][tendency] = tendencies[tendency]
-    print(json.dumps(ordered_tendencies, indent=4))
     return ordered_tendencies

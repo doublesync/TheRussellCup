@@ -19,8 +19,8 @@ def view_logs(request, id):
     current_week = config.CONFIG_SEASON["CURRENT_WEEK"]
     current_season = config.CONFIG_SEASON["CURRENT_SEASON"]
     upgrade_logs = UpgradeLog.objects.filter(player=player, week=current_week, season=current_season)
-    payment_logs = PaymentLog.objects.filter(player=player, week=current_week, season=current_season, type="SP")
-    payment_sum_week = payment_logs.aggregate(models.Sum("payment"))["payment__sum"]
+    payment_logs = PaymentLog.objects.filter(player=player, season=current_season, type="SP").order_by("-created")
+    payment_sum_season = payment_logs.aggregate(models.Sum("payment"))["payment__sum"]
     return render(request, template_name="logs/view_logs.html", context={
         "player": player, 
         "upgrade_logs": upgrade_logs, 
@@ -28,8 +28,7 @@ def view_logs(request, id):
         "payment_data": {
             "current_week": current_week,
             "current_season": current_season,
-            "payment_sum_week": payment_sum_week,
-            "max_sp_week": config.CONFIG_SEASON["MAX_SP_WEEK"],
+            "payment_sum_season": payment_sum_season,
             "max_sp_season": config.CONFIG_SEASON["MAX_SP_SEASON"],
         }
     })

@@ -19,18 +19,13 @@ class Payment:
         self.bypass = bypass
 
     def exceeds_limit(self, adding_amount):
-        # Filter payments for the current season and week and sum them
+        # Filter payments for the current season (only) and sum them up
         total_payment = PaymentLog.objects.filter(
             player=self.receiver, 
             season=config.CONFIG_SEASON["CURRENT_SEASON"],
-            week=config.CONFIG_SEASON["CURRENT_WEEK"],
             type="SP").aggregate(models.Sum("payment"))["payment__sum"] or 0
         # Check if the total payment plus the adding amount would surpass the maximum allowed
-        if (total_payment + adding_amount) > config.CONFIG_SEASON["MAX_SP_WEEK"]:
-            # This could be used to convert exceeding SP to XP
-            # difference = (total_payment + adding_amount) - config.CONFIG_SEASON["MAX_SP_WEEK"]
-            # self.amount = adding_amount - difference
-            # self.receiver.user.xp += (self.amount + round(self.amount * 0.70))
+        if (total_payment + adding_amount) > config.CONFIG_SEASON["MAX_SP_SEASON"]:
             return True
         # Return False if the payment would not surpass the maximum
         return False
@@ -38,7 +33,7 @@ class Payment:
     def pay_sp(self):
         # Validate the payment amount
         if self.exceeds_limit(self.amount):
-            return "❌ Payment would surpass the maximum allowed for the week."
+            return "❌ Payment would surpass the maximum allowed for the season."
         # Create the payment log
         PaymentLog.objects.create(
             staff=self.payer, 

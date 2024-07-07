@@ -151,27 +151,6 @@
             {% if not log.complete %}
                 {% if user.can_mark_upgrades %}
                 <div class="mt-1 mb-5">
-                    <!-- A confirmation modal -->
-                    <form>
-                        {% csrf_token %}
-                        <div class="modal fade" id="markUpgradeCompleteModal" tabindex="-1" aria-labelledby="markUpgradeCompleteModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="markUpgradeCompleteModalLabel">Mark Upgrade Complete</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        Are you sure you want to mark this upgrade as complete?
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal">Close</button>
-                                        <a class="btn btn-sm btn-success" data-bs-dismiss="modal" hx-post="{% url 'mark_upgrade_complete' log.id %}" hx-trigger="click throttle:1s" hx-target="#marked-status" hx-swap="log_{{ log.id }}"><i class="fa-solid fa-check"></i> Mark Complete</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
                     <!-- The open modal button -->
                     <div class="col-md-12" id="marked-status">
                         <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#markUpgradeCompleteModal"><i class="fa-solid fa-check"></i> Mark Upgrade Complete</button>
@@ -181,4 +160,28 @@
             {% endif %}
         </div>
     </div>
+{% endblock %}
+
+{% block modals %}
+<!-- A confirmation modal -->
+<form>
+    {% csrf_token %}
+    <div class="modal fade" id="markUpgradeCompleteModal" tabindex="-1" aria-labelledby="markUpgradeCompleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="markUpgradeCompleteModalLabel">Mark Upgrade Complete</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to mark this upgrade as complete?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-danger" data-bs-dismiss="modal">Close</button>
+                    <a class="btn btn-sm btn-success" data-bs-dismiss="modal" hx-post="{% url 'mark_upgrade_complete' log.id %}" hx-trigger="click throttle:1s" hx-target="#marked-status" hx-swap="log_{{ log.id }}"><i class="fa-solid fa-check"></i> Mark Complete</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
 {% endblock %}

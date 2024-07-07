@@ -13,8 +13,12 @@
                 </div>
                 <div class="card-body">
                     <p>Hey, {{ user.username }}!</p>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><a href="{% url 'draft_page' 1 %}" class="btn btn-sm btn-dark"><i class="fa-solid fa-arrow-right"></i> S1 Draft Hub</a></li>
+                    <ul>
+                        <form>
+                            {% csrf_token %}
+                            <li id="claim-status" class="list-group-item mt-2"><a href="#" class="text-decoration-none" hx-trigger="click throttle:1s" hx-target="#claim-status" hx-swap="innerHTML" hx-post="{% url 'claim_contracts' %}"><i class="fa-solid fa-file-contract"></i> Claim Contracts</a></li>
+                            <li class="list-group-item mt-2"><a href="{% url 'draft_page' 1 %}" class="text-decoration-none"><i class="fa-solid fa-award"></i> Draft Results</a></li>
+                        </form>
                     </ul>
                 </div>
                 <div class="card-footer p-3">

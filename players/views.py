@@ -27,6 +27,7 @@ import simulation.webhook as webhook
 import simulation.scripts.attribute as attribute
 import simulation.scripts.badge as badge
 import simulation.scripts.tendency as tendency
+import simulation.payment as payment
 
 
 # This is a class based view that will render the form to create a player

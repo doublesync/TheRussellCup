@@ -5,4 +5,7 @@ from django.urls import path
 from accounts import views
 
 # Create your urls here.
-urlpatterns = [path("profile/<int:id>/", views.user, name="user")]
+urlpatterns = [
+    path("profile/<int:id>/", views.user, name="user"),
+    path("user/contracts/claim/", views.claim_contracts, name="claim_contracts")
+]

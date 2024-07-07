@@ -27,6 +27,10 @@ class Payment:
             type="SP").aggregate(models.Sum("payment"))["payment__sum"] or 0
         # Check if the total payment plus the adding amount would surpass the maximum allowed
         if (total_payment + adding_amount) > config.CONFIG_SEASON["MAX_SP_WEEK"]:
+            # This could be used to convert exceeding SP to XP
+            # difference = (total_payment + adding_amount) - config.CONFIG_SEASON["MAX_SP_WEEK"]
+            # self.amount = adding_amount - difference
+            # self.receiver.user.xp += (self.amount + round(self.amount * 0.70))
             return True
         # Return False if the payment would not surpass the maximum
         return False
@@ -69,11 +73,13 @@ def pay_contracts(user):
     # Get the user's players
     players = user.player_set.all()
     current_week = config.CONFIG_SEASON["CURRENT_WEEK"]
+    players_paid = []
     # Loop through the players
     if players:
         for player in players:
             if player.contract:
                 if player.contract.weeks_paid and (str(current_week) in player.contract.weeks_paid):
+                    # If we allow multiple players, we'll need to change this to a list
                     return "❌ Players have already been paid for this week."
                 else:
                     # Pay the player
@@ -88,5 +94,6 @@ def pay_contracts(user):
                     else:
                         player.contract.weeks_paid = {current_week: True}
                     player.contract.save()
-    # Return True since the players were paid
-    return True
+                    players_paid.append(player)
+    # Return success message since the payment was successful
+    return f"✅ Players paid: {', '.join([player.name for player in players_paid])}."

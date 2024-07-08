@@ -87,7 +87,7 @@ class PlayerGameStats(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
     player = models.ForeignKey(Player, on_delete=models.CASCADE)
     minutes = models.IntegerField()
-    points = models.IntegerField()
+    points = models.IntegerField(help_text="Automatically calculated field")
     rebounds = models.IntegerField()
     assists = models.IntegerField()
     steals = models.IntegerField()
@@ -100,12 +100,12 @@ class PlayerGameStats(models.Model):
     free_throws_made = models.IntegerField()
     free_throws_attempted = models.IntegerField()
     offensive_rebounds = models.IntegerField()
-    defensive_rebounds = models.IntegerField(default=0)
     personal_fouls = models.IntegerField()
     plus_minus = models.IntegerField()
     points_responsible_for = models.IntegerField()
     dunks = models.IntegerField()
     created = models.DateTimeField(auto_now_add=True)
+    defensive_rebounds = models.IntegerField(default=0, help_text="Automatically calculated field")
 
     def __str__(self):
         return f"{self.player} Game {self.game} Stats"

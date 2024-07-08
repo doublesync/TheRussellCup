@@ -85,6 +85,7 @@ class PlayerGameStats(models.Model):
 
     # Defined fields
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
+    team = models.ForeignKey(Team, on_delete=models.CASCADE)
     player = models.ForeignKey(Player, on_delete=models.CASCADE)
     minutes = models.IntegerField()
     points = models.IntegerField(help_text="Automatically calculated field")
@@ -110,6 +111,10 @@ class PlayerGameStats(models.Model):
     def __str__(self):
         return f"{self.player} Game {self.game} Stats"
     
+    def set_team(self):
+        self.team = self.player.team
+        self.save()
+
     def save(self, *args, **kwargs):
         self.points = (self.field_goals_made * 2) + (self.three_pointers_made) + (self.free_throws_made)
         self.defensive_rebounds = (self.rebounds - self.offensive_rebounds)

@@ -45,7 +45,7 @@ class PlayerCreator:
             return "Player creation is currently disabled."
 
         # List of validators
-        validators = [validate_max_players, validate_background]
+        validators = [validate_max_players, validate_background, validate_toggle_creation]
         # Run validators
         for validator in validators:
             validation = validator()

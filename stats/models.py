@@ -112,8 +112,9 @@ class PlayerGameStats(models.Model):
         return f"{self.player} Game {self.game} Stats"
     
     def set_team(self):
-        self.team = self.player.team
-        self.save()
+        if self.player.team:
+            self.team = self.player.team
+            self.save()
 
     def save(self, *args, **kwargs):
         self.points = (self.field_goals_made * 2) + (self.three_pointers_made) + (self.free_throws_made)

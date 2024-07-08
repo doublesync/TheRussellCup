@@ -15,16 +15,15 @@ class StatFinder:
 
     def __init__(self, week=current_week, season=current_season, fetch_all_season=False, fetch_all_time=False):
         if fetch_all_season:
-            self.games = Game.objects.filter(season=season)
+            self.games = Game.get_cached_queryset(filter_kwargs={"season": season})
         elif fetch_all_time:
-            self.games = Game.objects.all()
+            self.games = Game.get_cached_queryset()
         else:
-            self.games = Game.objects.filter(week=week, season=season)
+            self.games = Game.get_cached_queryset(filter_kwargs={"week": week, "season": season})
 
     def player_averages(self, player, team=None):
-        player_box_scores = PlayerGameStats.objects.filter(player=player)
-        cache.set(key="player_averages", value=player_box_scores, timeout=3600)
-        return player_box_scores.aggregate(
+        player_box_scores = PlayerGameStats.get_cached_queryset(filter_kwargs={"player": player})
+        aggregates = player_box_scores.aggregate(
             models.Avg("minutes"),
             models.Avg("points"), 
             models.Avg("rebounds"), 
@@ -45,11 +44,15 @@ class StatFinder:
             models.Avg("points_responsible_for"),
             models.Avg("dunks"),
         )
+        # Calculate shooting percentages
+        aggregates["field_goal_percentage"] = (aggregates["field_goals_made__avg"] / aggregates["field_goals_attempted__avg"])
+        aggregates["three_point_percentage"] = (aggregates["three_pointers_made__avg"] / aggregates["three_pointers_attempted__avg"])
+        aggregates["free_throw_percentage"] = (aggregates["free_throws_made__avg"] / aggregates["free_throws_attempted__avg"])
+        return aggregates
     
     def team_averages(self, team):
-        team_box_scores = TeamGameStats.objects.filter(team=team)
-        cache.set(key="team_averages", value=team_box_scores, timeout=3600)
-        return team_box_scores.aggregate(
+        team_box_scores = TeamGameStats.get_cached_queryset(filter_kwargs={"team": team})
+        aggregates = team_box_scores.aggregate(
             models.Avg("field_goals_made"), 
             models.Avg("field_goals_attempted"),
             models.Avg("three_pointers_made"),
@@ -72,10 +75,14 @@ class StatFinder:
             models.Avg("biggest_lead"),
             models.Avg("time_of_possession"),
         )
+        # Calculate shooting percentages
+        aggregates["field_goal_percentage"] = (aggregates["field_goals_made__avg"] / aggregates["field_goals_attempted__avg"])
+        aggregates["three_point_percentage"] = (aggregates["three_pointers_made__avg"] / aggregates["three_pointers_attempted__avg"])
+        aggregates["free_throw_percentage"] = (aggregates["free_throws_made__avg"] / aggregates["free_throws_attempted__avg"])
+        return aggregates
     
     def player_totals(self, player, team=None):
-        player_box_scores = PlayerGameStats.objects.filter(player=player)
-        cache.set(key="player_totals", value=player_box_scores, timeout=3600)
+        player_box_scores = PlayerGameStats.get_cached_queryset(filter_kwargs={"player": player})
         return player_box_scores.aggregate(
             models.Sum("minutes"),
             models.Sum("points"), 
@@ -99,8 +106,7 @@ class StatFinder:
         )
     
     def team_totals(self, team):
-        team_box_scores = TeamGameStats.objects.filter(team=team)
-        cache.set(key="team_totals", value=team_box_scores, timeout=3600)
+        team_box_scores = TeamGameStats.get_cached_queryset(filter_kwargs={"team": team})
         return team_box_scores.aggregate(
             models.Sum("field_goals_made"), 
             models.Sum("field_goals_attempted"),
@@ -123,5 +129,4 @@ class StatFinder:
             models.Sum("dunks"),
             models.Sum("biggest_lead"),
             models.Sum("time_of_possession"),
-        )
-    
+        ) 

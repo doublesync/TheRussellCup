@@ -1,10 +1,10 @@
 # Python imports
-
+import hashlib
 
 # Django imports
-from typing import Iterable
 from django.db import models
-
+from django.core.cache import cache
+from django.utils.functional import cached_property
 
 # Local imports
 import simulation.scripts.default as default
@@ -44,6 +44,34 @@ class Game(models.Model):
         elif self.away_team_score > self.home_team_score:
             return self.away_team
 
+    @cached_property
+    def cached_data(self):
+        cache_key = f'game_{self.id}'
+        game = cache.get(cache_key)
+        if game is None:
+            game = self
+            cache.set(cache_key, game, timeout=900)
+        return game
+
+    @classmethod
+    def get_cached_queryset(cls, filter_kwargs=None, cache_key=None, timeout=60*15):
+        if filter_kwargs is None:
+            filter_kwargs = {}
+
+        if cache_key is None:
+            cache_key = f"games_{hash(frozenset(filter_kwargs.items()))}"
+
+        pks = cache.get(cache_key)
+        if pks is None:
+            queryset = cls.objects.filter(**filter_kwargs)
+            pks = list(queryset.values_list('pk', flat=True))
+            cache.set(cache_key, pks, timeout)
+
+        # Reconstruct the queryset from the primary keys
+        queryset = cls.objects.filter(pk__in=pks)
+
+        return queryset
+        
     def __str__(self):
         return f"{self.season}, W{self.week} | {self.home_team} vs. {self.away_team} |"
         
@@ -78,6 +106,34 @@ class TeamGameStats(models.Model):
     biggest_lead = models.IntegerField()
     time_of_possession = models.DurationField()
 
+    @cached_property
+    def cached_data(self):
+        cache_key = f'teamgamestat_{self.id}'
+        game_stat = cache.get(cache_key)
+        if game_stat is None:
+            game_stat = self
+            cache.set(cache_key, game_stat, timeout=900)  # Cache for 15 minutes
+        return game_stat
+
+    @classmethod
+    def get_cached_queryset(cls, filter_kwargs=None, cache_key=None, timeout=60*15):
+        if filter_kwargs is None:
+            filter_kwargs = {}
+
+        if cache_key is None:
+            cache_key = f"teamgamestats_{hash(frozenset(filter_kwargs.items()))}"
+
+        pks = cache.get(cache_key)
+        if pks is None:
+            queryset = cls.objects.filter(**filter_kwargs)
+            pks = list(queryset.values_list('pk', flat=True))
+            cache.set(cache_key, pks, timeout)
+
+        # Reconstruct the queryset from the primary keys
+        queryset = cls.objects.filter(pk__in=pks)
+
+        return queryset
+
     def __str__(self):
         return f"{self.team} Game Stats"
 
@@ -107,6 +163,34 @@ class PlayerGameStats(models.Model):
     dunks = models.IntegerField()
     created = models.DateTimeField(auto_now_add=True)
     defensive_rebounds = models.IntegerField(default=0, help_text="Automatically calculated field")
+
+    @cached_property
+    def cached_data(self):
+        cache_key = f'playergamestat_{self.id}'
+        game_stat = cache.get(cache_key)
+        if game_stat is None:
+            game_stat = self
+            cache.set(cache_key, game_stat, timeout=900)  # Cache for 15 minutes
+        return game_stat
+    
+    @classmethod
+    def get_cached_queryset(cls, filter_kwargs=None, cache_key=None, timeout=60*15):
+        if filter_kwargs is None:
+            filter_kwargs = {}
+
+        if cache_key is None:
+            cache_key = f"playergamestats_{hash(frozenset(filter_kwargs.items()))}"
+
+        pks = cache.get(cache_key)
+        if pks is None:
+            queryset = cls.objects.filter(**filter_kwargs)
+            pks = list(queryset.values_list('pk', flat=True))
+            cache.set(cache_key, pks, timeout)
+
+        # Reconstruct the queryset from the primary keys
+        queryset = cls.objects.filter(pk__in=pks)
+
+        return queryset
 
     def __str__(self):
         return f"{self.player} Game {self.game} Stats"

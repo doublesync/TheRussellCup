@@ -6,11 +6,13 @@ from django.shortcuts import render
 
 # Local imports
 from teams.models import Team, Draft, DraftPick, DraftOrder
+import simulation.config as config
 
 # Create your views here.
 def team_page(request, id):
     team = Team.objects.get(pk=id)
-    return render(request, "teams/team_page.html", {"team": team})
+    current_week = config.CONFIG_SEASON["CURRENT_WEEK"]
+    return render(request, "teams/team_page.html", {"team": team, "current_week": current_week})
 
 def team_list(request):
     teams = Team.objects.all()

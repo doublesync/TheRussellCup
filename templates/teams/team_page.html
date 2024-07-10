@@ -39,6 +39,7 @@
                                 <td>No</td>
                             {% else %}
                                 <td>Yes</td>
+                            {% endif %}
                             {% if player.user.is_staff %}
                                 <td><i class="fa-solid fa-lock"></i> <a style="height: 100%; width: 100%;" href="{% url 'player_page' player.id %}">{{ player.first_name }} {{ player.last_name }}</a></td>
                             {% else %}

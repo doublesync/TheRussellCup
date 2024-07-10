@@ -35,7 +35,7 @@
                         {% else %}
                             <tr>
                         {% endif %}
-                            {% if current_week not in player.contract.weeks_paid %}
+                            {% if current_week|str not in player.contract.weeks_paid %}
                                 <td>No</td>
                             {% else %}
                                 <td>Yes</td>

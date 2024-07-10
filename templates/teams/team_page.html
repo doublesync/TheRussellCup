@@ -1,4 +1,5 @@
 {% extends '_base.html' %}
+{% load style_filters %}
 
 {% block title %}{{ team.name }}{% endblock %}
 
@@ -36,7 +37,7 @@
                         {% else %}
                             <tr>
                         {% endif %}
-                            {% if current_week|str not in player.contract.weeks_paid %}
+                            {% if current_week|stringify not in player.contract.weeks_paid %}
                                 <td>No</td>
                             {% else %}
                                 <td>Yes</td>

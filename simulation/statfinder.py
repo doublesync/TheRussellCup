@@ -60,6 +60,7 @@ class StatFinder:
         aggregates["field_goal_percentage"] = self.safe_division(fgm, fga)
         aggregates["three_point_percentage"] = self.safe_division(tpm, tpa)
         aggregates["free_throw_percentage"] = self.safe_division(ftm, fta)
+        aggregates["games"] = player_box_scores.count()
         return aggregates
     
     def team_averages(self, team):
@@ -94,6 +95,7 @@ class StatFinder:
         aggregates["field_goal_percentage"] = self.safe_division(fgm, fga)
         aggregates["three_point_percentage"] = self.safe_division(tpm, tpa)
         aggregates["free_throw_percentage"] = self.safe_division(ftm, fta)
+        aggregates["games"] = team_box_scores.count()
         return aggregates
     
     def player_totals(self, player, team=None):

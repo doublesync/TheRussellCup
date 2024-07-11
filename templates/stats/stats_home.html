@@ -9,6 +9,7 @@
             <thead>
                 <tr>
                     <th><i class="fas fa-user"></i> Player</th>
+                    <th>GP</th>
                     <th>PPG</th>
                     <th>RPG</th>
                     <th>APG</th>
@@ -28,8 +29,10 @@
             </thead>
             <tbody class="table table-dark table-hover">
                 {% for id, player in players.items %}
+                {% if player.games > 0 %}
                     <tr>
                         <td><a href="{% url 'player_page' id %}">{{ player.full_name }}</a></td>
+                        <td>{{ player.games }}</td>
                         <td>{{ player.points__avg}}</td>
                         <td>{{ player.rebounds__avg }}</td>
                         <td>{{ player.assists__avg }}</td>
@@ -47,6 +50,7 @@
                         <td>{{ player.points_responsible_for__avg }}</td>
                         <td>{{ player.dunks__avg }}</td>
                     </tr>
+                {% endif %}
                 {% endfor %}
             </tbody>
         </div>

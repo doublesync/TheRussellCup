@@ -21,6 +21,15 @@ class StatFinder:
         else:
             self.games = Game.get_cached_queryset(filter_kwargs={"week": week, "season": season})
 
+    def safe_division(self, numerator, denominator):
+        try:
+            if denominator != 0:
+                return round((numerator / denominator), 2)
+            else:
+                return 0
+        except:
+            return 0
+
     def player_averages(self, player, team=None):
         player_box_scores = PlayerGameStats.get_cached_queryset(filter_kwargs={"player": player})
         aggregates = player_box_scores.aggregate(
@@ -45,9 +54,12 @@ class StatFinder:
             models.Avg("dunks"),
         )
         # Calculate shooting percentages
-        aggregates["field_goal_percentage"] = (aggregates["field_goals_made__avg"] / aggregates["field_goals_attempted__avg"])
-        aggregates["three_point_percentage"] = (aggregates["three_pointers_made__avg"] / aggregates["three_pointers_attempted__avg"])
-        aggregates["free_throw_percentage"] = (aggregates["free_throws_made__avg"] / aggregates["free_throws_attempted__avg"])
+        fgm, fga = aggregates["field_goals_made__avg"], aggregates["field_goals_attempted__avg"]
+        tpm, tpa = aggregates["three_pointers_made__avg"], aggregates["three_pointers_attempted__avg"]
+        ftm, fta = aggregates["free_throws_made__avg"], aggregates["free_throws_attempted__avg"]
+        aggregates["field_goal_percentage"] = self.safe_division(fgm, fga)
+        aggregates["three_point_percentage"] = self.safe_division(tpm, tpa)
+        aggregates["free_throw_percentage"] = self.safe_division(ftm, fta)
         return aggregates
     
     def team_averages(self, team):
@@ -76,9 +88,12 @@ class StatFinder:
             models.Avg("time_of_possession"),
         )
         # Calculate shooting percentages
-        aggregates["field_goal_percentage"] = (aggregates["field_goals_made__avg"] / aggregates["field_goals_attempted__avg"])
-        aggregates["three_point_percentage"] = (aggregates["three_pointers_made__avg"] / aggregates["three_pointers_attempted__avg"])
-        aggregates["free_throw_percentage"] = (aggregates["free_throws_made__avg"] / aggregates["free_throws_attempted__avg"])
+        fgm, fga = aggregates["field_goals_made__avg"], aggregates["field_goals_attempted__avg"]
+        tpm, tpa = aggregates["three_pointers_made__avg"], aggregates["three_pointers_attempted__avg"]
+        ftm, fta = aggregates["free_throws_made__avg"], aggregates["free_throws_attempted__avg"]
+        aggregates["field_goal_percentage"] = self.safe_division(fgm, fga)
+        aggregates["three_point_percentage"] = self.safe_division(tpm, tpa)
+        aggregates["free_throw_percentage"] = self.safe_division(ftm, fta)
         return aggregates
     
     def player_totals(self, player, team=None):

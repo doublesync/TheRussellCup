@@ -61,6 +61,11 @@ class StatFinder:
         aggregates["three_point_percentage"] = self.safe_division(tpm, tpa)
         aggregates["free_throw_percentage"] = self.safe_division(ftm, fta)
         aggregates["games"] = player_box_scores.count()
+        # Round all aggregates
+        for key in aggregates:
+            if aggregates[key] and key != "games":
+                aggregates[key] = round(aggregates[key], 2)
+        # If team is provided, calculate team averages
         return aggregates
     
     def team_averages(self, team):
@@ -96,6 +101,11 @@ class StatFinder:
         aggregates["three_point_percentage"] = self.safe_division(tpm, tpa)
         aggregates["free_throw_percentage"] = self.safe_division(ftm, fta)
         aggregates["games"] = team_box_scores.count()
+        # Round all aggregates
+        for key in aggregates:
+            if aggregates[key] and key != "games":
+                aggregates[key] = round(aggregates[key], 2)
+        # If team is provided, calculate team averages
         return aggregates
     
     def player_totals(self, player, team=None):

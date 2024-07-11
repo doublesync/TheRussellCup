@@ -1,0 +1,74 @@
+{% extends '_base.html' %}
+
+{% block title %}Stats Home{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-5 p-5">
+    <div class="table-responsive">
+        <table class="table table-dark table-striped">
+            <thead>
+                <tr>
+                    <th><i class="fas fa-user"></i> Player</th>
+                    <th>PPG</th>
+                    <th>RPG</th>
+                    <th>APG</th>
+                    <th>SPG</th>
+                    <th>BPG</th>
+                    <th>TOV</th>
+                    <th>FG%</th>
+                    <th>3P%</th>
+                    <th>FT%</th>
+                    <th>ORPG</th>
+                    <th>DRPG</th>
+                    <th>FPG</th>
+                    <th>+/-</th>
+                    <th>PRF</th>
+                    <th>DPG</th>
+                </tr>
+            </thead>
+            <tbody class="table table-dark table-hover">
+                {% for id, player in players.items %}
+                    <tr>
+                        <td><a href="{% url 'player_page' id %}">{{ player.full_name }}</a></td>
+                        <td>{{ player.points_per_game__avg}}</td>
+                        <td>{{ player.rebounds_per_game__avg }}</td>
+                        <td>{{ player.assists_per_game__avg }}</td>
+                        <td>{{ player.steals_per_game__avg }}</td>
+                        <td>{{ player.blocks_per_game__avg }}</td>
+                        <td>{{ player.turnovers_per_game__avg }}</td>
+                        <td>{{ player.field_goal_percentage }}</td>
+                        <td>{{ player.three_point_percentage }}</td>
+                        <td>{{ player.free_throw_percentage }}</td>
+                        <td>{{ player.offensive_rebounds__avg }}</td>
+                        <td>{{ player.defensive_rebounds__avg }}</td>
+                        <td>{{ player.fouls_per_game__avg }}</td>
+                        <td>{{ player.personal_fouls__avg }}</td>
+                        <td>{{ player.plus_minus__avg }}</td>
+                        <td>{{ player.points_responsible_for__avg }}</td>
+                        <td>{{ player.dunks__avg }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </div>
+        <!-- <ul class="pagination mt-4">
+            {% if page_obj.has_previous %}
+                <li class="page-item m-1"><a class="btn btn-sm"  hx-post="#?page=1" hx-trigger="click throttle:1s" hx-target="#search-table" hx-swap="innerHTML">First</a></li>
+                <li class="page-item m-1"><a class="btn btn-sm" hx-post="#?page={{ page_obj.previous_page_number }}" hx-trigger="click throttle:1s" hx-target="#search-table" hx-swap="innerHTML">Previous</a></li>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <li class="active m-1"><span class="btn btn-sm btn-primary">{{ num }}</span></li>
+                {% else %}
+                    <li class=" m-1"><a class="btn btn-sm" hx-post="#?page={{ num }}" hx-trigger="click throttle:1s" hx-target="#search-table" hx-swap="innerHTML">{{ num }}</a></li>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <li class="page-item m-1"><a class="btn btn-sm" hx-post="#?page={{ page_obj.next_page_number }}" hx-trigger="click throttle:1s" hx-target="#search-table" hx-swap="innerHTML">Next</a></li>
+                <li class="page-item m-1"><a class="btn btn-sm" hx-post="#?page={{ page_obj.paginator.num_pages }}" hx-trigger="click throttle:1s" hx-target="#search-table" hx-swap="innerHTML">Last</a></li>
+            {% endif %}
+        </ul> -->
+    </div>
+</div>
+{% endblock %}

@@ -30,12 +30,12 @@
                 {% for id, player in players.items %}
                     <tr>
                         <td><a href="{% url 'player_page' id %}">{{ player.full_name }}</a></td>
-                        <td>{{ player.points_per_game__avg}}</td>
-                        <td>{{ player.rebounds_per_game__avg }}</td>
-                        <td>{{ player.assists_per_game__avg }}</td>
-                        <td>{{ player.steals_per_game__avg }}</td>
-                        <td>{{ player.blocks_per_game__avg }}</td>
-                        <td>{{ player.turnovers_per_game__avg }}</td>
+                        <td>{{ player.points__avg}}</td>
+                        <td>{{ player.rebounds__avg }}</td>
+                        <td>{{ player.assists__avg }}</td>
+                        <td>{{ player.steals__avg }}</td>
+                        <td>{{ player.blocks__avg }}</td>
+                        <td>{{ player.turnovers__avg }}</td>
                         <td>{{ player.field_goal_percentage }}</td>
                         <td>{{ player.three_point_percentage }}</td>
                         <td>{{ player.free_throw_percentage }}</td>

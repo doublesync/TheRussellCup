@@ -167,7 +167,14 @@
                         <div id="attribute_list" class="row">
                             {% for k, v in attributes.items %}
                             <div class="col-lg-6" data-category="{{ k|add_attribute_category }}">
-                                <p><span style="{{ v|add_attribute_color }}" class="badge">{{ v }}</span> {{ k|truncatechars:20 }}</p>
+                                <p class="mt-0 mb-0">
+                                {% for key, value in player.coach_suggestion_attributes.items %}
+                                    {% if key == k %}
+                                        <span class="badge bg-light text-dark"><i class="fas fa-tasks"></i> {{ value }}</span>
+                                    {% endif %}
+                                {% endfor %}
+                                <span style="{{ v|add_attribute_color }}" class="badge">{{ v }}</span> {{ k|truncatechars:20 }}
+                                </p>
                             </div>
                             {% endfor %}
                         </div>
@@ -211,7 +218,14 @@
                         <div id="badge_list" class="row">
                             {% for k, v in badges.items %}
                             <div class="col-lg-6" data-category="{{ k|add_badge_category }}">
-                                <p><span style="{{ v|add_badge_color }}" class="badge">{{ v }}</span> {{ k }}</p>
+                                <p class="mt-0 mb-0">
+                                    {% for key, value in player.coach_suggestion_badges.items %}
+                                        {% if key == k %}
+                                            <span class="badge bg-light text-dark"><i class="fas fa-tasks"></i> {{ value }}</span>
+                                        {% endif %}
+                                    {% endfor %}
+                                    <span style="{{ v|add_badge_color }}" class="badge">{{ v }}</span> {{ k }}
+                                </p>
                             </div>
                             {% endfor %}
                         </div>
@@ -264,7 +278,14 @@
                     <div id="tendency_list" class="row">
                         {% for k, v in tendencies.items %}
                         <div class="col-lg-6" data-category="{{ k|add_tendency_category }}">
-                            <p><span style="{{ v|add_attribute_color }}" class="badge">{{ v }}</span> {{ k }}</p>
+                            <p class="mt-0 mb-0">
+                                {% for key, value in player.coach_suggestion_tendencies.items %}
+                                    {% if key == k %}
+                                        <span class="badge bg-light text-dark"><i class="fas fa-tasks"></i> {{ value }}</span>
+                                    {% endif %}
+                                {% endfor %}
+                                <span style="{{ v|add_attribute_color }}" class="badge">{{ v }}</span> {{ k }}
+                            </p>
                         </div>
                         {% endfor %}
                     </div>

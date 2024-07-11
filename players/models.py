@@ -48,6 +48,9 @@ class Player(models.Model):
     attributes = models.JSONField(default=default.default_attributes)
     badges = models.JSONField(default=default.default_badges)
     tendencies = models.JSONField(default=default.default_tendencies, null=True, blank=True)
+    coach_suggestion_attributes = models.JSONField(default=dict)
+    coach_suggestion_badges = models.JSONField(default=dict)
+    coach_suggestion_tendencies = models.JSONField(default=dict)
     sim_rating = models.FloatField(default=0.00)
     # Foreign key fields
     user = models.ForeignKey("accounts.CustomUser", on_delete=models.CASCADE, null=True, blank=True)

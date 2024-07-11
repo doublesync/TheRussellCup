@@ -91,4 +91,4 @@ def pay_contracts(user):
                     player.contract.save()
                     players_paid.append(player)
     # Return success message since the payment was successful
-    return f"✅ Players paid: {', '.join([f"{player.first_name} {player.last_name}" for player in players_paid])}."
+    return f"✅ Players paid: {players_paid}"

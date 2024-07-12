@@ -90,3 +90,10 @@ def convert_position(p):
     }
     if p in positions:
         return positions[p]
+
+@register.filter
+def percentage(value, total):
+    try:
+        return (value / total) * 100
+    except (ValueError, ZeroDivisionError):
+        return 0

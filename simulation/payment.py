@@ -92,3 +92,16 @@ def pay_contracts(user):
                     players_paid.append(player)
     # Return success message since the payment was successful
     return f"✅ Players paid: {players_paid}"
+
+# A method that counts the total salary cap spent for a team
+def get_salary_book(team):
+    # Get the team's players
+    players = team.player_set.all()
+    salary_book = {"total_spent": 0}
+    # Loop through the players
+    for player in players:
+        if player.contract:
+            salary_book[player.id] = player.contract.current_year_payment
+            salary_book["total_spent"] += player.contract.current_year_payment
+    # Return the total spent
+    return salary_book

@@ -3,13 +3,31 @@
 
 {% block title %}{{ team.name }}{% endblock %}
 
+
 {% block content %}
 <div class="container-fluid p-4">
     <a href="{% url 'team_list' %}" class="btn btn-sm btn-info"><i class="fa-solid fa-arrow-left"></i> Back to Teams</a>
     <div class="mt-4">
-        <h1 style="color: {{ team.color }};">{{ team.name }}</h1>
-        <p class="fw-bold">{{ team.city }}</p>
-        <p><span class="fw-bold">Current Week:</span> {{ current_week }}</p>
+        <h1 style="color: {{ team.color }};">{{ team.name|upper }}</h1>
+        <p class="fw-bold">{{ team.city|upper }}</p>
+
+        <div class="card bg-dark text-white">
+            <div class="card-body">
+                <h5 class="card-title">Salary Book</h5>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group list-group-item">
+                        <div>
+                            <div class="border-rounded border border-light p-1" style="height: 35px; width: 30%;">
+                                <div class="progress bg-dark" style="height: 100%; width: 100%;">
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar" style="width: {{ salary_book.total_spent|percentage:1200 }}%;" aria-valuenow="{{ salary_book.total_spent }}" aria-valuemin="0" aria-valuemax="1200"><span class="fw-bold">{{ salary_book.total_spent }}/1200</span></div>
+                                </div>
+                            </div>
+                        <div>
+                    </li>
+                </ul>                    
+            </div>
+        </div>
+
         <hr>
         <div id="roster">
             <h2>Roster</h2>

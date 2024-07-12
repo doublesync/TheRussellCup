@@ -89,7 +89,7 @@ def pay_contracts(user):
                     else:
                         player.contract.weeks_paid = {current_week: True}
                     player.contract.save()
-                    players_paid.append(player)
+                    players_paid.append(f"{player.first_name} {player.last_name}")
     # Return success message since the payment was successful
     return f"✅ Players paid: {players_paid}"
 

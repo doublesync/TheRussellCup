@@ -118,6 +118,16 @@ class UpgradeCreator:
         # Return a success message
         return [True, self.cart]
 
+    def push_upgrades(self, existing_log, data, upgrade_type):
+        for item, data in data.items():
+            item_upgraded = existing_log.upgrades[upgrade_type].get(item)
+            if item_upgraded:
+                item_upgraded["new"] = data["new"]
+                item_upgraded["price"] += data["price"]
+            else:
+                existing_log.upgrades[upgrade_type][item] = data   
+        existing_log.save()
+
     def purchase(self):
         # Format the data
         validate_format = self.format()
@@ -141,7 +151,18 @@ class UpgradeCreator:
             self.user.save()
             self.player.save()
             # Log the upgrades
-            UpgradeLog.objects.create(player=self.player, total_sp=self.cart["total_sp"], total_xp=self.cart["total_xp"], upgrades=self.cart)
+            # Check for existing upgrade log
+            existing_log = UpgradeLog.objects.filter(player=self.player, complete=False).first()
+            if existing_log:
+                # Add the cost of SP & XP to the existing log
+                existing_log.total_sp += self.cart["total_sp"]
+                existing_log.total_xp += self.cart["total_xp"]
+                # Add the upgrades to the existing log
+                self.push_upgrades(existing_log, self.cart["attributes"], "attributes")
+                self.push_upgrades(existing_log, self.cart["badges"], "badges")
+                self.push_upgrades(existing_log, self.cart["tendencies"], "tendencies")
+            else:
+                UpgradeLog.objects.create(player=self.player, total_sp=self.cart["total_sp"], total_xp=self.cart["total_xp"], upgrades=self.cart)
             # Return a success message
             return [True, "Upgrades applied successfully."]
         else:

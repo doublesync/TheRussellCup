@@ -8,6 +8,7 @@
 <div class="container-fluid p-4">
     <a href="{% url 'team_list' %}" class="btn btn-sm btn-info"><i class="fa-solid fa-arrow-left"></i> Back to Teams</a>
     <div class="mt-4">
+
         <h1 style="color: {{ team.color }};">{{ team.name|upper }}</h1>
         <p class="fw-bold">{{ team.city|upper }}</p>
 
@@ -79,6 +80,117 @@
                 </table>
             </div>
         </div>
+
+        <hr>
+
+        <h6>Player Averages</h6>
+        <div class="table-responsive">
+            <table class="table table-dark table-striped">
+                <thead>
+                    <tr>
+                        <th><i class="fas fa-user"></i> Player</th>
+                        <th>GP</th>
+                        <th>PPG</th>
+                        <th>RPG</th>
+                        <th>APG</th>
+                        <th>SPG</th>
+                        <th>BPG</th>
+                        <th>TOV</th>
+                        <th>FG%</th>
+                        <th>3P%</th>
+                        <th>FT%</th>
+                        <th>ORPG</th>
+                        <th>DRPG</th>
+                        <th>FPG</th>
+                        <th>+/-</th>
+                        <th>PRF</th>
+                        <th>DPG</th>
+                    </tr>
+                </thead>
+                <tbody class="table table-dark table-hover">
+                    {% for name, player in team_stats.player_averages.items %}
+                    {% if player.games > 0 %}
+                        <tr>
+                            <td>{{ name }}</td>
+                            <td>{{ player.games }}</td>
+                            <td>{{ player.points__avg}}</td>
+                            <td>{{ player.rebounds__avg }}</td>
+                            <td>{{ player.assists__avg }}</td>
+                            <td>{{ player.steals__avg }}</td>
+                            <td>{{ player.blocks__avg }}</td>
+                            <td>{{ player.turnovers__avg }}</td>
+                            <td>{{ player.field_goal_percentage }}</td>
+                            <td>{{ player.three_point_percentage }}</td>
+                            <td>{{ player.free_throw_percentage }}</td>
+                            <td>{{ player.offensive_rebounds__avg }}</td>
+                            <td>{{ player.defensive_rebounds__avg }}</td>
+                            <td>{{ player.personal_fouls__avg }}</td>
+                            <td>{{ player.plus_minus__avg }}</td>
+                            <td>{{ player.points_responsible_for__avg }}</td>
+                            <td>{{ player.dunks__avg }}</td>
+                        </tr>
+                    {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <hr>
+
+        <h6>Player Totals</h6>
+        <div class="table-responsive">
+            <table class="table table-dark table-striped">
+                <thead>
+                    <tr>
+                        <th><i class="fas fa-user"></i> Player</th>
+                        <th>Points</th>
+                        <th>Rebounds</th>
+                        <th>Assists</th>
+                        <th>Steals</th>
+                        <th>Blocks</th>
+                        <th>Turnovers</th>
+                        <th>FGM</th>
+                        <th>FGA</th>
+                        <th>3PM</th>
+                        <th>3PA</th>
+                        <th>FTM</th>
+                        <th>FTA</th>
+                        <th>OREB</th>
+                        <th>DREB</th>
+                        <th>PF</th>
+                        <th>+/-</th>
+                        <th>PRF</th>
+                        <th>DNK</th>
+                    </tr>
+                </thead>
+                <tbody class="table table-dark table-hover">
+                {% for name, player in team_stats.player_totals.items %}
+                    <tr>
+                        <td>{{ name }}</td>
+                        <td>{{ player.points__sum}}</td>
+                        <td>{{ player.rebounds__sum }}</td>
+                        <td>{{ player.assists__sum }}</td>
+                        <td>{{ player.steals__sum }}</td>
+                        <td>{{ player.blocks__sum }}</td>
+                        <td>{{ player.turnovers__sum }}</td>
+                        <td>{{ player.field_goals_made__sum }}</td>
+                        <td>{{ player.field_goals_attempted__sum }}</td>
+                        <td>{{ player.three_pointers_made__sum }}</td>
+                        <td>{{ player.three_pointers_attempted__sum }}</td>
+                        <td>{{ player.free_throws_made__sum }}</td>
+                        <td>{{ player.free_throws_attempted__sum }}</td>
+                        <td>{{ player.offensive_rebounds__sum }}</td>
+                        <td>{{ player.defensive_rebounds__sum }}</td>
+                        <td>{{ player.personal_fouls__sum }}</td>
+                        <td>{{ player.plus_minus__sum }}</td>
+                        <td>{{ player.points_responsible_for__sum }}</td>
+                        <td>{{ player.dunks__sum }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
     </div>
 </div>
 {% endblock %}

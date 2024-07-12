@@ -19,7 +19,7 @@ def stats_home(request):
     objects = Player.objects.all()
     players = {}
     for player in objects:
-        players[player.id] = statfinder.StatFinder().player_averages(player)
+        players[player.id] = statfinder.StatFinder(fetch_all_season=True).player_averages(player)
         players[player.id]["full_name"] = f"{player.first_name} {player.last_name}"
     return render(request, "stats/stats_home.html", {"players": players})
 

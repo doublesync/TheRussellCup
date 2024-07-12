@@ -11,6 +11,8 @@ from stats.models import Game, TeamGameStats, PlayerGameStats
 current_week = config.CONFIG_SEASON["CURRENT_WEEK"]
 current_season = config.CONFIG_SEASON["CURRENT_SEASON"]
 
+
+# Do the filter queries not work (?)
 class StatFinder:
 
     def __init__(self, week=current_week, season=current_season, fetch_all_season=False, fetch_all_time=False):
@@ -29,6 +31,26 @@ class StatFinder:
                 return 0
         except:
             return 0
+
+    def team_averages_totals(self, team):
+        # Get all the players on the team
+        player_list = team.player_set.all()
+        # Get player averages and totals
+        player_averages = {}
+        player_totals = {}
+        for player in player_list:
+            player_averages[player] = self.player_averages(player)
+            player_totals[player] = self.player_totals(player)
+        # Get team averages and totals
+        team_averages = self.team_averages(team)
+        team_totals = self.team_totals(team)
+        # Return all the data
+        return {
+            "player_averages": player_averages,
+            "player_totals": player_totals,
+            "team_averages": team_averages,
+            "team_totals": team_totals
+        }
 
     def player_averages(self, player, team=None):
         player_box_scores = PlayerGameStats.get_cached_queryset(filter_kwargs={"player": player})
@@ -91,7 +113,6 @@ class StatFinder:
             models.Avg("personal_fouls"),
             models.Avg("dunks"),
             models.Avg("biggest_lead"),
-            models.Avg("time_of_possession"),
         )
         # Calculate shooting percentages
         fgm, fga = aggregates["field_goals_made__avg"], aggregates["field_goals_attempted__avg"]

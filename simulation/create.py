@@ -42,7 +42,7 @@ class PlayerCreator:
                 return "Country and college names must be less than 32 characters."
 
         def validate_toggle_creation():
-            return "Player creation is currently disabled."
+            return None
 
         # List of validators
         validators = [validate_max_players, validate_background, validate_toggle_creation]

@@ -6,10 +6,18 @@ from unfold.admin import ModelAdmin
 from stats.models import Season, Game, TeamGameStats, PlayerGameStats
 
 # Register your models here.
+class GameAdmin(ModelAdmin):
+    search_fields = ['season', 'week', 'home_team', 'away_team']
+    autocomplete_fields = ['home_team', 'away_team']
+    ordering = ['-season', '-week']    
+
+class TeamGameStatsAdmin(ModelAdmin):
+    autocomplete_fields = ['game']
+
 class PlayerGameStatsStatsAdmin(ModelAdmin):
-    autocomplete_fields = ['player']
+    autocomplete_fields = ['game', 'player']
 
 admin.site.register(Season, ModelAdmin)
-admin.site.register(Game, ModelAdmin)
-admin.site.register(TeamGameStats, ModelAdmin)
+admin.site.register(Game, GameAdmin)
+admin.site.register(TeamGameStats, TeamGameStatsAdmin)
 admin.site.register(PlayerGameStats, PlayerGameStatsStatsAdmin)

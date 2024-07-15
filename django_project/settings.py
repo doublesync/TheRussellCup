@@ -36,7 +36,7 @@ DEV_MODE = os.getenv("DEV_MODE", "True") == "True"
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = ['https://localhost:8000']
+CSRF_TRUSTED_ORIGINS = ['https://localhost:8000', 'https://ominous-zebra-qxxwgv6j9v43xj75-8000.app.github.dev/']
 
 # Application definition
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps

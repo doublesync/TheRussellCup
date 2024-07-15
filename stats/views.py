@@ -22,6 +22,3 @@ def stats_home(request):
         players[player.id] = statfinder.StatFinder(fetch_all_season=True).player_averages(player)
         players[player.id]["full_name"] = f"{player.first_name} {player.last_name}"
     return render(request, "stats/stats_home.html", {"players": players})
-
-# def stats_season(request, id):
-#     return HttpResponse(f"S{id} Stats")

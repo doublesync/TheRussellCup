@@ -78,7 +78,6 @@ class Player(models.Model):
         # Call the parent save method
         super(Player, self).save(*args, **kwargs)
 
-
 class Modification(models.Model):
 
     # User defined fields

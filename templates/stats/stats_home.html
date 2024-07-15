@@ -1,77 +1,41 @@
 {% extends '_base.html' %}
+{% load static %}
 
-{% block title %}Stats Home{% endblock %}
+{% block title %}Players{% endblock %}
+
+{% block styles %}
+<style>
+    input::placeholder {
+        color: gray!important;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="container-fluid mt-5 p-5">
-    <div class="table-responsive">
-        <table class="table table-dark table-striped">
-            <thead>
-                <tr>
-                    <th><i class="fas fa-user"></i> Player</th>
-                    <th>GP</th>
-                    <th>PPG</th>
-                    <th>RPG</th>
-                    <th>APG</th>
-                    <th>SPG</th>
-                    <th>BPG</th>
-                    <th>TOV</th>
-                    <th>FG%</th>
-                    <th>3P%</th>
-                    <th>FT%</th>
-                    <th>ORPG</th>
-                    <th>DRPG</th>
-                    <th>FPG</th>
-                    <th>+/-</th>
-                    <th>PRF</th>
-                    <th>DPG</th>
-                </tr>
-            </thead>
-            <tbody class="table table-dark table-hover">
-                {% for id, player in players.items %}
-                {% if player.games > 0 %}
-                    <tr>
-                        <td><a href="{% url 'player_page' id %}">{{ player.full_name }}</a></td>
-                        <td>{{ player.games }}</td>
-                        <td>{{ player.points__avg}}</td>
-                        <td>{{ player.rebounds__avg }}</td>
-                        <td>{{ player.assists__avg }}</td>
-                        <td>{{ player.steals__avg }}</td>
-                        <td>{{ player.blocks__avg }}</td>
-                        <td>{{ player.turnovers__avg }}</td>
-                        <td>{{ player.field_goal_percentage }}</td>
-                        <td>{{ player.three_point_percentage }}</td>
-                        <td>{{ player.free_throw_percentage }}</td>
-                        <td>{{ player.offensive_rebounds__avg }}</td>
-                        <td>{{ player.defensive_rebounds__avg }}</td>
-                        <td>{{ player.personal_fouls__avg }}</td>
-                        <td>{{ player.plus_minus__avg }}</td>
-                        <td>{{ player.points_responsible_for__avg }}</td>
-                        <td>{{ player.dunks__avg }}</td>
-                    </tr>
-                {% endif %}
-                {% endfor %}
-            </tbody>
+<div class="container-fluid p-md-5">
+    <small class="text-muted">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</small>
+    <h1>Player List</h1>
+    <form>
+        {% csrf_token %}
+        <div class="form-group pull-right col-lg-4">
+            <!-- Radio button for asc or desc -->
+            <div id="order-type" name="order-type" class="form-check form-check-sm form-check-inline">
+                <input class="form-check form-check-input" type="radio" name="order" id="asc" value="asc" checked>
+                <label class="form-check form-check-label" for="asc">Ascending</label>
+            </div>
+            <div id="order-type" name="order-type" class="form-check form-check-sm form-check-inline">
+                <input class="form-check form-check-input" type="radio" name="order" id="desc" value="desc">
+                <label class="form-check form-check-label" for="desc">Descending</label>
+            </div>
         </div>
-        <!-- <ul class="pagination mt-4">
-            {% if page_obj.has_previous %}
-                <li class="page-item m-1"><a class="btn btn-sm"  hx-post="#?page=1" hx-trigger="click throttle:1s" hx-target="#search-table" hx-swap="innerHTML">First</a></li>
-                <li class="page-item m-1"><a class="btn btn-sm" hx-post="#?page={{ page_obj.previous_page_number }}" hx-trigger="click throttle:1s" hx-target="#search-table" hx-swap="innerHTML">Previous</a></li>
-            {% endif %}
-
-            {% for num in page_obj.paginator.page_range %}
-                {% if page_obj.number == num %}
-                    <li class="active m-1"><span class="btn btn-sm btn-primary">{{ num }}</span></li>
-                {% else %}
-                    <li class=" m-1"><a class="btn btn-sm" hx-post="#?page={{ num }}" hx-trigger="click throttle:1s" hx-target="#search-table" hx-swap="innerHTML">{{ num }}</a></li>
-                {% endif %}
-            {% endfor %}
-
-            {% if page_obj.has_next %}
-                <li class="page-item m-1"><a class="btn btn-sm" hx-post="#?page={{ page_obj.next_page_number }}" hx-trigger="click throttle:1s" hx-target="#search-table" hx-swap="innerHTML">Next</a></li>
-                <li class="page-item m-1"><a class="btn btn-sm" hx-post="#?page={{ page_obj.paginator.num_pages }}" hx-trigger="click throttle:1s" hx-target="#search-table" hx-swap="innerHTML">Last</a></li>
-            {% endif %}
-        </ul> -->
-    </div>
+        <span class="counter pull-right"></span>
+        <div id="search-table">
+            {% include 'stats/fragments/list_fragment.html' %}
+        </div>
+    </form>
 </div>
+
+{% endblock %}
+
+{% block scripts %}
 {% endblock %}

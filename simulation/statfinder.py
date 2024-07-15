@@ -6,6 +6,7 @@ from django.core.cache import cache
 
 # Local imports
 import simulation.config as config
+from players.models import Player
 from stats.models import Game, TeamGameStats, PlayerGameStats
 
 current_week = config.CONFIG_SEASON["CURRENT_WEEK"]
@@ -51,6 +52,12 @@ class StatFinder:
             "team_averages": team_averages,
             "team_totals": team_totals
         }
+
+    def all_player_averages(self):
+        player_averages = {}
+        for player in Player.objects.all():
+            player_averages[player] = self.player_averages(player)
+        return player_averages
 
     def player_averages(self, player, team=None):
         player_box_scores = PlayerGameStats.get_cached_queryset(filter_kwargs={"player": player})

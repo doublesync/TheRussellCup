@@ -19,12 +19,12 @@
         {% csrf_token %}
         <div class="form-group pull-right col-lg-4">
             <!-- Radio button for asc or desc -->
-            <div id="order-type" name="order-type" class="form-check form-check-sm form-check-inline">
-                <input class="form-check form-check-input" type="radio" name="order" id="asc" value="asc" checked>
+            <div class="form-check form-check-sm form-check-inline">
+                <input class="form-check form-check-input" type="radio" name="order-type" id="asc" value="asc" checked>
                 <label class="form-check form-check-label" for="asc">Ascending</label>
             </div>
-            <div id="order-type" name="order-type" class="form-check form-check-sm form-check-inline">
-                <input class="form-check form-check-input" type="radio" name="order" id="desc" value="desc">
+            <div class="form-check form-check-sm form-check-inline">
+                <input class="form-check form-check-input" type="radio" name="order-type" id="desc" value="desc">
                 <label class="form-check form-check-label" for="desc">Descending</label>
             </div>
         </div>

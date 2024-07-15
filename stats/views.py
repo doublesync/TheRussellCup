@@ -35,6 +35,10 @@ def sort_by_stat(request, stat):
     # Order type can be ascending or descending
     order_type = request.GET.get("order-type")
     reverse_order = True if order_type == "asc" else False
+    # Before sorting, set any None values to 0
+    for player in players:
+        if players[player][stat] is None:
+            players[player][stat] = 0
     sorted_players = {k: v for k, v in sorted(players.items(), key=lambda item: item[1][stat], reverse=reverse_order)}
     # Render to string
     fragment_html = render_to_string("stats/fragments/list_fragment.html", {"players": sorted_players})

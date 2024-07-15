@@ -1,7 +1,6 @@
 # Python imports
 import hashlib
 import datetime
-import pytz
 
 # Django imports
 from django.db import models

@@ -12,11 +12,11 @@ class GameAdmin(ModelAdmin):
     ordering = ['-season', '-week']    
 
 class TeamGameStatsAdmin(ModelAdmin):
-    search_fields = ['game', 'player']
+    search_fields = ['team__city', 'team__name']
     autocomplete_fields = ['game', 'team']
 
 class PlayerGameStatsStatsAdmin(ModelAdmin):
-    search_fields = ['game', 'player']
+    search_fields = ['player__first_name', 'player__last_name']
     autocomplete_fields = ['game', 'player']
 
 admin.site.register(Season, ModelAdmin)

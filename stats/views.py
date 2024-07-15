@@ -45,7 +45,7 @@ def sort_by_stat(request, stat):
             players[player.id]["full_name"] = f"{player.first_name} {player.last_name}"
         # Sort by the stat & make a dictionary of players
         order_type = request.POST.get("order-type")
-        reverse_order = True if order_type == "asc" else False
+        reverse_order = False if order_type == "asc" else True
         # Before sorting, set any None values to 0
         for player in players:
             if players[player][stat] is None:

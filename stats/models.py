@@ -1,11 +1,13 @@
 # Python imports
 import hashlib
 import datetime
+import pytz
 
 # Django imports
 from django.db import models
 from django.core.cache import cache
 from django.utils.functional import cached_property
+from django.utils import timezone
 from django.contrib import messages
 
 # Local imports
@@ -81,14 +83,9 @@ class Game(models.Model):
         # Automatically set the winner of the game
         self.winner = self.get_winner()
         # Prevent non-staff users from saving games that are older than 24 hours
-        if not self.is_staff:
-            if self.created > datetime.datetime.now() - datetime.timedelta(days=1):
-                super(Game, self).save(*args, **kwargs)
-            else:
-                messages.error(self.request, "You cannot save stats for games that are older than 24 hours.")
-        # Allow staff users to save games that are older than 24 hours
-        super(Game, self).save(*args, **kwargs)
-
+        if self.created > timezone.now() - datetime.timedelta(days=1):
+            super(PlayerGameStats, self).save(*args, **kwargs)
+            
 class TeamGameStats(models.Model):
 
     # Defined fields
@@ -150,13 +147,8 @@ class TeamGameStats(models.Model):
     
     def save(self, *args, **kwargs):
         # Prevent non-staff users from saving games that are older than 24 hours
-        if not self.is_staff:
-            if self.created > datetime.datetime.now() - datetime.timedelta(days=1):
-                super(Game, self).save(*args, **kwargs)
-            else:
-                messages.error(self.request, "You cannot save stats for games that are older than 24 hours.")
-        # Allow staff users to save stats that are older than 24 hours
-        super(TeamGameStats, self).save(*args, **kwargs)
+        if self.created > timezone.now() - datetime.timedelta(days=1):
+            super(PlayerGameStats, self).save(*args, **kwargs)
 
 class PlayerGameStats(models.Model):
 
@@ -226,10 +218,5 @@ class PlayerGameStats(models.Model):
         self.points = (self.field_goals_made * 2) + (self.three_pointers_made) + (self.free_throws_made)
         self.defensive_rebounds = (self.rebounds - self.offensive_rebounds)
         # Prevent non-staff users from saving games that are older than 24 hours
-        if not self.is_staff:
-            if self.created > datetime.datetime.now() - datetime.timedelta(days=1):
-                super(Game, self).save(*args, **kwargs)
-            else:
-                messages.error(self.request, "You cannot save stats for games that are older than 24 hours.")
-        # Allow staff users to save games that are older than 24 hours
-        super(PlayerGameStats, self).save(*args, **kwargs)
+        if self.created > timezone.now() - datetime.timedelta(days=1):
+            super(PlayerGameStats, self).save(*args, **kwargs)

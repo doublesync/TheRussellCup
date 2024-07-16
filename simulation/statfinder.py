@@ -212,9 +212,9 @@ class StatFinder:
         aggregates = self.none_to_zero(aggregates)
         return aggregates
     
-    def league_standings(self):
+    def league_standings(self, surge_only=False):
         # Get all the teams and get their totals
-        teams = Team.objects.all()
+        teams = Team.objects.filter(surge=surge_only)
         team_standings = {}
         for team in teams:
             team_standings[team.id] = {

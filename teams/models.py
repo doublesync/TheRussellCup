@@ -32,6 +32,7 @@ class Team(models.Model):
     name = models.CharField(max_length=32)
     city = models.CharField(max_length=32)
     color = models.CharField(max_length=10, default="#434648")
+    surge = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

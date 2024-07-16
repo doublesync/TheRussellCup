@@ -214,7 +214,7 @@ class StatFinder:
     
     def league_standings(self, surge_only=False):
         # Get all the teams and get their totals
-        teams = Team.objects.filter(surge=surge_only)
+        teams = Team.objects.queryset_from_cache({"surge": surge_only})
         team_standings = {}
         for team in teams:
             team_standings[team.id] = {

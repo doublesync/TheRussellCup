@@ -15,8 +15,41 @@ from players.models import Player
 from teams.models import Team
 
 
-# Create your models here.
+# Create your managers here.
+class GameManager(models.Manager):
+    def queryset_from_cache(self, filterdict):
+        cachekey = 'GameCache'
+        res = cache.get(cachekey)
+        if res:
+            return res  # Return only the queryset from cache
+        else:
+            res = Game.objects.filter(**filterdict)
+            cache.set(cachekey, res, 300)  # Five minutes
+            return res
 
+class TeamGameStatsManager(models.Manager):
+    def queryset_from_cache(self, filterdict):
+        cachekey = 'TeamGameStatsCache'
+        res = cache.get(cachekey)
+        if res:
+            return res  # Return only the queryset from cache
+        else:
+            res = TeamGameStats.objects.filter(**filterdict)
+            cache.set(cachekey, res, 300)  # Five minutes
+            return res
+        
+class PlayerGameStatsManager(models.Manager):
+    def queryset_from_cache(self, filterdict):
+        cachekey = 'PlayerGameStatsCache'
+        res = cache.get(cachekey)
+        if res:
+            return res  # Return only the queryset from cache
+        else:
+            res = PlayerGameStats.objects.filter(**filterdict)
+            cache.set(cachekey, res, 300)  # Five minutes
+            return res
+
+# Create your models here.
 class Season(models.Model):
     
     # Defined fields
@@ -28,6 +61,9 @@ class Season(models.Model):
         return f"S{self.season}"
 
 class Game(models.Model):
+
+    # Managers
+    objects = GameManager()
 
     # Defined fields
     surge_game = models.BooleanField(default=False)
@@ -46,34 +82,6 @@ class Game(models.Model):
             return self.home_team
         elif self.away_team_score > self.home_team_score:
             return self.away_team
-
-    @cached_property
-    def cached_data(self):
-        cache_key = f'game_{self.id}'
-        game = cache.get(cache_key)
-        if game is None:
-            game = self
-            cache.set(cache_key, game, timeout=900)
-        return game
-
-    @classmethod
-    def get_cached_queryset(cls, filter_kwargs=None, cache_key=None, timeout=60*15):
-        if filter_kwargs is None:
-            filter_kwargs = {}
-
-        if cache_key is None:
-            cache_key = f"games_{hash(frozenset(filter_kwargs.items()))}"
-
-        pks = cache.get(cache_key)
-        if pks is None:
-            queryset = cls.objects.filter(**filter_kwargs)
-            pks = list(queryset.values_list('pk', flat=True))
-            cache.set(cache_key, pks, timeout)
-
-        # Reconstruct the queryset from the primary keys
-        queryset = cls.objects.filter(pk__in=pks)
-
-        return queryset
         
     def __str__(self):
         return f"{self.season}, W{self.week} | {self.home_team} vs. {self.away_team} |"
@@ -86,6 +94,9 @@ class Game(models.Model):
             super(Game, self).save(*args, **kwargs)
             
 class TeamGameStats(models.Model):
+
+    # Managers
+    objects = TeamGameStatsManager()
 
     # Defined fields
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
@@ -113,36 +124,8 @@ class TeamGameStats(models.Model):
     time_of_possession = models.DurationField()
     created = models.DateTimeField(auto_now_add=True)
 
-    @cached_property
-    def cached_data(self):
-        cache_key = f'teamgamestat_{self.id}'
-        game_stat = cache.get(cache_key)
-        if game_stat is None:
-            game_stat = self
-            cache.set(cache_key, game_stat, timeout=900)  # Cache for 15 minutes
-        return game_stat
-
-    @classmethod
-    def get_cached_queryset(cls, filter_kwargs=None, cache_key=None, timeout=60*15):
-        if filter_kwargs is None:
-            filter_kwargs = {}
-
-        if cache_key is None:
-            cache_key = f"teamgamestats_{hash(frozenset(filter_kwargs.items()))}"
-
-        pks = cache.get(cache_key)
-        if pks is None:
-            queryset = cls.objects.filter(**filter_kwargs)
-            pks = list(queryset.values_list('pk', flat=True))
-            cache.set(cache_key, pks, timeout)
-
-        # Reconstruct the queryset from the primary keys
-        queryset = cls.objects.filter(pk__in=pks)
-
-        return queryset
-
     def __str__(self):
-        return f"{self.team} Game Stats"
+        return f"{self.team} | Game {self.game}"
     
     def save(self, *args, **kwargs):
         # Prevent non-staff users from saving games that are older than 24 hours
@@ -150,6 +133,9 @@ class TeamGameStats(models.Model):
             super(TeamGameStats, self).save(*args, **kwargs)
 
 class PlayerGameStats(models.Model):
+
+    # Managers
+    objects = PlayerGameStatsManager()
 
     # Defined fields
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
@@ -175,34 +161,6 @@ class PlayerGameStats(models.Model):
     dunks = models.IntegerField()
     defensive_rebounds = models.IntegerField(default=0, help_text="Automatically calculated field")
     created = models.DateTimeField(auto_now_add=True)
-
-    @cached_property
-    def cached_data(self):
-        cache_key = f'playergamestat_{self.id}'
-        game_stat = cache.get(cache_key)
-        if game_stat is None:
-            game_stat = self
-            cache.set(cache_key, game_stat, timeout=900)  # Cache for 15 minutes
-        return game_stat
-    
-    @classmethod
-    def get_cached_queryset(cls, filter_kwargs=None, cache_key=None, timeout=60*15):
-        if filter_kwargs is None:
-            filter_kwargs = {}
-
-        if cache_key is None:
-            cache_key = f"playergamestats_{hash(frozenset(filter_kwargs.items()))}"
-
-        pks = cache.get(cache_key)
-        if pks is None:
-            queryset = cls.objects.filter(**filter_kwargs)
-            pks = list(queryset.values_list('pk', flat=True))
-            cache.set(cache_key, pks, timeout)
-
-        # Reconstruct the queryset from the primary keys
-        queryset = cls.objects.filter(pk__in=pks)
-
-        return queryset
 
     def __str__(self):
         return f"{self.player} Game {self.game} Stats"

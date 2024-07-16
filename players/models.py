@@ -2,6 +2,7 @@
 import random
 
 # Django imports
+from django.core.cache import cache
 from django.db import models
 
 # Local imports
@@ -16,9 +17,24 @@ class ChoiceFieldNoValidation(models.CharField):
     def validate(self):
         return
 
+# Create your managers here.
+class PlayerManager(models.Manager):
+    def queryset_from_cache(self, filterdict):
+        cachekey = 'PlayerCache'
+        res = cache.get(cachekey)
+        if res:
+            return res  # Return only the queryset from cache
+        else:
+            res = Player.objects.filter(**filterdict)
+            cache.set(cachekey, res, 300)  # Five minutes
+            return res
+
 # Create your models here.
 class Player(models.Model):
     
+    # Managers
+    objects = PlayerManager()
+
     # User defined fields
     first_name = models.CharField(max_length=16)
     last_name = models.CharField(max_length=16)

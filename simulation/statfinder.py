@@ -7,22 +7,27 @@ from django.core.cache import cache
 # Local imports
 import simulation.config as config
 from players.models import Player
+from teams.models import Team
 from stats.models import Game, TeamGameStats, PlayerGameStats
 
 current_week = config.CONFIG_SEASON["CURRENT_WEEK"]
 current_season = config.CONFIG_SEASON["CURRENT_SEASON"]
 
-
-# Do the filter queries not work (?)
 class StatFinder:
 
     def __init__(self, week=current_week, season=current_season, fetch_all_season=False, fetch_all_time=False):
         if fetch_all_season:
-            self.games = Game.get_cached_queryset(filter_kwargs={"season": season})
+            self.games = Game.objects.queryset_from_cache({"season": season})
         elif fetch_all_time:
-            self.games = Game.get_cached_queryset()
+            self.games = Game.objects.queryset_from_cache({})
         else:
-            self.games = Game.get_cached_queryset(filter_kwargs={"week": week, "season": season})
+            self.games = Game.objects.queryset_from_cache({"week": week, "season": season})
+
+    def none_to_zero(self, dictionary):
+        for key in dictionary:
+            if dictionary[key] is None:
+                dictionary[key] = 0
+        return dictionary
 
     def safe_division(self, numerator, denominator):
         try:
@@ -54,14 +59,16 @@ class StatFinder:
         }
 
     def all_player_averages(self):
+        # Get all the players and get their averages
         player_averages = {}
-        for player in Player.objects.all():
+        for player in Player.objects.queryset_from_cache({}):
             player_averages[player] = self.player_averages(player)
+        # Return all the player averages
         return player_averages
 
     def player_averages(self, player, team=None):
-        player_box_scores = PlayerGameStats.get_cached_queryset(filter_kwargs={"player": player})
-        aggregates = player_box_scores.aggregate(
+        box_scores = PlayerGameStats.objects.queryset_from_cache({"player": player})
+        aggregates = box_scores.aggregate(
             models.Avg("minutes"),
             models.Avg("points"), 
             models.Avg("rebounds"), 
@@ -89,17 +96,21 @@ class StatFinder:
         aggregates["field_goal_percentage"] = self.safe_division(fgm, fga)
         aggregates["three_point_percentage"] = self.safe_division(tpm, tpa)
         aggregates["free_throw_percentage"] = self.safe_division(ftm, fta)
-        aggregates["games"] = player_box_scores.count()
+        aggregates["games"] = box_scores.count()
         # Round all aggregates
         for key in aggregates:
             if aggregates[key] and key != "games":
                 aggregates[key] = round(aggregates[key], 2)
+        # Set None values to 0
+        aggregates["full_name"] = f"{player.first_name} {player.last_name}"
+        aggregates = self.none_to_zero(aggregates)
         # If team is provided, calculate team averages
         return aggregates
     
     def team_averages(self, team):
-        team_box_scores = TeamGameStats.get_cached_queryset(filter_kwargs={"team": team})
-        aggregates = team_box_scores.aggregate(
+        # Get all the box scores for the team & get their averages
+        box_scores = TeamGameStats.objects.queryset_from_cache({"team": team})
+        aggregates = box_scores.aggregate(
             models.Avg("field_goals_made"), 
             models.Avg("field_goals_attempted"),
             models.Avg("three_pointers_made"),
@@ -128,17 +139,20 @@ class StatFinder:
         aggregates["field_goal_percentage"] = self.safe_division(fgm, fga)
         aggregates["three_point_percentage"] = self.safe_division(tpm, tpa)
         aggregates["free_throw_percentage"] = self.safe_division(ftm, fta)
-        aggregates["games"] = team_box_scores.count()
+        aggregates["games"] = box_scores.count()
         # Round all aggregates
         for key in aggregates:
             if aggregates[key] and key != "games":
                 aggregates[key] = round(aggregates[key], 2)
+        # Set None values to 0
+        aggregates = self.none_to_zero(aggregates)
         # If team is provided, calculate team averages
         return aggregates
     
     def player_totals(self, player, team=None):
-        player_box_scores = PlayerGameStats.get_cached_queryset(filter_kwargs={"player": player})
-        return player_box_scores.aggregate(
+        # Get all the box scores for the player & get their totals
+        box_scores = PlayerGameStats.objects.queryset_from_cache({"player": player})
+        aggregates = box_scores.aggregate(
             models.Sum("minutes"),
             models.Sum("points"), 
             models.Sum("rebounds"), 
@@ -159,10 +173,15 @@ class StatFinder:
             models.Sum("points_responsible_for"),
             models.Sum("dunks"),
         )
+        # Set None values to 0
+        aggregates["full_name"] = f"{player.first_name} {player.last_name}"
+        aggregates = self.none_to_zero(aggregates)
+        return aggregates
     
     def team_totals(self, team):
-        team_box_scores = TeamGameStats.get_cached_queryset(filter_kwargs={"team": team})
-        return team_box_scores.aggregate(
+        # Get all the players on the team & get their totals
+        box_scores = TeamGameStats.objects.queryset_from_cache({"team": team})
+        aggregates = box_scores.aggregate(
             models.Sum("field_goals_made"), 
             models.Sum("field_goals_attempted"),
             models.Sum("three_pointers_made"),
@@ -184,4 +203,27 @@ class StatFinder:
             models.Sum("dunks"),
             models.Sum("biggest_lead"),
             models.Sum("time_of_possession"),
-        ) 
+        )
+        # Add the games played, won, and lost
+        aggregates["games"] = box_scores.count()
+        aggregates["games_won"] = box_scores.filter(game__winner=team).count()
+        aggregates["games_lost"] = (aggregates["games"] - aggregates["games_won"])
+        # Set None values to 0
+        aggregates = self.none_to_zero(aggregates)
+        return aggregates
+    
+    def league_standings(self):
+        # Get all the teams and get their totals
+        teams = Team.objects.all()
+        team_standings = {}
+        for team in teams:
+            team_standings[team.id] = {
+                "team": team,
+                "totals": self.team_totals(team)
+            }
+        # Sort the teams by wins
+        sorted_teams = {k: v for k, v in sorted(team_standings.items(), key=lambda item: item[1]["totals"]["games_won"], reverse=True)}
+        # If two teams have the same amount of wins:
+            # 1. Head-to-head record
+            # 2. Point differential in head-to-head games
+        return sorted_teams

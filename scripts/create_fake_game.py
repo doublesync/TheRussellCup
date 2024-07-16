@@ -6,10 +6,11 @@ from faker import Faker
 
 # Local imports
 from players.models import Player
-from stats.models import Game, TeamGameStats, PlayerGameStats
+from stats.models import Season, Game, TeamGameStats, PlayerGameStats
 
 # Create your tests here.
 def run():
+    season = Season.objects.get(pk=1)
     game = Game.objects.create(
         surge_game=False,
         game_type="Regular Season",

@@ -1,12 +1,28 @@
 # Python imports
+from django.core.cache import cache
 from django.db import models
 
 # Local imports
 from players.models import Player
 from accounts.models import CustomUser
 
+# Create your managers here.
+class TeamManager(models.Manager):
+    def queryset_from_cache(self, filterdict):
+        cachekey = 'TeamGameStatsCache'
+        res = cache.get(cachekey)
+        if res:
+            return res  # Return only the queryset from cache
+        else:
+            res = Team.objects.filter(**filterdict)
+            cache.set(cachekey, res, 300)  # Five minutes
+            return res
+
 # Create your models here.
 class Team(models.Model):
+
+    # Managers
+    objects = TeamManager()
 
     # Defined fields
     manager = models.ForeignKey(CustomUser, on_delete=models.CASCADE)

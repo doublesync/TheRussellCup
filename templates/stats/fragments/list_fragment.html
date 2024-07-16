@@ -25,7 +25,7 @@
             {% for id, player in players.items %}
             {% if player.games > 0 %}
                 <tr>
-                    <td><a href="{% url 'player_page' id %}">{{ player.full_name }}</a></td>
+                    <td>{{ player.full_name }}</td>
                     <td>{{ player.games }}</td>
                     <td>{{ player.points__avg}}</td>
                     <td>{{ player.rebounds__avg }}</td>

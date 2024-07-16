@@ -83,7 +83,7 @@ class Game(models.Model):
         self.winner = self.get_winner()
         # Prevent non-staff users from saving games that are older than 24 hours
         if not self.created or self.created > timezone.now() - datetime.timedelta(days=1):
-            super(PlayerGameStats, self).save(*args, **kwargs)
+            super(Game, self).save(*args, **kwargs)
             
 class TeamGameStats(models.Model):
 
@@ -147,7 +147,7 @@ class TeamGameStats(models.Model):
     def save(self, *args, **kwargs):
         # Prevent non-staff users from saving games that are older than 24 hours
         if not self.created or self.created > timezone.now() - datetime.timedelta(days=1):
-            super(PlayerGameStats, self).save(*args, **kwargs)
+            super(TeamGameStats, self).save(*args, **kwargs)
 
 class PlayerGameStats(models.Model):
 

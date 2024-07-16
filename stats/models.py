@@ -18,7 +18,7 @@ from teams.models import Team
 # Create your managers here.
 class GameManager(models.Manager):
     def queryset_from_cache(self, filterdict):
-        cachekey = 'GameCache'
+        cachekey = 'GameCache' + hashlib.md5(str(filterdict).encode()).hexdigest()
         res = cache.get(cachekey)
         if res:
             return res  # Return only the queryset from cache
@@ -29,7 +29,7 @@ class GameManager(models.Manager):
 
 class TeamGameStatsManager(models.Manager):
     def queryset_from_cache(self, filterdict):
-        cachekey = 'TeamGameStatsCache'
+        cachekey = 'TeamGameStatsCache' + hashlib.md5(str(filterdict).encode()).hexdigest()
         res = cache.get(cachekey)
         if res:
             return res  # Return only the queryset from cache
@@ -40,7 +40,7 @@ class TeamGameStatsManager(models.Manager):
         
 class PlayerGameStatsManager(models.Manager):
     def queryset_from_cache(self, filterdict):
-        cachekey = 'PlayerGameStatsCache'
+        cachekey = 'PlayerGameStatsCache' + hashlib.md5(str(filterdict).encode()).hexdigest()
         res = cache.get(cachekey)
         if res:
             return res  # Return only the queryset from cache

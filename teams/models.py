@@ -1,4 +1,7 @@
 # Python imports
+import hashlib
+
+# Django imports
 from django.core.cache import cache
 from django.db import models
 
@@ -9,7 +12,7 @@ from accounts.models import CustomUser
 # Create your managers here.
 class TeamManager(models.Manager):
     def queryset_from_cache(self, filterdict):
-        cachekey = 'TeamGameStatsCache'
+        cachekey = 'TeamGameStatsCache' + hashlib.md5(str(filterdict).encode()).hexdigest()
         res = cache.get(cachekey)
         if res:
             return res  # Return only the queryset from cache

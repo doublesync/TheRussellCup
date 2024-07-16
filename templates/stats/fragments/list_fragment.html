@@ -19,6 +19,10 @@
                 <th><a href="#" class="fas fa-sort text-decoration-none text-light" hx-trigger="click throttle:1s" hx-target="#stat-table" hx-swap="outerHTML" hx-post="{% url 'sort_by_stat' 'plus_minus__avg' %}"></a> +/-</th>
                 <th><a href="#" class="fas fa-sort text-decoration-none text-light" hx-trigger="click throttle:1s" hx-target="#stat-table" hx-swap="outerHTML" hx-post="{% url 'sort_by_stat' 'points_responsible_for__avg' %}"></a> PRF</th>
                 <th><a href="#" class="fas fa-sort text-decoration-none text-light" hx-trigger="click throttle:1s" hx-target="#stat-table" hx-swap="outerHTML" hx-post="{% url 'sort_by_stat' 'dunks__avg' %}"></a> DPG</th>
+                <th><a href="#" class="fas fa-sort text-decoration-none text-light" hx-trigger="click throttle:1s" hx-target="#stat-table" hx-swap="outerHTML" hx-post="{% url 'sort_by_stat' 'game_score__avg' %}"></a> GMSC</th>
+                <th><a href="#" class="fas fa-sort text-decoration-none text-light" hx-trigger="click throttle:1s" hx-target="#stat-table" hx-swap="outerHTML" hx-post="{% url 'sort_by_stat' 'effective_field_goal_percentage__avg' %}"></a> EFG%</th>
+                <th><a href="#" class="fas fa-sort text-decoration-none text-light" hx-trigger="click throttle:1s" hx-target="#stat-table" hx-swap="outerHTML" hx-post="{% url 'sort_by_stat' 'true_shooting_percentage__avg' %}"></a> TS%</th>
+                <th><a href="#" class="fas fa-sort text-decoration-none text-light" hx-trigger="click throttle:1s" hx-target="#stat-table" hx-swap="outerHTML" hx-post="{% url 'sort_by_stat' 'turnover_percentage__avg' %}"></a> TOV%</th>
             </tr>
         </thead>
         <tbody class="table table-dark table-hover">
@@ -42,6 +46,10 @@
                     <td>{{ player.plus_minus__avg }}</td>
                     <td>{{ player.points_responsible_for__avg }}</td>
                     <td>{{ player.dunks__avg }}</td>
+                    <td>{{ player.game_score__avg }}</td>
+                    <td>{{ player.effective_field_goal_percentage__avg }}</td>
+                    <td>{{ player.true_shooting_percentage__avg }}</td>
+                    <td>{{ player.turnover_percentage__avg }}</td>
                 </tr>
             {% endif %}
             {% endfor %}

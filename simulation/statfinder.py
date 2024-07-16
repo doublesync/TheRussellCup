@@ -69,6 +69,7 @@ class StatFinder:
     def player_averages(self, player, team=None):
         box_scores = PlayerGameStats.objects.queryset_from_cache({"player": player})
         aggregates = box_scores.aggregate(
+            # Basic stats
             models.Avg("minutes"),
             models.Avg("points"), 
             models.Avg("rebounds"), 
@@ -88,6 +89,11 @@ class StatFinder:
             models.Avg("plus_minus"),
             models.Avg("points_responsible_for"),
             models.Avg("dunks"),
+            # Advanced stats
+            models.Avg("game_score"),
+            models.Avg("effective_field_goal_percentage"),
+            models.Avg("true_shooting_percentage"),
+            models.Avg("turnover_percentage"),
         )
         # Calculate shooting percentages
         fgm, fga = aggregates["field_goals_made__avg"], aggregates["field_goals_attempted__avg"]
@@ -153,6 +159,7 @@ class StatFinder:
         # Get all the box scores for the player & get their totals
         box_scores = PlayerGameStats.objects.queryset_from_cache({"player": player})
         aggregates = box_scores.aggregate(
+            # Basic stats
             models.Sum("minutes"),
             models.Sum("points"), 
             models.Sum("rebounds"), 
@@ -172,6 +179,11 @@ class StatFinder:
             models.Sum("plus_minus"),
             models.Sum("points_responsible_for"),
             models.Sum("dunks"),
+            # Advanced stats
+            models.Sum("game_score"),
+            models.Sum("effective_field_goal_percentage"),
+            models.Sum("true_shooting_percentage"),
+            models.Sum("turnover_percentage"),
         )
         # Set None values to 0
         aggregates["full_name"] = f"{player.first_name} {player.last_name}"

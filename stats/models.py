@@ -126,7 +126,7 @@ class TeamGameStats(models.Model):
 
     def __str__(self):
         return f"{self.team} | Game {self.game}"
-    
+
     def save(self, *args, **kwargs):
         # Prevent non-staff users from saving games that are older than 24 hours
         if not self.created or self.created > timezone.now() - datetime.timedelta(days=1):
@@ -162,6 +162,12 @@ class PlayerGameStats(models.Model):
     defensive_rebounds = models.IntegerField(default=0, help_text="Automatically calculated field")
     created = models.DateTimeField(auto_now_add=True)
 
+    # Advanced stat fields
+    game_score = models.FloatField(default=0.0, help_text="Automatically calculated field")
+    effective_field_goal_percentage = models.FloatField(default=0.0, help_text="Automatically calculated field")
+    true_shooting_percentage = models.FloatField(default=0.0, help_text="Automatically calculated field")
+    turnover_percentage = models.FloatField(default=0.0, help_text="Automatically calculated field")
+
     def __str__(self):
         return f"{self.player} Game {self.game} Stats"
     
@@ -170,10 +176,18 @@ class PlayerGameStats(models.Model):
             self.team = self.player.team
             self.save()
 
+    def set_advanced_stats(self):
+        self.game_score = round((self.points + (0.4 * self.field_goals_made) - (0.7 * self.field_goals_attempted) - (0.4 * (self.free_throws_attempted - self.free_throws_made)) + (0.7 * self.offensive_rebounds) + (0.3 * self.defensive_rebounds) + self.steals + (0.7 * self.assists) + (0.7 * self.blocks) - (0.4 * self.personal_fouls) - self.turnovers), 2)
+        self.effective_field_goal_percentage = round(((self.field_goals_made + (0.5 * self.three_pointers_made)) / self.field_goals_attempted), 2)
+        self.true_shooting_percentage = round((self.points / (2 * (self.field_goals_attempted + (0.44 * self.free_throws_attempted)))), 2)
+        self.turnover_percentage = round((self.turnovers / (self.field_goals_attempted + (0.44 * self.free_throws_attempted) + self.turnovers)), 2)
+
     def save(self, *args, **kwargs):
         # Automatically calculate the points & defensive rebounds scored by the player
         self.points = (self.field_goals_made * 2) + (self.three_pointers_made) + (self.free_throws_made)
         self.defensive_rebounds = (self.rebounds - self.offensive_rebounds)
         # Prevent non-staff users from saving games that are older than 24 hours
         if not self.created or self.created > timezone.now() - datetime.timedelta(days=1):
+            # Set the advanced stats
+            self.set_advanced_stats()
             super(PlayerGameStats, self).save(*args, **kwargs)

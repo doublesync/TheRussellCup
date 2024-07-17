@@ -168,6 +168,9 @@ class PlayerGameStats(models.Model):
     true_shooting_percentage = models.FloatField(default=0.0, help_text="Automatically calculated field")
     turnover_percentage = models.FloatField(default=0.0, help_text="Automatically calculated field")
 
+    class Meta:
+        get_latest_by = "game_score"
+
     def __str__(self):
         return f"{self.player} Game {self.game} Stats"
     

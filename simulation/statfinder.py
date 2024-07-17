@@ -16,12 +16,26 @@ current_season = config.CONFIG_SEASON["CURRENT_SEASON"]
 class StatFinder:
 
     def __init__(self, week=current_week, season=current_season, fetch_all_season=False, fetch_all_time=False):
+
+        # Set the kwargs
+        self.kwargs = {
+            "game__week": week,
+            "game__season": season,
+        }
+
+        # Get the games, player box scores, and team box scores
         if fetch_all_season:
             self.games = Game.objects.queryset_from_cache({"season": season})
+            self.player_box_scores = PlayerGameStats.objects.queryset_from_cache({"game__season": season})
+            self.team_box_scores = TeamGameStats.objects.queryset_from_cache({"game__season": season})
         elif fetch_all_time:
             self.games = Game.objects.queryset_from_cache({})
+            self.player_box_scores = PlayerGameStats.objects.queryset_from_cache({})
+            self.team_box_scores = TeamGameStats.objects.queryset_from_cache({})
         else:
             self.games = Game.objects.queryset_from_cache({"week": week, "season": season})
+            self.player_box_scores = PlayerGameStats.objects.queryset_from_cache({"game__week": week, "game__season": season})
+            self.team_box_scores = TeamGameStats.objects.queryset_from_cache({"game__week": week, "game__season": season})
 
     def none_to_zero(self, dictionary):
         for key in dictionary:
@@ -67,7 +81,7 @@ class StatFinder:
         return player_averages
 
     def player_averages(self, player, team=None):
-        box_scores = PlayerGameStats.objects.queryset_from_cache({"player": player})
+        box_scores = self.player_box_scores.filter(player=player)
         aggregates = box_scores.aggregate(
             # Basic stats
             models.Avg("minutes"),
@@ -115,7 +129,7 @@ class StatFinder:
     
     def team_averages(self, team):
         # Get all the box scores for the team & get their averages
-        box_scores = TeamGameStats.objects.queryset_from_cache({"team": team})
+        box_scores = self.team_box_scores.filter(team=team)
         aggregates = box_scores.aggregate(
             models.Avg("field_goals_made"), 
             models.Avg("field_goals_attempted"),
@@ -157,7 +171,7 @@ class StatFinder:
     
     def player_totals(self, player, team=None):
         # Get all the box scores for the player & get their totals
-        box_scores = PlayerGameStats.objects.queryset_from_cache({"player": player})
+        box_scores = self.player_box_scores.filter(player=player)
         aggregates = box_scores.aggregate(
             # Basic stats
             models.Sum("minutes"),
@@ -192,7 +206,7 @@ class StatFinder:
     
     def team_totals(self, team):
         # Get all the players on the team & get their totals
-        box_scores = TeamGameStats.objects.queryset_from_cache({"team": team})
+        box_scores = self.team_box_scores.filter(team=team)
         aggregates = box_scores.aggregate(
             models.Sum("field_goals_made"), 
             models.Sum("field_goals_attempted"),
@@ -239,3 +253,39 @@ class StatFinder:
             # 1. Head-to-head record
             # 2. Point differential in head-to-head games
         return sorted_teams
+
+    def best_performance(self):
+        # Get the highest gamescore from the list of games
+        box_scores_exist = PlayerGameStats.objects.filter(**self.kwargs).exists()
+        if box_scores_exist:
+            best_performance = PlayerGameStats.objects.filter(**self.kwargs).latest("game_score")
+            print("Best Performance:", best_performance)
+            # Return all the player performances
+            return best_performance
+        else:
+            return None
+    
+    def worst_performance(self):
+        # Get the lowest gamescore from the list of games
+        box_scores_exist = PlayerGameStats.objects.filter(**self.kwargs).exists()
+        if box_scores_exist:
+            best_performance = PlayerGameStats.objects.filter(**self.kwargs).earliest("game_score")
+            # Return all the player performances
+            return best_performance
+        else:
+            return None
+    
+def get_season_performances():
+    performances = {}
+    # Get the best and worst performances for each week
+    current_week = config.CONFIG_SEASON["CURRENT_WEEK"]
+    # Get the best and worst performances for each week
+    for week in range(1, current_week + 1):
+        finder = StatFinder(week=week)
+        performances[week] = {
+            "week": week,
+            "best": finder.best_performance(),
+            "worst": finder.worst_performance()
+        }
+    # Return all the performances
+    return performances

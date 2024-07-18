@@ -89,7 +89,7 @@ class Game(models.Model):
     def save(self, *args, **kwargs):
         # Automatically set the winner of the game
         self.winner = self.get_winner()
-        # Prevent non-staff users from saving games that are older than 24 hours
+        # Prevent non-staff users from saving games that are older than 10 days
         if not self.created or self.created > timezone.now() - datetime.timedelta(days=10):
             super(Game, self).save(*args, **kwargs)
             
@@ -128,7 +128,7 @@ class TeamGameStats(models.Model):
         return f"{self.team} | Game {self.game}"
 
     def save(self, *args, **kwargs):
-        # Prevent non-staff users from saving games that are older than 24 hours
+        # Prevent non-staff users from saving games that are older than 10 days
         if not self.created or self.created > timezone.now() - datetime.timedelta(days=10):
             super(TeamGameStats, self).save(*args, **kwargs)
 
@@ -203,6 +203,6 @@ class PlayerGameStats(models.Model):
         self.points = (self.field_goals_made * 2) + (self.three_pointers_made) + (self.free_throws_made)
         self.defensive_rebounds = (self.rebounds - self.offensive_rebounds)
         self.set_advanced_stats()
-        # Prevent non-staff users from saving games that are older than 24 hours
+        # Prevent non-staff users from saving games that are older than 10 days
         if not self.created or self.created > timezone.now() - datetime.timedelta(days=10):
-            super(TeamGameStats, self).save(*args, **kwargs)
+            super(PlayerGameStats, self).save(*args, **kwargs)

@@ -7,7 +7,7 @@ from stats.models import Season, Game, TeamGameStats, PlayerGameStats
 
 # Register your models here.
 class GameAdmin(ModelAdmin):
-    search_fields = ['season', 'week', 'home_team', 'away_team']
+    search_fields = ['week', 'home_team__name', 'away_team__name']
     autocomplete_fields = ['home_team', 'away_team']
     ordering = ['-season', '-week']    
 

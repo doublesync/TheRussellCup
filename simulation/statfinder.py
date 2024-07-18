@@ -123,6 +123,7 @@ class StatFinder:
                 aggregates[key] = round(aggregates[key], 2)
         # Set None values to 0
         aggregates["full_name"] = f"{player.first_name} {player.last_name}"
+        aggregates["position"] = player.position
         aggregates = self.none_to_zero(aggregates)
         # If team is provided, calculate team averages
         return aggregates
@@ -270,7 +271,6 @@ class StatFinder:
         box_scores_exist = PlayerGameStats.objects.filter(**self.kwargs).exists()
         if box_scores_exist:
             best_performance = PlayerGameStats.objects.filter(**self.kwargs).earliest("game_score")
-            # Return all the player performances
             return best_performance
         else:
             return None

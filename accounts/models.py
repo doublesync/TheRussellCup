@@ -13,6 +13,7 @@ class CustomUser(AbstractUser):
     can_pay_players = models.BooleanField(default=False)
     can_mark_upgrades = models.BooleanField(default=False)
     can_edit_stats = models.BooleanField(default=False)
+    can_edit_past_games = models.BooleanField(default=False)
 
     def __str__(self):
         return self.username

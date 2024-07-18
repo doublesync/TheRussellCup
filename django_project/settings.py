@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     "crispy_bootstrap5",
     "debug_toolbar",
     "django_extensions",
+    "factory",
     # Local
     "accounts",
     "pages",
@@ -149,6 +150,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/dev/topics/i18n/
 # https://docs.djangoproject.com/en/dev/ref/settings/#language-code
 LANGUAGE_CODE = "en-us"
+
+FAKER_LOCALE = None # 'en_US' is loaded
+FAKER_PROVIDERS = None # faker.DEFAULT_PROVIDERS is loaded
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#time-zone
 TIME_ZONE = "EST"

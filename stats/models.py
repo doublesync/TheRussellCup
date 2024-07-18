@@ -180,10 +180,23 @@ class PlayerGameStats(models.Model):
             self.save()
 
     def set_advanced_stats(self):
+        # Automatically calculate the game score of the player
         self.game_score = round((self.points + (0.4 * self.field_goals_made) - (0.7 * self.field_goals_attempted) - (0.4 * (self.free_throws_attempted - self.free_throws_made)) + (0.7 * self.offensive_rebounds) + (0.3 * self.defensive_rebounds) + self.steals + (0.7 * self.assists) + (0.7 * self.blocks) - (0.4 * self.personal_fouls) - self.turnovers), 2)
-        self.effective_field_goal_percentage = round(((self.field_goals_made + (0.5 * self.three_pointers_made)) / self.field_goals_attempted), 2)
-        self.true_shooting_percentage = round((self.points / (2 * (self.field_goals_attempted + (0.44 * self.free_throws_attempted)))), 2)
-        self.turnover_percentage = round((self.turnovers / (self.field_goals_attempted + (0.44 * self.free_throws_attempted) + self.turnovers)), 2)
+        # Prevents floating point division by zero
+        try:
+            self.effective_field_goal_percentage = round(((self.field_goals_made + (0.5 * self.three_pointers_made)) / self.field_goals_attempted), 2)
+        except ZeroDivisionError:
+            self.effective_field_goal_percentage = 0.0
+        # Prevents floating point division by zero
+        try:
+            self.true_shooting_percentage = round((self.points / (2 * (self.field_goals_attempted + (0.44 * self.free_throws_attempted)))), 2)
+        except ZeroDivisionError:
+            self.true_shooting_percentage = 0.0
+        # Prevents floating point division by zero
+        try:
+            self.turnover_percentage = round((self.turnovers / (self.field_goals_attempted + (0.44 * self.free_throws_attempted) + self.turnovers)), 2)
+        except ZeroDivisionError:
+            self.turnover_percentage = 0.0
 
     def save(self, *args, **kwargs):
         # Automatically calculate the points & defensive rebounds scored by the player

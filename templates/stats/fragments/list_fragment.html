@@ -3,6 +3,7 @@
         <thead>
             <tr>
                 <th><i class="fas fa-user"></i> Player</th>
+                <th><i class="fas fa-basketball-ball"></i> Position</th>
                 <th><a href="#" class="fas fa-sort text-decoration-none text-light" hx-trigger="click throttle:1s" hx-target="#stat-table" hx-swap="outerHTML" hx-post="{% url 'sort_by_stat' 'games' %}"></a> GP</th>
                 <th><a href="#" class="fas fa-sort text-decoration-none text-light" hx-trigger="click throttle:1s" hx-target="#stat-table" hx-swap="outerHTML" hx-post="{% url 'sort_by_stat' 'points__avg' %}"></a> PPG</th>
                 <th><a href="#" class="fas fa-sort text-decoration-none text-light" hx-trigger="click throttle:1s" hx-target="#stat-table" hx-swap="outerHTML" hx-post="{% url 'sort_by_stat' 'rebounds__avg' %}"></a> RPG</th>
@@ -30,6 +31,7 @@
             {% if player.games > 0 %}
                 <tr>
                     <td>{{ player.full_name }}</td>
+                    <td>{{ player.position }}</td>
                     <td>{{ player.games }}</td>
                     <td>{{ player.points__avg}}</td>
                     <td>{{ player.rebounds__avg }}</td>

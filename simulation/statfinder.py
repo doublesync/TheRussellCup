@@ -274,7 +274,83 @@ class StatFinder:
             return best_performance
         else:
             return None
-    
+
+    def set_game_highs(self, season):
+        # Get the player and team box scores for the season
+        player_box_scores = PlayerGameStats.objects.queryset_from_cache({"game__season": season})
+        # team_box_scores = TeamGameStats.objects.queryset_from_cache({"game__season": season})
+
+        # Find the game highs
+        highest_points = player_box_scores.latest("points")
+        season.highest_points["game_id"] = highest_points.game.id
+        season.highest_points["label"] = f"({highest_points.points}) {highest_points.player.first_name} {highest_points.player.last_name}"
+        highest_rebounds = player_box_scores.latest("rebounds")
+        season.highest_rebounds["game_id"] = highest_rebounds.game.id
+        season.highest_rebounds["label"] = f"({highest_rebounds.rebounds}) {highest_rebounds.player.first_name} {highest_rebounds.player.last_name}"
+        highest_assists = player_box_scores.latest("assists")
+        season.highest_assists["game_id"] = highest_assists.game.id
+        season.highest_assists["label"] = f"({highest_assists.assists}) {highest_assists.player.first_name} {highest_assists.player.last_name}"
+        highest_steals = player_box_scores.latest("steals")
+        season.highest_steals["game_id"] = highest_steals.game.id
+        season.highest_steals["label"] = f"({highest_steals.steals}) {highest_steals.player.first_name} {highest_steals.player.last_name}"
+        highest_blocks = player_box_scores.latest("blocks")
+        season.highest_blocks["game_id"] = highest_blocks.game.id
+        season.highest_blocks["label"] = f"({highest_blocks.blocks}) {highest_blocks.player.first_name} {highest_blocks.player.last_name}"
+        highest_turnovers = player_box_scores.latest("turnovers")
+        season.highest_turnovers["game_id"] = highest_turnovers.game.id
+        season.highest_turnovers["label"] = f"({highest_turnovers.turnovers}) {highest_turnovers.player.first_name} {highest_turnovers.player.last_name}"
+        highest_field_goals_made = player_box_scores.latest("field_goals_made")
+        season.highest_field_goals_made["game_id"] = highest_field_goals_made.game.id
+        season.highest_field_goals_made["label"] = f"({highest_field_goals_made.field_goals_made}) {highest_field_goals_made.player.first_name} {highest_field_goals_made.player.last_name}"
+        highest_field_goals_attempted = player_box_scores.latest("field_goals_attempted")
+        season.highest_field_goals_attempted["game_id"] = highest_field_goals_attempted.game.id
+        season.highest_field_goals_attempted["label"] = f"({highest_field_goals_attempted.field_goals_attempted}) {highest_field_goals_attempted.player.first_name} {highest_field_goals_attempted.player.last_name}"
+        highest_three_pointers_made = player_box_scores.latest("three_pointers_made")
+        season.highest_three_pointers_made["game_id"] = highest_three_pointers_made.game.id
+        season.highest_three_pointers_made["label"] = f"({highest_three_pointers_made.three_pointers_made}) {highest_three_pointers_made.player.first_name} {highest_three_pointers_made.player.last_name}"
+        highest_three_pointers_attempted = player_box_scores.latest("three_pointers_attempted")
+        season.highest_three_pointers_attempted["game_id"] = highest_three_pointers_attempted.game.id
+        season.highest_three_pointers_attempted["label"] = f"({highest_three_pointers_attempted.three_pointers_attempted}) {highest_three_pointers_attempted.player.first_name} {highest_three_pointers_attempted.player.last_name}"
+        highest_free_throws_made = player_box_scores.latest("free_throws_made")
+        season.highest_free_throws_made["game_id"] = highest_free_throws_made.game.id
+        season.highest_free_throws_made["label"] = f"({highest_free_throws_made.free_throws_made}) {highest_free_throws_made.player.first_name} {highest_free_throws_made.player.last_name}"
+        highest_free_throws_attempted = player_box_scores.latest("free_throws_attempted")
+        season.highest_free_throws_attempted["game_id"] = highest_free_throws_attempted.game.id
+        season.highest_free_throws_attempted["label"] = f"({highest_free_throws_attempted.free_throws_attempted}) {highest_free_throws_attempted.player.first_name} {highest_free_throws_attempted.player.last_name}"
+        highest_offensive_rebounds = player_box_scores.latest("offensive_rebounds")
+        season.highest_offensive_rebounds["game_id"] = highest_offensive_rebounds.game.id
+        season.highest_offensive_rebounds["label"] = f"({highest_offensive_rebounds.offensive_rebounds}) {highest_offensive_rebounds.player.first_name} {highest_offensive_rebounds.player.last_name}"
+        highest_defensive_rebounds = player_box_scores.latest("defensive_rebounds")
+        season.highest_defensive_rebounds["game_id"] = highest_defensive_rebounds.game.id
+        season.highest_defensive_rebounds["label"] = f"({highest_defensive_rebounds.defensive_rebounds}) {highest_defensive_rebounds.player.first_name} {highest_defensive_rebounds.player.last_name}"
+        highest_personal_fouls = player_box_scores.latest("personal_fouls")
+        season.highest_personal_fouls["game_id"] = highest_personal_fouls.game.id
+        season.highest_personal_fouls["label"] = f"({highest_personal_fouls.personal_fouls}) {highest_personal_fouls.player.first_name} {highest_personal_fouls.player.last_name}"
+        highest_plus_minus = player_box_scores.latest("plus_minus")
+        season.highest_plus_minus["game_id"] = highest_plus_minus.game.id
+        season.highest_plus_minus["label"] = f"({highest_plus_minus.plus_minus}) {highest_plus_minus.player.first_name} {highest_plus_minus.player.last_name}"
+        highest_points_responsible_for = player_box_scores.latest("points_responsible_for")
+        season.highest_points_responsible_for["game_id"] = highest_points_responsible_for.game.id
+        season.highest_points_responsible_for["label"] = f"({highest_points_responsible_for.points_responsible_for}) {highest_points_responsible_for.player.first_name} {highest_points_responsible_for.player.last_name}"
+        highest_dunks = player_box_scores.latest("dunks")
+        season.highest_dunks["game_id"] = highest_dunks.game.id
+        season.highest_dunks["label"] = f"({highest_dunks.dunks}) {highest_dunks.player.first_name} {highest_dunks.player.last_name}"
+        highest_game_score = player_box_scores.latest("game_score")
+        season.highest_game_score["game_id"] = highest_game_score.game.id
+        season.highest_game_score["label"] = f"({highest_game_score.game_score}) {highest_game_score.player.first_name} {highest_game_score.player.last_name}"
+        highest_effective_field_goal_percentage = player_box_scores.latest("effective_field_goal_percentage")
+        season.highest_effective_field_goal_percentage["game_id"] = highest_effective_field_goal_percentage.game.id
+        season.highest_effective_field_goal_percentage["label"] = f"({highest_effective_field_goal_percentage.effective_field_goal_percentage}) {highest_effective_field_goal_percentage.player.first_name} {highest_effective_field_goal_percentage.player.last_name}"
+        highest_true_shooting_percentage = player_box_scores.latest("true_shooting_percentage")
+        season.highest_true_shooting_percentage["game_id"] = highest_true_shooting_percentage.game.id
+        season.highest_true_shooting_percentage["label"] = f"({highest_true_shooting_percentage.true_shooting_percentage}) {highest_true_shooting_percentage.player.first_name} {highest_true_shooting_percentage.player.last_name}"
+        highest_turnover_percentage = player_box_scores.latest("turnover_percentage")
+        season.highest_turnover_percentage["game_id"] = highest_turnover_percentage.game.id
+        season.highest_turnover_percentage["label"] = f"({highest_turnover_percentage.turnover_percentage}) {highest_turnover_percentage.player.first_name} {highest_turnover_percentage.player.last_name}"
+        
+        # Save the season
+        season.save()
+
 def get_season_performances():
     performances = {}
     # Get the best and worst performances for each week

@@ -49,13 +49,40 @@ class PlayerGameStatsManager(models.Manager):
             cache.set(cachekey, res, 300)  # Five minutes
             return res
 
+def default_game_highs():
+    return {
+        "game_id": 0,
+        "label": "N/A",
+    }
+
 # Create your models here.
 class Season(models.Model):
     
     # Defined fields
+    current_season = models.BooleanField(default=True)
     season = models.IntegerField()
-    start_date = models.DateField()
-    end_date = models.DateField(blank=True, null=True)
+    highest_points = models.JSONField(default=default_game_highs, null=True, blank=True)
+    highest_rebounds = models.JSONField(default=default_game_highs, null=True, blank=True)
+    highest_assists = models.JSONField(default=default_game_highs, null=True, blank=True)
+    highest_steals = models.JSONField(default=default_game_highs, null=True, blank=True)
+    highest_blocks = models.JSONField(default=default_game_highs, null=True, blank=True)
+    highest_turnovers = models.JSONField(default=default_game_highs, null=True, blank=True)
+    highest_field_goals_made = models.JSONField(default=default_game_highs, null=True, blank=True)
+    highest_field_goals_attempted = models.JSONField(default=default_game_highs, null=True, blank=True)
+    highest_three_pointers_made = models.JSONField(default=default_game_highs, null=True, blank=True)
+    highest_three_pointers_attempted = models.JSONField(default=default_game_highs, null=True, blank=True)
+    highest_free_throws_made = models.JSONField(default=default_game_highs, null=True, blank=True)
+    highest_free_throws_attempted = models.JSONField(default=default_game_highs, null=True, blank=True)
+    highest_offensive_rebounds = models.JSONField(default=default_game_highs, null=True, blank=True)
+    highest_personal_fouls = models.JSONField(default=default_game_highs, null=True, blank=True)
+    highest_plus_minus = models.JSONField(default=default_game_highs, null=True, blank=True)
+    highest_points_responsible_for = models.JSONField(default=default_game_highs, null=True, blank=True)
+    highest_dunks = models.JSONField(default=default_game_highs, null=True, blank=True)
+    highest_defensive_rebounds = models.JSONField(default=default_game_highs, null=True, blank=True)
+    highest_game_score = models.JSONField(default=default_game_highs, null=True, blank=True)
+    highest_effective_field_goal_percentage = models.JSONField(default=default_game_highs, null=True, blank=True)
+    highest_true_shooting_percentage = models.JSONField(default=default_game_highs, null=True, blank=True)
+    highest_turnover_percentage = models.JSONField(default=default_game_highs, null=True, blank=True)
 
     def __str__(self):
         return f"S{self.season}"

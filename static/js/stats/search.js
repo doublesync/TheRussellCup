@@ -4,7 +4,7 @@ toggle_info = {};
 
 for (let i = 0; i < sort_buttons.length; i++) {
   identifier = sort_buttons[i].id;
-  toggle_info[identifier] = 'desc'; // Initial sort order
+  toggle_info[identifier] = 'asc'; // Initial sort order
 }
 
 document.querySelectorAll('.sort-btn').forEach(item => {

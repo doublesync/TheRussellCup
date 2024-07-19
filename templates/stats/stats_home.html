@@ -1,7 +1,7 @@
 {% extends '_base.html' %}
 {% load static %}
 
-{% block title %}Players{% endblock %}
+{% block title %}Statistics{% endblock %}
 
 {% block styles %}
 <style>
@@ -19,6 +19,7 @@
     <div class="mb-4">
         <a href="{% url 'performances' %}" class="text-decoration-none"><i class="fas fa-arrow-right"></i> Performances</a><br>
         <a href="{% url 'records' %}" class="text-decoration-none"><i class="fas fa-arrow-right"></i> Records</a><br>
+        <a href="{% url 'player_averages' %}" class="text-decoration-none"><i class="fas fa-arrow-right"></i> Player Averages</a><br>
     </div>
 
     <!-- League standings information -->
@@ -47,30 +48,6 @@
             </tbody>
         </table>
     </div>
-</div>
-
-<!-- Averages information -->
-<div class="container-fluid p-md-5">
-    <small class="text-muted">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</small>
-    <h1>Player Averages</h1>
-    <form>
-        {% csrf_token %}
-        <div class="form-group pull-right col-lg-4">
-            <!-- Radio button for asc or desc -->
-            <div class="form-check form-check-sm form-check-inline">
-                <input class="form-check form-check-input" type="radio" name="order-type" id="asc" value="asc" checked>
-                <label class="form-check form-check-label" for="asc">Ascending</label>
-            </div>
-            <div class="form-check form-check-sm form-check-inline">
-                <input class="form-check form-check-input" type="radio" name="order-type" id="desc" value="desc">
-                <label class="form-check form-check-label" for="desc">Descending</label>
-            </div>
-        </div>
-        <span class="counter pull-right"></span>
-        <div id="search-table">
-            {% include 'stats/fragments/list_fragment.html' %}
-        </div>
-    </form>
 </div>
 
 {% endblock %}

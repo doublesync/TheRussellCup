@@ -42,10 +42,8 @@ def player_averages(request):
 
 def stats_home(request):
     finder = statfinder.StatFinder(fetch_all_season=True)
-    players = finder.all_player_averages()
     standings = finder.league_standings()
-    performances = statfinder.get_season_performances()
-    return render(request, "stats/stats_home.html", {"players": players, "standings": standings, "performances": performances})
+    return render(request, "stats/stats_home.html", {"standings": standings})
 
 # A function that sorts the players by a given stat
 def sort_by_stat(request, stat):

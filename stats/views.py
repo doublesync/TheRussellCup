@@ -2,18 +2,12 @@
 import json
 
 # Django imports
-from django.core.cache import cache
 from django.http import HttpResponse
-from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.shortcuts import render
-from django.views.generic.list import ListView
 
 # Local imports
-from django.views.generic import TemplateView
-from stats.models import Game, TeamGameStats, PlayerGameStats
-from players.models import Player
-from teams.models import Team
+from stats.models import Season
 import simulation.statfinder as statfinder
 
 # Create your views here.
@@ -36,3 +30,13 @@ def sort_by_stat(request, stat):
         # Render to string
         fragment_html = render_to_string("stats/fragments/list_fragment.html", {"players": sorted_players})
         return HttpResponse(fragment_html)
+    
+# A function that returns the records page
+def records(request):
+    season = Season.objects.filter(current_season=True).first()
+    return render(request, "stats/records.html", {"season": season})
+
+# A function that returns the performances page
+def performances(request):
+    performances = statfinder.get_season_performances()
+    return render(request, "stats/performances.html", {"performances": performances})

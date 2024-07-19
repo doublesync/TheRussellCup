@@ -1,0 +1,43 @@
+{% extends '_base.html' %}
+{% load static %}
+
+{% block title %}Records{% endblock %}
+
+{% block styles %}
+<style>
+    input::placeholder {
+        color: gray!important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid p-md-5">
+    <h1>Records</h1>
+    <small>Only season records for now!</small>
+    <hr>
+    <p><span style="font-size: 24px;" class="badge badge-primary mb-2">PTS</span><br>{{ season.highest_points.label }}</p>
+    <p><span style="font-size: 24px;" class="badge badge-primary mb-2">REB</span><br>{{ season.highest_rebounds.label }}</p>
+    <p><span style="font-size: 24px;" class="badge badge-primary mb-2">AST</span><br>{{ season.highest_assists.label }}</p>
+    <p><span style="font-size: 24px;" class="badge badge-primary mb-2">STL</span><br>{{ season.highest_steals.label }}</p>
+    <p><span style="font-size: 24px;" class="badge badge-primary mb-2">BLK</span><br>{{ season.highest_blocks.label }}</p>
+    <p><span style="font-size: 24px;" class="badge badge-primary mb-2">TOV</span><br>{{ season.highest_turnovers.label }}</p>
+    <p><span style="font-size: 24px;" class="badge badge-primary mb-2">FGM</span><br>{{ season.highest_field_goals_made.label }}</p>
+    <p><span style="font-size: 24px;" class="badge badge-primary mb-2">FGA</span><br>{{ season.highest_field_goals_attempted.label }}</p>
+    <p><span style="font-size: 24px;" class="badge badge-primary mb-2">3PM</span><br>{{ season.highest_three_point_field_goals_made.label }}</p>
+    <p><span style="font-size: 24px;" class="badge badge-primary mb-2">3PA</span><br>{{ season.highest_three_point_field_goals_attempted.label }}</p>
+    <p><span style="font-size: 24px;" class="badge badge-primary mb-2">FTM</span><br>{{ season.highest_free_throws_made.label }}</p>
+    <p><span style="font-size: 24px;" class="badge badge-primary mb-2">FTA</span><br>{{ season.highest_free_throws_attempted.label }}</p>
+    <p><span style="font-size: 24px;" class="badge badge-primary mb-2">OREB</span><br>{{ season.highest_offensive_rebounds.label }}</p>
+    <p><span style="font-size: 24px;" class="badge badge-primary mb-2">DREB</span><br>{{ season.highest_defensive_rebounds.label }}</p>
+    <p><span style="font-size: 24px;" class="badge badge-primary mb-2">PF</span><br>{{ season.highest_personal_fouls.label }}</p>
+    <p><span style="font-size: 24px;" class="badge badge-primary mb-2">+/-</span><br>{{ season.highest_plus_minus.label }}</p>
+    <p><span style="font-size: 24px;" class="badge badge-primary mb-2">PRF</span><br>{{ season.highest_points_responsible_for.label }}</p>
+    <p><span style="font-size: 24px;" class="badge badge-primary mb-2">GMSC</span><br>{{ season.highest_game_score.label }}</p>
+    <p><span style="font-size: 24px;" class="badge badge-primary mb-2">EFG%</span><br>{{ season.highest_effective_field_goal_percentage.label }}</p>
+    <p><span style="font-size: 24px;" class="badge badge-primary mb-2">TS%</span> <br>{{ season.highest_true_shooting_percentage.label }}</p>
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

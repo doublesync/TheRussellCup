@@ -7,5 +7,5 @@ class SimulationRating:
         # Calculate the simulation rating
         attribute_avg = round((sum(self.player.attributes.values()) / len(self.player.attributes)), 2)
         badge_avg = round((sum(self.player.badges.values()) / len(self.player.badges)), 2)
-        rating = (attribute_avg) + (badge_avg * 2.5) + (self.player.sp_spent / 1000) + (self.player.xp_spent / 2000)
+        rating = round((attribute_avg) + (badge_avg * 1.5) + (self.player.sp_spent / 1000) + (self.player.xp_spent / 2000), 2)
         return rating

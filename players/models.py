@@ -6,6 +6,7 @@ from django.core.cache import cache
 from django.db import models
 
 # Local imports
+from simulation.frivolity import SimulationRating
 import simulation.scripts.default as default
 import simulation.scripts.animation as animation
 import simulation.scripts.utility as utility
@@ -90,7 +91,8 @@ class Player(models.Model):
         # Calculate the lateral quickness after potential upgrades
         self.attributes["Lateral Quickness"] = (self.attributes["Speed"] + self.attributes["Perimeter Defense"]) // 2
         # Calculate the overall rating after potential upgrades
-        self.sim_rating = round((sum(self.attributes.values()) / len(self.attributes)), 2)
+        rating_manager = SimulationRating(self)
+        self.sim_rating = rating_manager.get_rating()
         # Call the parent save method
         super(Player, self).save(*args, **kwargs)
 

@@ -13,7 +13,38 @@
         <input type="hidden" name="order-type" id="order-type" value="desc">
         <span class="counter pull-right"></span>
         <div id="search-table">
-            {% include 'stats/fragments/list_fragment.html' %}
+            <div name="stat-table" id="stat-table" class="table-responsive">
+                <table class="table table-dark table-striped">
+                    <thead>
+                        <tr>
+                            <th><i class="fas fa-user"></i> NAME</th>
+                            <th><i class="fas fa-gear"></i> POS</th>
+                            <!-- Add IDS to each field -->
+                            <th><a href="#" id="1" class="fas fa-sort text-decoration-none text-light sort-btn" hx-trigger="click delay:1s" hx-target="#stat-body" hx-swap="outerHTML" hx-post="{% url 'sort_by_stat' 'games' %}"></a> GP</th>
+                            <th><a href="#" id="2" class="fas fa-sort text-decoration-none text-light sort-btn" hx-trigger="click delay:1s" hx-target="#stat-body" hx-swap="outerHTML" hx-post="{% url 'sort_by_stat' 'points__avg' %}"></a> PPG</th>
+                            <th><a href="#" id="3" class="fas fa-sort text-decoration-none text-light sort-btn" hx-trigger="click delay:1s" hx-target="#stat-body" hx-swap="outerHTML" hx-post="{% url 'sort_by_stat' 'rebounds__avg' %}"></a> RPG</th>
+                            <th><a href="#" id="4" class="fas fa-sort text-decoration-none text-light sort-btn" hx-trigger="click delay:1s" hx-target="#stat-body" hx-swap="outerHTML" hx-post="{% url 'sort_by_stat' 'assists__avg' %}"></a> APG</th>
+                            <th><a href="#" id="5" class="fas fa-sort text-decoration-none text-light sort-btn" hx-trigger="click delay:1s" hx-target="#stat-body" hx-swap="outerHTML" hx-post="{% url 'sort_by_stat' 'steals__avg' %}"></a> SPG</th>
+                            <th><a href="#" id="6" class="fas fa-sort text-decoration-none text-light sort-btn" hx-trigger="click delay:1s" hx-target="#stat-body" hx-swap="outerHTML" hx-post="{% url 'sort_by_stat' 'blocks__avg' %}"></a> BPG</th>
+                            <th><a href="#" id="7" class="fas fa-sort text-decoration-none text-light sort-btn" hx-trigger="click delay:1s" hx-target="#stat-body" hx-swap="outerHTML" hx-post="{% url 'sort_by_stat' 'turnovers__avg' %}"></a> TOV</th>
+                            <th><a href="#" id="8" class="fas fa-sort text-decoration-none text-light sort-btn" hx-trigger="click delay:1s" hx-target="#stat-body" hx-swap="outerHTML" hx-post="{% url 'sort_by_stat' 'field_goal_percentage' %}"></a> FG%</th>
+                            <th><a href="#" id="9" class="fas fa-sort text-decoration-none text-light sort-btn" hx-trigger="click delay:1s" hx-target="#stat-body" hx-swap="outerHTML" hx-post="{% url 'sort_by_stat' 'three_point_percentage' %}"></a> 3P%</th>
+                            <th><a href="#" id="10" class="fas fa-sort text-decoration-none text-light sort-btn" hx-trigger="click delay:1s" hx-target="#stat-body" hx-swap="outerHTML" hx-post="{% url 'sort_by_stat' 'free_throw_percentage' %}"></a> FT%</th>
+                            <th><a href="#" id="11" class="fas fa-sort text-decoration-none text-light sort-btn" hx-trigger="click delay:1s" hx-target="#stat-body" hx-swap="outerHTML" hx-post="{% url 'sort_by_stat' 'offensive_rebounds__avg' %}"></a> ORPG</th>
+                            <th><a href="#" id="12" class="fas fa-sort text-decoration-none text-light sort-btn" hx-trigger="click delay:1s" hx-target="#stat-body" hx-swap="outerHTML" hx-post="{% url 'sort_by_stat' 'defensive_rebounds__avg' %}"></a> DRPG</th>
+                            <th><a href="#" id="13" class="fas fa-sort text-decoration-none text-light sort-btn" hx-trigger="click delay:1s" hx-target="#stat-body" hx-swap="outerHTML" hx-post="{% url 'sort_by_stat' 'personal_fouls__avg' %}"></a> FPG</th>
+                            <th><a href="#" id="14" class="fas fa-sort text-decoration-none text-light sort-btn" hx-trigger="click delay:1s" hx-target="#stat-body" hx-swap="outerHTML" hx-post="{% url 'sort_by_stat' 'plus_minus__avg' %}"></a> +/-</th>
+                            <th><a href="#" id="15" class="fas fa-sort text-decoration-none text-light sort-btn" hx-trigger="click delay:1s" hx-target="#stat-body" hx-swap="outerHTML" hx-post="{% url 'sort_by_stat' 'points_responsible_for__avg' %}"></a> PRF</th>
+                            <th><a href="#" id="16" class="fas fa-sort text-decoration-none text-light sort-btn" hx-trigger="click delay:1s" hx-target="#stat-body" hx-swap="outerHTML" hx-post="{% url 'sort_by_stat' 'dunks__avg' %}"></a> DPG</th>
+                            <th><a href="#" id="17" class="fas fa-sort text-decoration-none text-light sort-btn" hx-trigger="click delay:1s" hx-target="#stat-body" hx-swap="outerHTML" hx-post="{% url 'sort_by_stat' 'game_score__avg' %}"></a> GMSC</th>
+                            <th><a href="#" id="18" class="fas fa-sort text-decoration-none text-light sort-btn" hx-trigger="click delay:1s" hx-target="#stat-body" hx-swap="outerHTML" hx-post="{% url 'sort_by_stat' 'effective_field_goal_percentage__avg' %}"></a> EFG%</th>
+                            <th><a href="#" id="19" class="fas fa-sort text-decoration-none text-light sort-btn" hx-trigger="click delay:1s" hx-target="#stat-body" hx-swap="outerHTML" hx-post="{% url 'sort_by_stat' 'true_shooting_percentage__avg' %}"></a> TS%</th>
+                            <th><a href="#" id="20" class="fas fa-sort text-decoration-none text-light sort-btn" hx-trigger="click delay:1s" hx-target="#stat-body" hx-swap="outerHTML" hx-post="{% url 'sort_by_stat' 'turnover_percentage__avg' %}"></a> TOV%</th>
+                        </tr>
+                    </thead>
+                    {% include 'stats/fragments/list_fragment.html' %}
+                </div>
+            </div>
         </div>
     </form>
 </div>

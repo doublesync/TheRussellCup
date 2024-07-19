@@ -8,10 +8,10 @@ from django.core.cache import cache
 import simulation.config as config
 from players.models import Player
 from teams.models import Team
-from stats.models import Game, TeamGameStats, PlayerGameStats
+from stats.models import Season, Game, TeamGameStats, PlayerGameStats
 
 current_week = config.CONFIG_SEASON["CURRENT_WEEK"]
-current_season = config.CONFIG_SEASON["CURRENT_SEASON"]
+current_season = Season.objects.filter(current_season=True).first()
 
 class StatFinder:
 

@@ -1,23 +1,34 @@
-<div class="table-responsive">
-    <table class="table table-dark table-striped">
-        <thead>
-            <tr>
-                <!-- Modification, XP Price, Expires -->
-                <th><i class="fa-solid fa-star"></i> Purchase</th>
-                <th><i class="fa-solid fa-gear"></i> Modification</th>
-                <th><i class="fa-solid fa-clock"></i> Expired</th>
-                <th><i class="fa-solid fa-star"></i> XP Price</th>
-            </tr>
-        </thead>
-        <tbody class="table table-dark table-hover">
-            {% for mod in modifications %}
+{% if players %}
+    <div class="table-responsive">
+        <table class="table table-dark table-striped">
+            <thead>
                 <tr>
-                    <td><a type="button" class="text-underline" data-bs-toggle="modal" data-bs-target="#purchase-modal-{{ mod.id }}">Purchase</button></a>
-                    <td>{{ mod.item }}</td>
-                    <td>{{ mod.expired }}</td>
-                    <td>{{ mod.xp_price }}</td>
+                    <!-- Modification, XP Price, Expires -->
+                    <th><i class="fa-solid fa-star"></i> Purchase</th>
+                    <th><i class="fa-solid fa-gear"></i> Modification</th>
+                    <th><i class="fa-solid fa-clock"></i> Expired</th>
+                    <th><i class="fa-solid fa-star"></i> XP Price</th>
                 </tr>
-            {% endfor %}
-        </tbody>
+            </thead>
+            <tbody class="table table-dark table-hover">
+                <form>
+                    {% csrf_token %}
+                    {% for mod in modifications %}
+                        <tr>
+                            <td><button type="button" class="btn btn-sm btn-success" data-bs-toggle="collapse" data-bs-target="#purchase-{{ mod.id }}" aria-expanded="false" aria-controls="purchase-{{ mod.id }}">Purchase</button></td>
+                            <td>{{ mod.item }}</td>
+                            <td>{{ mod.expired }}</td>
+                            <td>{{ mod.xp_price }}</td>
+                        </tr>
+                        <!-- Let's make a hidden row that contains the submit button -->
+                        <tr class="collapse" id="purchase-{{ mod.id }}">
+                            <td colspan="4">
+                                <button type="button" class="btn btn-sm btn-info" data-bs-dismiss="modal" hx-post="{% url 'purchase_modification' mod.id %}" hx-trigger="click throttle:1s" hx-target="#status" hx-swap="innerHTML">Confirm</button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </form>
+            </tbody>
+        </div>
     </div>
-</div>
+{% endif %}

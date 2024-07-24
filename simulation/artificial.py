@@ -22,7 +22,7 @@ def prompt_storylines():
 
     # Initialize the prompts list & other data points
     prompts = []
-    week = config.CONFIG_SEASON["CURRENT_WEEK"]
+    week = config.CONFIG_SEASON["GAME_WEEK"]
     season = Season.objects.get(season=config.CONFIG_SEASON["CURRENT_SEASON"])
     games = Game.objects.filter(season=season, week=week)
 

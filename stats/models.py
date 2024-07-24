@@ -155,6 +155,15 @@ class TeamGameStats(models.Model):
     def __str__(self):
         return f"{self.team} | Game {self.game}"
 
+    def get_standing_stats(self):
+        total_points = self.game.home_team_score if self.team == self.game.home_team else self.game.away_team_score
+        points_against = self.game.away_team_score if self.team == self.game.home_team else self.game.home_team_score
+        point_differential = total_points - points_against
+        return {
+            "point_differential": point_differential,
+        }
+
+
     def save(self, *args, **kwargs):
         # Prevent non-staff users from saving games that are older than 10 days
         if not self.created or self.created > timezone.now() - datetime.timedelta(days=10):

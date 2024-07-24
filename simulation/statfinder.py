@@ -165,6 +165,12 @@ class StatFinder:
         for key in aggregates:
             if aggregates[key] and key != "games":
                 aggregates[key] = round(aggregates[key], 2)
+        # Find some more standing statistics
+        point_differentials = []
+        for box_score in box_scores:
+            standing_stats = box_score.get_standing_stats()
+            point_differentials.append(standing_stats["point_differential"])
+        aggregates["point_differential"] = round(sum(point_differentials) / len(point_differentials), 2)
         # Set None values to 0
         aggregates = self.none_to_zero(aggregates)
         # If team is provided, calculate team averages
@@ -235,10 +241,39 @@ class StatFinder:
         aggregates["games"] = box_scores.count()
         aggregates["games_won"] = box_scores.filter(game__winner=team).count()
         aggregates["games_lost"] = (aggregates["games"] - aggregates["games_won"])
+        # Find some more standing statistics
+        point_differentials = []
+        for box_score in box_scores:
+            standing_stats = box_score.get_standing_stats()
+            point_differentials.append(standing_stats["point_differential"])
+        aggregates["point_differential"] = sum(point_differentials)
         # Set None values to 0
         aggregates = self.none_to_zero(aggregates)
         return aggregates
     
+    def tie_breakers(self, team):
+        # Get the team's head-to-head record
+        tallies = {}
+        tiebreakers = []
+        # Check each game the team has played against every other team to check if they have tiebreakers against every other team
+        for game in self.team_box_scores.filter(team=team):
+            opponent = game.game.away_team if game.game.home_team == team else game.game.home_team
+            if opponent not in tallies:
+                tallies[opponent] = {
+                    "games_won": 0,
+                    "games_lost": 0,
+                }
+            if game.game.winner == team:
+                tallies[opponent]["games_won"] += 1
+            else:
+                tallies[opponent]["games_lost"] += 1
+        # Check the tiebreakers in tallies
+        for opponent in tallies:
+            if tallies[opponent]["games_won"] > tallies[opponent]["games_lost"]:
+                tiebreakers.append(f"{opponent.city} {opponent.name}")
+        # Return the tie breakers
+        return tiebreakers
+
     def league_standings(self, surge_only=False):
         # Get all the teams and get their totals
         teams = Team.objects.queryset_from_cache({"surge": surge_only})
@@ -249,10 +284,14 @@ class StatFinder:
                 "totals": self.team_totals(team)
             }
         # Sort the teams by wins
-        sorted_teams = {k: v for k, v in sorted(team_standings.items(), key=lambda item: item[1]["totals"]["games_won"], reverse=True)}
-        # If two teams have the same amount of wins:
-            # 1. Head-to-head record
-            # 2. Point differential in head-to-head games
+        # Let's set a secondary sorter using the "point_differential" key
+        sorted_teams = {k: v for k, v in sorted(team_standings.items(), key=lambda item: (item[1]["totals"]["games_won"], item[1]["totals"]["point_differential"]), reverse=True)}
+        # Add tiebreakers to the team standings
+        for team_id in sorted_teams:
+            team = sorted_teams[team_id]["team"]
+            tiebreakers = self.tie_breakers(team)
+            sorted_teams[team_id]["tiebreakers"] = tiebreakers
+        # Return all the team standings
         return sorted_teams
 
     def best_performance(self):

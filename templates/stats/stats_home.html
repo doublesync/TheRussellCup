@@ -33,6 +33,8 @@
                     <th>Games</th></th>
                     <th>Wins</th>
                     <th>Losses</th>
+                    <th>Differential</th>
+                    <th>Tiebreakers</th>
                 </tr>
             </thead>
             <tbody>
@@ -43,6 +45,13 @@
                     <td>{{ data.totals.games }}</td>
                     <td>{{ data.totals.games_won }}</td>
                     <td>{{ data.totals.games_lost }}</td>
+                    <td>{{ data.totals.point_differential }}</td>
+                    <td>
+                        <!-- Make a badge for each team in tiebreakers -->
+                        {% for tiebreaker in data.tiebreakers %}
+                        <span class="badge bg-info">> {{ tiebreaker }}</span>
+                        {% endfor %}
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>

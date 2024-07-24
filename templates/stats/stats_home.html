@@ -25,13 +25,11 @@
     <!-- League storylines -->
     <h1>League Storylines</h1>
     <div class="container-fluid mt-4">
-        {% for storyline in storylines %}
         <div class="card mb-3">
             <div class="card-body">
-                <p class="card-text">{{ storyline.content }}</p>
+                <p class="card-text">{{ storylines }}</p>
             </div>
         </div>
-        {% endfor %}
     </div>
 
     <!-- League standings information -->

@@ -331,6 +331,7 @@ class StatFinder:
             accolade_counts["40+ Points"] = self.player_box_scores.filter(points__gte=40).values("player__first_name", "player__last_name").annotate(count=models.Count("player")).order_by("-count")[:3]
             accolade_counts["30+ Points"] = self.player_box_scores.filter(points__gte=30).values("player__first_name", "player__last_name").annotate(count=models.Count("player")).order_by("-count")[:3]
             accolade_counts["20+ Rebounds"] = self.player_box_scores.filter(rebounds__gte=20).values("player__first_name", "player__last_name").annotate(count=models.Count("player")).order_by("-count")[:3]
+            accolade_counts["10+ Rebounds"] = self.player_box_scores.filter(rebounds__gte=10).values("player__first_name", "player__last_name").annotate(count=models.Count("player")).order_by("-count")[:3]
             accolade_counts["10+ Assists"] = self.player_box_scores.filter(assists__gte=10).values("player__first_name", "player__last_name").annotate(count=models.Count("player")).order_by("-count")[:3]
             accolade_counts["15+ Assists"] = self.player_box_scores.filter(assists__gte=15).values("player__first_name", "player__last_name").annotate(count=models.Count("player")).order_by("-count")[:3]
             accolade_counts["10+ Assists"] = self.player_box_scores.filter(assists__gte=10).values("player__first_name", "player__last_name").annotate(count=models.Count("player")).order_by("-count")[:3]

@@ -10,12 +10,12 @@ from players.models import Player
 from teams.models import Team
 from stats.models import Season, Game, TeamGameStats, PlayerGameStats
 
+current_week = config.CONFIG_SEASON["CURRENT_WEEK"]
+current_season = Season.objects.filter(current_season=True).first()
+
 class StatFinder:
 
-    def __init__(self, week=None, season=None, fetch_all_season=False, fetch_all_time=False):
-
-        self.current_week = config.CONFIG_SEASON["GAME_WEEK"] if not week else week
-        self.current_season = Season.objects.filter(current_season=True).first() if not season else season
+    def __init__(self, week=current_week, season=current_season, fetch_all_season=False, fetch_all_time=False):
 
         # Set the kwargs
         self.kwargs = {
@@ -418,7 +418,7 @@ class StatFinder:
 def get_season_performances():
     performances = {}
     # Get the best and worst performances for each week
-    current_week = config.CONFIG_SEASON["GAME_WEEK"]
+    current_week = config.CONFIG_SEASON["CURRENT_WEEK"]
     # Get the best and worst performances for each week
     for week in range(1, current_week + 1):
         finder = StatFinder(week=week)

@@ -35,11 +35,13 @@ class RecentGameListView(ListView):
         )
         return context
     
+# A function that returns the 'player_averages' page
 def player_averages(request):
     finder = statfinder.StatFinder(fetch_all_season=True)
     players = finder.all_player_averages()
     return render(request, "stats/player_averages.html", {"players": players})
 
+# A function that returns the 'team_averages' page
 def stats_home(request):
     finder = statfinder.StatFinder(fetch_all_season=True)
     standings = finder.league_standings()
@@ -65,5 +67,7 @@ def records(request):
 
 # A function that returns the performances page
 def performances(request):
+    finder = statfinder.StatFinder(fetch_all_season=True)
     performances = statfinder.get_season_performances()
-    return render(request, "stats/performances.html", {"performances": performances})
+    accolades = finder.accolade_counts()
+    return render(request, "stats/performances.html", {"performances": performances, "accolades": accolades})

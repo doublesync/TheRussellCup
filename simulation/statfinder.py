@@ -320,6 +320,21 @@ class StatFinder:
         else:
             return None
 
+    def accolade_counts(self):
+        # Let's initialize the accolade counts dictionary
+        accolade_counts = {}
+        # Each accolade in 'accolade_counts' should store the top three players who have achieved the accolade. The players should have a key of their name, and a value of the number of times they have achieved the accolade.
+        accolade_counts["40+ Points"] = self.player_box_scores.filter(points__gte=40).values("player__first_name", "player__last_name").annotate(count=models.Count("player")).order_by("-count")[:3]
+        accolade_counts["30+ Points"] = self.player_box_scores.filter(points__gte=30).values("player__first_name", "player__last_name").annotate(count=models.Count("player")).order_by("-count")[:3]
+        accolade_counts["20+ Rebounds"] = self.player_box_scores.filter(rebounds__gte=20).values("player__first_name", "player__last_name").annotate(count=models.Count("player")).order_by("-count")[:3]
+        accolade_counts["10+ Assists"] = self.player_box_scores.filter(assists__gte=10).values("player__first_name", "player__last_name").annotate(count=models.Count("player")).order_by("-count")[:3]
+        accolade_counts["15+ Assists"] = self.player_box_scores.filter(assists__gte=15).values("player__first_name", "player__last_name").annotate(count=models.Count("player")).order_by("-count")[:3]
+        accolade_counts["10+ Assists"] = self.player_box_scores.filter(assists__gte=10).values("player__first_name", "player__last_name").annotate(count=models.Count("player")).order_by("-count")[:3]
+        accolade_counts["5+ Steals"] = self.player_box_scores.filter(steals__gte=5).values("player__first_name", "player__last_name").annotate(count=models.Count("player")).order_by("-count")[:3]
+        accolade_counts["5+ Blocks"] = self.player_box_scores.filter(blocks__gte=5).values("player__first_name", "player__last_name").annotate(count=models.Count("player")).order_by("-count")[:3]
+        # Return the accolade counts
+        return accolade_counts
+
     def set_game_highs(self, season):
         # Get the player and team box scores for the season
         player_box_scores = PlayerGameStats.objects.queryset_from_cache({"game__season": season})

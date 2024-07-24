@@ -14,6 +14,8 @@
 {% block content %}
 
 <div class="container-fluid p-md-5">
+
+    <!-- Visa POTW -->
     <h1><i class="fa-brands fa-cc-visa"></i> Player of the Week</h1>
     <div class="table-responsive">
         <table class="table table-striped table-bordered table-hover mt-2">
@@ -74,6 +76,7 @@
         </table>
     </div>
 
+    <!-- Trash POTW -->
     <h1><i class="fa-brands fa-accessible-icon"></i> Loser of the Week</h1>
     <div class="table-responsive">
         <table class="table table-striped table-bordered table-hover mt-2">
@@ -132,6 +135,22 @@
                 {% endfor %}
             </tbody>
         </table>
+    </div>
+
+    <!-- Apple Accolades -->
+    <h1><i class="fa-brands fa-apple"></i> Accolades</h1>
+    <div class="card-deck mt-4">
+        {% for accolade, data in accolades.items %}
+        <div class="card mt-2">
+            <div class="card-header">
+                {{ accolade }}
+            </div>
+            <div class="card-body">
+                {% for player in data.all %}
+                <p class="card-text"><span class="badge bg-info">{{ player.count }}</span> {{ player.player__first_name }} {{ player.player__last_name }}</p>
+                {% endfor %}
+            </div>
+        {% endfor %}
     </div>
 
 </div>

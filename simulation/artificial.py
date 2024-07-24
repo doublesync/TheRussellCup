@@ -29,8 +29,9 @@ def prompt_storylines(season, week):
 
         # Get team & player stats
         player_stats = game.playergamestats_set.all()
+        game_winner = game.home_team.name if game.home_team_score > game.away_team_score else game.away_team.name
         # Make the prompt
-        prompt = f"Write a short (75 words), espn-like, storyline for the game between {game.home_team.name} and {game.away_team.name}, the game ended {game.home_team_score}-{game.away_team_score}.\n"
+        prompt = f"Write a short (75 words), espn-like, storyline for the game between {game.home_team.name} and {game.away_team.name}, the game ended {game.home_team_score}-{game.away_team_score}, the winner was {game_winner}.\n"
         # Add the player stats
         prompt += f"Players stats:\n"
         for player_stat in player_stats:

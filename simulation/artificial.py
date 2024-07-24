@@ -44,14 +44,14 @@ def prompt_storylines(season, week):
                 {"role": "system", "content": prompt}
             ]
         )
-        prompts.append(completion.choices[0].message)
+        prompts.append(completion.choices[0].message.content)
 
     # Set in cache & return the prompts
     cache.set(f"storylines_{season}_{week}", prompts, 60*60*24)
     
     # Set the prompts to 'current_storylines' in the season
-    # season.current_storylines = "\n".join(prompts)
-    # season.save()
+    season.current_storylines = "\n".join(prompts)
+    season.save()
 
     # Return the prompts
     return prompts

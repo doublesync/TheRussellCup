@@ -168,7 +168,7 @@ class StatFinder:
         # Find some more standing statistics
         point_differentials = []
         for box_score in box_scores:
-            standing_stats = box_score.get_standing_stats()
+            standing_stats = box_score.get_point_differential()
             point_differentials.append(standing_stats["point_differential"])
         aggregates["point_differential"] = round(sum(point_differentials) / len(point_differentials), 2)
         # Set None values to 0
@@ -244,7 +244,7 @@ class StatFinder:
         # Find some more standing statistics
         point_differentials = []
         for box_score in box_scores:
-            standing_stats = box_score.get_standing_stats()
+            standing_stats = box_score.get_point_differential()
             point_differentials.append(standing_stats["point_differential"])
         aggregates["point_differential"] = sum(point_differentials)
         # Set None values to 0

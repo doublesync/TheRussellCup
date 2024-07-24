@@ -252,27 +252,33 @@ class StatFinder:
         return aggregates
     
     def tie_breakers(self, team):
-        # Get the team's head-to-head record
-        tallies = {}
-        tiebreakers = []
-        # Check each game the team has played against every other team to check if they have tiebreakers against every other team
-        for game in self.team_box_scores.filter(team=team):
-            opponent = game.game.away_team if game.game.home_team == team else game.game.home_team
-            if opponent not in tallies:
-                tallies[opponent] = {
-                    "games_won": 0,
-                    "games_lost": 0,
-                }
-            if game.game.winner == team:
-                tallies[opponent]["games_won"] += 1
-            else:
-                tallies[opponent]["games_lost"] += 1
-        # Check the tiebreakers in tallies
-        for opponent in tallies:
-            if tallies[opponent]["games_won"] > tallies[opponent]["games_lost"]:
-                tiebreakers.append(f"{opponent.city} {opponent.name}")
-        # Return the tie breakers
-        return tiebreakers
+        # Check for tiebreakers in the cache first
+        if cache.get(f"tiebreakers_{team.id}"):
+            return cache.get(f"tiebreakers_{team.id}")
+        else:
+            # Get the team's head-to-head record
+            tallies = {}
+            tiebreakers = []
+            # Check each game the team has played against every other team to check if they have tiebreakers against every other team
+            for game in self.team_box_scores.filter(team=team):
+                opponent = game.game.away_team if game.game.home_team == team else game.game.home_team
+                if opponent not in tallies:
+                    tallies[opponent] = {
+                        "games_won": 0,
+                        "games_lost": 0,
+                    }
+                if game.game.winner == team:
+                    tallies[opponent]["games_won"] += 1
+                else:
+                    tallies[opponent]["games_lost"] += 1
+            # Check the tiebreakers in tallies
+            for opponent in tallies:
+                if tallies[opponent]["games_won"] > tallies[opponent]["games_lost"]:
+                    tiebreakers.append(f"{opponent.city} {opponent.name}")
+            # Set the tiebreakers in the cache
+            cache.set(f"tiebreakers_{team.id}", tiebreakers, 60 * 60)
+            # Return the tie breakers
+            return tiebreakers
 
     def league_standings(self, surge_only=False):
         # Get all the teams and get their totals

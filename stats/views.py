@@ -8,6 +8,7 @@ from django.shortcuts import render
 from django.views.generic import ListView
 
 # Local imports
+import simulation.artificial as artificial
 from stats.models import Season, Game, PlayerGameStats, TeamGameStats
 import simulation.statfinder as statfinder
 from django_table_sort.table import TableSort
@@ -45,7 +46,8 @@ def player_averages(request):
 def stats_home(request):
     finder = statfinder.StatFinder(fetch_all_season=True)
     standings = finder.league_standings()
-    return render(request, "stats/stats_home.html", {"standings": standings})
+    storylines = artificial.prompt_storylines()
+    return render(request, "stats/stats_home.html", {"standings": standings, "storylines": storylines})
 
 # A function that sorts the players by a given stat
 def sort_by_stat(request, stat):

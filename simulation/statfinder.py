@@ -306,7 +306,6 @@ class StatFinder:
         box_scores_exist = PlayerGameStats.objects.filter(**self.kwargs).exists()
         if box_scores_exist:
             best_performance = PlayerGameStats.objects.filter(**self.kwargs).latest("game_score")
-            print("Best Performance:", best_performance)
             # Return all the player performances
             return best_performance
         else:

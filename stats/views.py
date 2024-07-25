@@ -6,6 +6,7 @@ from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.shortcuts import render
 from django.views.generic import ListView
+from django.db.models import Q
 
 # Local imports
 import simulation.artificial as artificial
@@ -14,27 +15,6 @@ import simulation.statfinder as statfinder
 from django_table_sort.table import TableSort
 
 # Create your views here.
-
-# A ListView that returns the 'player_averages' page
-class RecentGameListView(ListView):
-    model = PlayerGameStats
-    template_name = "stats/recent_games.html"
-    ordering_key = "game_score"
-    paginate_by = 10
-
-    def get_ordering(self):
-        return self.request.GET.getlist(self.ordering_key, None)
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["table"] = TableSort(
-            self.request,
-            self.object_list,
-            sort_key_name=self.ordering_key,
-            table_css_clases="table table-striped table-sm",
-            exclude=["id", "game"],
-        )
-        return context
     
 # A function that returns the 'player_averages' page
 def player_averages(request):
@@ -74,3 +54,12 @@ def performances(request):
     performances = statfinder.get_season_performances()
     accolades = finder.accolade_counts()
     return render(request, "stats/performances.html", {"performances": performances, "accolades": accolades})
+
+# A class that returns the recent games for a player
+def recent_season_games(request, id):
+    season = Season.objects.filter(current_season=True).first()
+    games = PlayerGameStats.objects.filter(
+        Q(game__season=season) | 
+        Q(player_id=id)
+    ).order_by("-created")
+    return render(request, "stats/recent_season_games.html", {"games": games})

@@ -1,0 +1,64 @@
+{% extends '_base.html' %}
+{% load static %}
+
+{% block title %}Recent Season Games{% endblock %}
+
+{% block content %}
+<div class="container-fluid p-5">
+    <h1>Recent Season Games</h1>
+    <div class="table-responsive">
+        <table class="table table-dark table-striped">
+            <thead>
+            <thead>
+                <tr>
+                    <th>GAME</th>
+                    <th>GMSC</th>
+                    <th>PTS</th>
+                    <th>REB</th>
+                    <th>AST</th>
+                    <th>STL</th>
+                    <th>BLK</th>
+                    <th>TO</th>
+                    <th>FG</th>
+                    <th>3P</th>
+                    <th>FT</th>
+                    <th>OREB</th>
+                    <th>DREB</th>
+                    <th>PF</th>
+                    <th>+/-</th>
+                    <th>PRF</th>
+                    <th>DUNKS</th>
+                    <th>EFG%</th>
+                    <th>TS%</th>
+                    <th>TOV%</th>
+            </thead>
+            <tbody>
+                {% for game in games %}
+                <tr>
+                    <td>{{ game.game }}</td>
+                    <td>{{ game.game_score }}</td>
+                    <td>{{ game.points }}</td>
+                    <td>{{ game.rebounds }}</td>
+                    <td>{{ game.assists }}</td>
+                    <td>{{ game.steals }}</td>
+                    <td>{{ game.blocks }}</td>
+                    <td>{{ game.turnovers }}</td>
+                    <td>{{ game.field_goals_made }}/{{ game.field_goals_attempted }}</td>
+                    <td>{{ game.three_pointers_made }}/{{ game.three_pointers_attempted }}</td>
+                    <td>{{ game.free_throws_made }}/{{ game.free_throws_attempted }}</td>
+                    <td>{{ game.offensive_rebounds }}</td>
+                    <td>{{ game.defensive_rebounds }}</td>
+                    <td>{{ game.personal_fouls }}</td>
+                    <td>{{ game.plus_minus }}</td>
+                    <td>{{ game.points_responsible_for }}</td>
+                    <td>{{ game.dunks }}</td>
+                    <td>{{ game.effective_field_goal_percentage }}</td>
+                    <td>{{ game.true_shooting_percentage }}</td>
+                    <td>{{ game.turnover_percentage }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </div>
+    </div>
+</div>
+{% endblock %}

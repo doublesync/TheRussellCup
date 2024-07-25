@@ -28,6 +28,8 @@
             <div class="row gx-4 gy-4">
                 <div class="p-2">
                     <div class="d-flex flex-column">
+                        <!-- Page to go to recent season games -->
+                        <small class="text-muted"><a style="text-decoration: none;" href="{% url 'recent_season_games' player.id %}"><i class="fa-solid fa-calendar"></i> Recent Season Games</a></small>
                         <small id="face-status" class="text-muted"><a style="text-decoration: none;" href="{% url 'edit_appearance' player.id %}"><i class="fa-solid fa-brush"></i> Edit Appearance</a></span></small>
                         <div style="height: 150px; width: 250px;" id="player-appearance">
                             {{ player.svg_image|safe }}

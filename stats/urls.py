@@ -11,7 +11,6 @@ urlpatterns = [
     path("records/", views.records, name="records"),
     path("performances/", views.performances, name="performances"),
     path("averages/players/", views.player_averages, name="player_averages"),
-    path("games/recent/", views.RecentGameListView.as_view(), name="recent_games"),
     path("sort/<str:stat>/", views.sort_by_stat, name="sort_by_stat"),
-    # path('season/<int:season_id>/', login_required(views.stats_season), name='stats_season'),
+    path("games/recent/player/<int:id>/", views.recent_season_games, name="recent_season_games"),
 ]

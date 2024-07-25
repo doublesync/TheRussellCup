@@ -114,7 +114,8 @@ class Game(models.Model):
             return self.away_team
         
     def __str__(self):
-        return f"{self.season}, W{self.week} | {self.home_team} vs. {self.away_team} |"
+        loser = self.home_team if self.winner == self.away_team else self.away_team
+        return f"{self.season}-W{self.week} | {self.winner.name} beat {loser.name} ({self.home_team_score}-{self.away_team_score})"
         
     def save(self, *args, **kwargs):
         # Automatically set the winner of the game

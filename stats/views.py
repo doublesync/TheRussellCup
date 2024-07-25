@@ -46,7 +46,8 @@ def player_averages(request):
 def stats_home(request):
     finder = statfinder.StatFinder(fetch_all_season=True)
     standings = finder.league_standings()
-    storylines = artificial.prompt_storylines()
+    season = Season.objects.filter(current_season=True).first()
+    storylines = season.current_storylines
     return render(request, "stats/stats_home.html", {"standings": standings, "storylines": storylines})
 
 # A function that sorts the players by a given stat

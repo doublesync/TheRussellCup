@@ -1,8 +1,9 @@
 # Python improts
 
 # Django imports
-from django.db import models
 from django.core.cache import cache
+from django.db import models
+from django.db.models import Q
 
 # Local imports
 import simulation.config as config
@@ -337,6 +338,9 @@ class StatFinder:
             accolade_counts["10+ Assists"] = self.player_box_scores.filter(assists__gte=10).values("player__first_name", "player__last_name").annotate(count=models.Count("player")).order_by("-count")[:3]
             accolade_counts["5+ Steals"] = self.player_box_scores.filter(steals__gte=5).values("player__first_name", "player__last_name").annotate(count=models.Count("player")).order_by("-count")[:3]
             accolade_counts["5+ Blocks"] = self.player_box_scores.filter(blocks__gte=5).values("player__first_name", "player__last_name").annotate(count=models.Count("player")).order_by("-count")[:3]
+            # Check for triple doubles & double doubles
+            accolade_counts["Triple Doubles"] = self.player_box_scores.filter(points__gte=10, rebounds__gte=10, assists__gte=10).values("player__first_name", "player__last_name").annotate(count=models.Count("player")).order_by("-count")[:3]
+            accolade_counts["Double Doubles"] = self.player_box_scores.filter(models.Q(points__gte=10, rebounds__gte=10) | models.Q(points__gte=10, assists__gte=10) | models.Q(rebounds__gte=10, assists__gte=10)).values("player__first_name", "player__last_name").annotate(count=models.Count("player")).order_by("-count")[:3]
             # Return the accolade counts
             return accolade_counts
 

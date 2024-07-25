@@ -58,8 +58,5 @@ def performances(request):
 # A class that returns the recent games for a player
 def recent_season_games(request, id):
     season = Season.objects.filter(current_season=True).first()
-    games = PlayerGameStats.objects.filter(
-        Q(game__season=season) | 
-        Q(player_id=id)
-    ).order_by("-created")
+    games = PlayerGameStats.objects.filter(Q(player_id=id) & Q(game__season=season)).order_by("-created")
     return render(request, "stats/recent_season_games.html", {"games": games})

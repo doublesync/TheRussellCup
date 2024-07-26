@@ -10,4 +10,5 @@ urlpatterns = [
     path("team/<int:id>/", views.team_page, name="team_page"),
     path("drafts/list/", views.draft_list, name="draft_list"),
     path("draft/<int:id>/", views.draft_page, name="draft_page"),
+    path("team/roster/move/<int:id>/", views.RosterMoveView.as_view(), name="roster_move"),
 ]

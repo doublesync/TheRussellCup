@@ -47,3 +47,29 @@ class ContractLog(models.Model):
 
     def __str__(self):
         return f"S{self.season} {self.player}"
+    
+# A model to store transaction approval logs
+class TransactionMoveLog(models.Model):
+    team = models.ForeignKey("teams.Team", on_delete=models.CASCADE)
+    signed = models.ForeignKey("players.Player", on_delete=models.CASCADE, related_name="signed")
+    released = models.ForeignKey("players.Player", on_delete=models.CASCADE, related_name="released")
+    approved = models.BooleanField(default=False)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.team} traded {self.old_player} for {self.new_player} with {self.trading_with}"
+    
+    def move_players(self):
+        # Make sure both player exists & they're not the same
+        if (self.team and self.old_player and self.new_player) and (self.old_player != self.new_player):
+            # Release & Sign logic
+            self.released.team = None
+            self.signed.team = self.team
+            self.released.save()
+            self.signed.save()
+
+    def save(self, *args, **kwargs):
+        # We will only save the log if it's not been approved (to prevent accidental moves)
+        if not self.approved:
+            self.move_players()
+            super(TransactionMoveLog, self).save(*args, **kwargs)

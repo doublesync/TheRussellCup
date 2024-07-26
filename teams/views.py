@@ -3,6 +3,8 @@
 # Django imports
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.views import View
+
 
 # Local imports
 from teams.models import Team, Draft, DraftPick, DraftOrder
@@ -33,3 +35,13 @@ def draft_page(request, id):
 
 def draft_list(request):
     return HttpResponse("Work in progress...")
+
+class RosterMoveView(View):
+
+    def get(self, request, id):
+        team = Team.objects.get(pk=id)
+        if team.manager == request.user:
+            return render(request, "teams/roster_move.html")
+
+    def post(self, request):
+        return HttpResponse("POST request")

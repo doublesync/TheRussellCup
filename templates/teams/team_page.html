@@ -7,6 +7,8 @@
 {% block content %}
 <div class="container-fluid p-4">
     <a href="{% url 'team_list' %}" class="btn btn-sm btn-info"><i class="fa-solid fa-arrow-left"></i> Back to Teams</a>
+    <a href="{% url 'roster_move' team.id %}" class="btn btn-sm btn-info"><i class="fa-solid fa-user-plus"></i> Make Roster Move</a>
+
     <div class="mt-4">
 
         <h1 style="color: {{ team.color }};">{{ team.name|upper }}</h1>

@@ -5,7 +5,7 @@ from django.db import models
 
 # Local imports
 import simulation.config as config
-from logs.models import PaymentLog
+from logs.models import PaymentLog, ContractLog
 
 
 # A class to handle payments
@@ -74,8 +74,7 @@ def pay_contracts(user):
         for player in players:
             if player.contract:
                 if player.contract.weeks_paid and (str(current_week) in player.contract.weeks_paid):
-                    # If we allow multiple players, we'll need to change this to a list
-                    return "❌ Players have already been paid for this week."
+                    return "❌ Player/s have already been paid for this week."
                 else:
                     # Pay the player
                     player.user.sp += round(player.contract.current_year_payment * 0.30)
@@ -90,8 +89,17 @@ def pay_contracts(user):
                         player.contract.weeks_paid = {current_week: True}
                     player.contract.save()
                     players_paid.append(f"{player.first_name} {player.last_name}")
+            else:
+                player.contract = ContractLog.objects.create(
+                    player=player,
+                    season=config.CONFIG_SEASON["CURRENT_SEASON"],
+                    length=1,
+                    current_year_payment=config.CONFIG_SEASON["DEFAULT_CONTRACT"]
+                )
+                player.save()
+                return f"💴 Contract was created for {player.first_name} {player.last_name}, please try again."
     # Return success message since the payment was successful
-    return f"✅ Players paid: {players_paid}"
+    return f"✅ Player/s paid: {players_paid}"
 
 # A method that counts the total salary cap spent for a team
 def get_salary_book(team):

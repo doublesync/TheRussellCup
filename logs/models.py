@@ -41,8 +41,8 @@ class ContractLog(models.Model):
     biennium_year_payment = models.IntegerField(default=0)
     no_trade_clause = models.BooleanField(default=False)
     no_release_clause = models.BooleanField(default=False)
-    incentives = models.CharField(max_length=255)
-    weeks_paid = models.JSONField(null=True, blank=True)
+    incentives = models.CharField(max_length=255, default="None")
+    weeks_paid = models.JSONField(default=dict, null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

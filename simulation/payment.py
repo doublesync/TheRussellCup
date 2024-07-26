@@ -11,12 +11,13 @@ from logs.models import PaymentLog, ContractLog
 # A class to handle payments
 class Payment:
     
-    def __init__(self, payer, receiver, amount, reason, bypass=False):
+    def __init__(self, payer, receiver, amount, reason, include_xp_equivalent, bypass=False):
         self.payer = payer
         self.receiver = receiver
         self.amount = amount
         self.reason = reason
         self.bypass = bypass
+        self.include_xp_equivalent = include_xp_equivalent
 
     def exceeds_limit(self, adding_amount):
         # Filter payments for the current season (only) and sum them up
@@ -44,6 +45,8 @@ class Payment:
         )
         # Send the player/user's payment
         self.receiver.user.sp += self.amount
+        if self.include_xp_equivalent == "on":
+            self.receiver.user.xp += round((self.amount * 1.7), 0)
         self.receiver.user.save()
         # Return True since the payment was successful
         return "✅ Payment successful."

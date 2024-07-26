@@ -22,13 +22,15 @@ def pay_user(request, id):
         currency = request.POST.get("pay-currency")
         reason = request.POST.get("pay-reason")
         _type = request.POST.get("pay-type")
+        include_xp_equivalent = request.POST.get("include-xp-equivalent")
+        print(include_xp_equivalent)
         # Update the player's balance
         if amount and currency == "SP":
             amount = int(amount) if _type == "add" else (0 - abs(int(amount)))
         if amount and currency == "XP":
             amount = int(amount) if _type == "add" else (0 - abs(int(amount)))
         # Create the payment
-        payment = Payment(request.user, player, amount, reason)
+        payment = Payment(request.user, player, amount, reason, include_xp_equivalent)
         response = payment.pay_sp() if currency == "SP" else payment.pay_xp()
         # Return the response
         return HttpResponse(response)

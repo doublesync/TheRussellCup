@@ -50,23 +50,27 @@ class ContractLog(models.Model):
     
 # A model to store transaction approval logs
 class TransactionMoveLog(models.Model):
-    team = models.ForeignKey("teams.Team", on_delete=models.CASCADE)
-    signed = models.ForeignKey("players.Player", on_delete=models.CASCADE, related_name="signed")
-    released = models.ForeignKey("players.Player", on_delete=models.CASCADE, related_name="released")
-    approved = models.BooleanField(default=False)
+    team = models.ForeignKey("teams.Team", on_delete=models.CASCADE, help_text="The team making the transaction.")
+    signed = models.ForeignKey("players.Player", on_delete=models.CASCADE, related_name="signed", help_text="The player being signed.")
+    released = models.ForeignKey("players.Player", on_delete=models.CASCADE, related_name="released", help_text="The player being released.")
+    approved = models.BooleanField(default=False, help_text="Whether the transaction has been approved.")
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.team} traded {self.old_player} for {self.new_player} with {self.trading_with}"
+        return f"{self.team} released {self.released} for {self.signed}"
     
     def move_players(self):
         # Make sure both player exists & they're not the same
-        if (self.team and self.old_player and self.new_player) and (self.old_player != self.new_player):
-            # Release & Sign logic
-            self.released.team = None
-            self.signed.team = self.team
-            self.released.save()
-            self.signed.save()
+        if (self.team and self.released and self.signed) and (self.released != self.signed):
+            # Make sure the team has the player it's releasing & the player it's signing is a free agent
+            if (self.released.team == self.team and self.signed.team == None):
+                # Release & Sign logic
+                self.released.team = None
+                self.signed.team = self.team
+                self.approved = True
+                self.released.save()
+                self.signed.save()
+                self.save()
 
     def save(self, *args, **kwargs):
         # We will only save the log if it's not been approved (to prevent accidental moves)

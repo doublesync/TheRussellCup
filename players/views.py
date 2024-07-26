@@ -225,6 +225,7 @@ class ModificationsListView(ListView):
     def get_queryset(self):
         return Modification.objects.filter(expired=False).order_by("created")
     
+
 # This is a function based view that will allow the user to purchase a modification
 def purchase_modification(request, id):
     # Get the modification

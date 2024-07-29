@@ -136,7 +136,7 @@
                                                 <input type="checkbox" id="include-xp-equivalent" name="include-xp-equivalent" class="form-check-input">
                                                 <label for="include-xp-equivalent">Pay XP Equivalent</label>
                                             </div>
-                                            <a href="#" style="width: 100%;" class="btn btn-sm btn-info mt-2" hx-trigger="click throttle:1s" hx-target="#pay-user-form" hx-swap="innerHTML" hx-post="{% url 'pay_user' player.id %}">Pay User</a>
+                                            <a href="#" style="width: 100%;" class="btn btn-sm btn-info mt-2" hx-trigger="click throttle:1s" hx-target="#pay-user-form" hx-swap="innerHTML" hx-post="{% url 'pay_user' player.id 'single' %}">Pay User</a>
                                         </div>
                                     </div>
                                 </form>

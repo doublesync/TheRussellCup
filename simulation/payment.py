@@ -33,8 +33,10 @@ class Payment:
     
     def pay_sp(self):
         # Validate the payment amount
+        if not self.receiver.user:
+            return f"❌ User not found for {self.receiver.first_name} {self.receiver.last_name}.<br>"
         if self.exceeds_limit(self.amount):
-            return "❌ Payment would surpass the maximum allowed for the season."
+            return f"❌ Payment would surpass the maximum allowed for the season for {self.receiver.first_name} {self.receiver.last_name}.<br>"
         # Create the payment log
         PaymentLog.objects.create(
             staff=self.payer, 
@@ -49,9 +51,11 @@ class Payment:
             self.receiver.user.xp += round((self.amount * 1.7), 0)
         self.receiver.user.save()
         # Return True since the payment was successful
-        return "✅ Payment successful."
+        return f"✅ Payment of {self.amount} SP was successful to {self.receiver.first_name} {self.receiver.last_name}.<br>"
     
     def pay_xp(self):
+        if not self.receiver.user:
+            return f"❌ User not found for {self.receiver.first_name} {self.receiver.last_name}.<br>"
         # Create the payment log
         PaymentLog.objects.create(
             staff=self.payer, 
@@ -64,7 +68,7 @@ class Payment:
         self.receiver.user.xp += self.amount
         self.receiver.user.save()
         # Return True since the payment was successful
-        return True
+        return f"✅ Payment of {self.amount} XP was successful to {self.receiver.first_name} {self.receiver.last_name}.<br>"
 
 # A method that pays a user's players based on their contract
 def pay_contracts(user):

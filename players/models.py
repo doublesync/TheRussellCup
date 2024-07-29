@@ -100,7 +100,7 @@ class Modification(models.Model):
 
     # User defined fields
     item = models.CharField(max_length=64)
-    xp_price = models.IntegerField()
+    xp_price = models.IntegerField(default=0)
     expired = models.BooleanField(default=False)
     # Timestamp fields
     created = models.DateTimeField(auto_now_add=True)

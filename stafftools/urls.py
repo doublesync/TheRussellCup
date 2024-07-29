@@ -8,6 +8,7 @@ from stafftools import views
 # Create your urls here.
 urlpatterns = [
     # fmt:off
-    path("payuser/<int:id>/", views.pay_user, name="pay_user"),
+    path("payuser/<int:id>/<str:payment_type>/", views.pay_user, name="pay_user"),
+    path("bulkpay/", views.BulkPayView.as_view(), name="bulk_pay"),
     # fmt:on
 ]

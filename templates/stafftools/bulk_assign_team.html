@@ -12,7 +12,7 @@
                 <h5 class="card-title mb-3">Assign Team Form</h5>
         
                 <div class="mb-3">
-                    <label for="assign-list" class="form-label">Select players to pay</label>
+                    <label for="assign-list" class="form-label">Select players to assign</label>
                     <select id="assign-list" class="js-multiple-select form-select" name="assign-list" multiple="multiple">
                         {% for player in players %}
                             <option value="{{ player.id }}">{{ player.first_name }} {{ player.last_name }}</option>
@@ -47,7 +47,7 @@
         $('.js-multiple-select').select2({
             allowClear: true,
             closeOnSelect: true,
-            placeholder: 'Select players to pay',
+            placeholder: 'Select players to assign',
         });
     });
 </script>

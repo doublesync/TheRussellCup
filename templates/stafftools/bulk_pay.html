@@ -51,7 +51,7 @@
                     <label for="include-xp-equivalent" class="form-check-label">Pay XP Equivalent</label>
                 </div>
                 <div class="d-grid">
-                    <button type="submit" class="btn btn-info btn-sm w-25" hx-trigger="click throttle:1s" hx-target="#pay-users-form" hx-swap="innerHTML" hx-post="{% url 'pay_user' 0 'bulk' %}"><i class="fas fa-coins"></i> Pay Users</button>
+                    <button type="submit" class="btn btn-info btn-sm" hx-trigger="click throttle:1s" hx-target="#pay-users-form" hx-swap="innerHTML" hx-post="{% url 'pay_user' 0 'bulk' %}"><i class="fas fa-coins"></i> Pay Users</button>
                 </div>
             </div>
         </form>
@@ -67,9 +67,6 @@
             placeholder: 'Select players to pay',
         });
     });
-    // We need to change the theme to dark I think
-    // https://select2.org/appearance
-    
 </script>
 {% endblock %}
 

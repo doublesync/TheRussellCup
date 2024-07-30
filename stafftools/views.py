@@ -8,6 +8,7 @@ from django.views import View
 from accounts.models import CustomUser
 from logs.models import PaymentLog
 from players.models import Player
+from teams.models import Team
 from simulation.payment import Payment
 
 # Create your views here.
@@ -55,3 +56,40 @@ class BulkPayView(View):
             return HttpResponse("You are not authorized to bulk pay users.")
         # Render the template
         return render(request, self.template_name, {"players": Player.objects.values("id", "first_name", "last_name")})
+    
+class BulkAssignTeamView(View):
+    template_name = "stafftools/bulk_assign_team.html"
+
+    def get(self, request):
+        # Check staff status
+        if not request.user.is_superuser:
+            return HttpResponse("You are not authorized to bulk assign users.")
+        # Create the context & render the template
+        context = {
+            "players": Player.objects.values("id", "first_name", "last_name"),
+            "teams": Team.objects.all(),
+        }
+        return render(request, self.template_name, context)
+    
+    def post(self, request):
+        # Check staff status
+        if not request.user.is_superuser:
+            return HttpResponse("You are not authorized to bulk assign users to teams.")
+        # Grab the form data
+        assign_list = request.POST.getlist("assign-list")
+        assign_team = request.POST.get("assign-team")
+        clear_existing_members = request.POST.get("clear-existing-members")
+        # Clear the existing members if the field is checked
+        team = Team.objects.get(pk=assign_team)
+        if clear_existing_members == "on":
+            for player in team.player_set.all():
+                player.team = None
+                player.save()
+        # Assign the players to the team
+        for id in assign_list:
+            player = Player.objects.get(pk=id)
+            player.team = team
+            player.save()
+            
+        # Return the response
+        return HttpResponse("✅ Players have been assigned to the team.")

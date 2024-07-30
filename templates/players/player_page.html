@@ -181,7 +181,7 @@
                                             <span class="badge bg-light text-dark"><i class="fas fa-tasks"></i> {{ value }}</span>
                                         {% endif %}
                                     {% endfor %}
-                                    <span style="{{ v|add_attribute_color }}" class="badge">{{ v }} - {{ category }}</span> {{ k|truncatechars:20 }}
+                                    <span style="{{ v|add_attribute_color }}" class="badge">{{ v }}</span> {{ k|truncatechars:20 }}
                                 </p>
                             </div>
                             {% endfor %}
@@ -234,7 +234,7 @@
                                             <span class="badge bg-light text-dark"><i class="fas fa-tasks"></i> {{ value }}</span>
                                         {% endif %}
                                     {% endfor %}
-                                    <span style="{{ v|add_badge_color }}" class="badge">{{ v }} - {{ category }}</span> {{ k }}
+                                    <span style="{{ v|add_badge_color }}" class="badge">{{ v }}</span> {{ k }}
                                 </p>
                             </div>
                             {% endfor %}
@@ -296,7 +296,7 @@
                                         <span class="badge bg-light text-dark"><i class="fas fa-tasks"></i> {{ value }}</span>
                                     {% endif %}
                                 {% endfor %}
-                                <span style="{{ v|add_attribute_color }}" class="badge">{{ v }} - {{ category }}</span> {{ k }}
+                                <span style="{{ v|add_attribute_color }}" class="badge">{{ v }}</span> {{ k }}
                             </p>
                         </div>
                         {% endfor %}

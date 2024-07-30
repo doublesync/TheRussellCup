@@ -171,7 +171,7 @@ class StatFinder:
         for box_score in box_scores:
             standing_stats = box_score.get_point_differential()
             point_differentials.append(standing_stats["point_differential"])
-        aggregates["point_differential"] = round(sum(point_differentials) / len(point_differentials), 2)
+        aggregates["point_differential"] = round(self.safe_division(sum(point_differentials), len(point_differentials)), 2)
         # Set None values to 0
         aggregates = self.none_to_zero(aggregates)
         # If team is provided, calculate team averages

@@ -319,7 +319,7 @@ college_choices = [
     "Xavier University",
     "Yale University",
 ]
-game_type_choices = ["Regular Season", "Playoff Game", "All-Star Game", "Preseason Game", "Olympic Game", "Showcase Game"]
+playoff_round_choices = ["Quarterfinals", "Semifinals", "Finals"]
 
 # Callable for attributes
 def default_attributes():
@@ -555,3 +555,10 @@ def default_tendencies():
 # Callable for modifications
 def default_modifications():
     return {}
+
+# Callable for game highs
+def default_game_highs():
+    return {
+        "game_id": 0,
+        "label": "N/A",
+    }

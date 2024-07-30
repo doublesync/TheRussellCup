@@ -16,7 +16,7 @@ current_season = Season.objects.filter(current_season=True).first()
 
 class StatFinder:
 
-    def __init__(self, week=current_week, season=current_season, fetch_all_season=False, fetch_all_time=False):
+    def __init__(self, week=current_week, season=current_season, all_season=False, all_time=False):
 
         # Set the kwargs
         self.kwargs = {
@@ -25,18 +25,18 @@ class StatFinder:
         }
 
         # Get the games, player box scores, and team box scores
-        if fetch_all_season:
+        if all_season:
             self.games = Game.objects.queryset_from_cache({"season": season})
             self.player_box_scores = PlayerGameStats.objects.queryset_from_cache({"game__season": season})
             self.team_box_scores = TeamGameStats.objects.queryset_from_cache({"game__season": season})
-        elif fetch_all_time:
+        elif all_time:
             self.games = Game.objects.queryset_from_cache({})
             self.player_box_scores = PlayerGameStats.objects.queryset_from_cache({})
             self.team_box_scores = TeamGameStats.objects.queryset_from_cache({})
         else:
             self.games = Game.objects.queryset_from_cache({"week": week, "season": season})
-            self.player_box_scores = PlayerGameStats.objects.queryset_from_cache({"game__week": week, "game__season": season, "game__game_type": "Regular Season"})
-            self.team_box_scores = TeamGameStats.objects.queryset_from_cache({"game__week": week, "game__season": season, "game__game_type": "Regular Season"})
+            self.player_box_scores = PlayerGameStats.objects.queryset_from_cache({"game__week": week, "game__season": season})
+            self.team_box_scores = TeamGameStats.objects.queryset_from_cache({"game__week": week, "game__season": season})
 
     def none_to_zero(self, dictionary):
         for key in dictionary:
@@ -82,7 +82,7 @@ class StatFinder:
         return player_averages
 
     def player_averages(self, player, team=None):
-        box_scores = self.player_box_scores.filter(player=player, game__game_type="Regular Season")
+        box_scores = self.player_box_scores.filter(player=player)
         aggregates = box_scores.aggregate(
             # Basic stats
             models.Avg("minutes"),
@@ -131,7 +131,7 @@ class StatFinder:
     
     def team_averages(self, team):
         # Get all the box scores for the team & get their averages
-        box_scores = self.team_box_scores.filter(team=team, game__game_type="Regular Season")
+        box_scores = self.team_box_scores.filter(team=team)
         aggregates = box_scores.aggregate(
             models.Avg("field_goals_made"), 
             models.Avg("field_goals_attempted"),
@@ -179,7 +179,7 @@ class StatFinder:
     
     def player_totals(self, player, team=None):
         # Get all the box scores for the player & get their totals
-        box_scores = self.player_box_scores.filter(player=player, game__game_type="Regular Season")
+        box_scores = self.player_box_scores.filter(player=player)
         aggregates = box_scores.aggregate(
             # Basic stats
             models.Sum("minutes"),
@@ -239,8 +239,8 @@ class StatFinder:
             models.Sum("time_of_possession"),
         )
         # Add the games played, won, and lost
-        aggregates["games"] = box_scores.filter(game__game_type="Regular Season").count()
-        aggregates["games_won"] = box_scores.filter(game__winner=team, game__game_type="Regular Season").count()
+        aggregates["games"] = box_scores.count()
+        aggregates["games_won"] = box_scores.filter(game__winner=team).count()
         aggregates["games_lost"] = (aggregates["games"] - aggregates["games_won"])
         # Find some more standing statistics
         point_differentials = []

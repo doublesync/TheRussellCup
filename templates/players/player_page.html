@@ -172,17 +172,19 @@
                         </div>
                         <hr>
                         <div id="attribute_list" class="row">
-                            {% for k, v in attributes.items %}
+                            {% for category, data in attributes.items %}
+                            {% for k, v in data.items %}
                             <div class="col-lg-6" data-category="{{ k|add_attribute_category }}">
                                 <p class="mt-0 mb-0">
-                                {% for key, value in player.coach_suggestion_attributes.items %}
-                                    {% if key == k %}
-                                        <span class="badge bg-light text-dark"><i class="fas fa-tasks"></i> {{ value }}</span>
-                                    {% endif %}
-                                {% endfor %}
-                                <span style="{{ v|add_attribute_color }}" class="badge">{{ v }}</span> {{ k|truncatechars:20 }}
+                                    {% for key, value in player.coach_suggestion_attributes.items %}
+                                        {% if key == k %}
+                                            <span class="badge bg-light text-dark"><i class="fas fa-tasks"></i> {{ value }}</span>
+                                        {% endif %}
+                                    {% endfor %}
+                                    <span style="{{ v|add_attribute_color }}" class="badge">{{ v }} - {{ category }}</span> {{ k|truncatechars:20 }}
                                 </p>
                             </div>
+                            {% endfor %}
                             {% endfor %}
                         </div>
                     </ul>
@@ -223,7 +225,8 @@
                         </div>
                         <hr>
                         <div id="badge_list" class="row">
-                            {% for k, v in badges.items %}
+                            {% for category, data in badges.items %}
+                            {% for k, v in data.items %}
                             <div class="col-lg-6" data-category="{{ k|add_badge_category }}">
                                 <p class="mt-0 mb-0">
                                     {% for key, value in player.coach_suggestion_badges.items %}
@@ -231,9 +234,10 @@
                                             <span class="badge bg-light text-dark"><i class="fas fa-tasks"></i> {{ value }}</span>
                                         {% endif %}
                                     {% endfor %}
-                                    <span style="{{ v|add_badge_color }}" class="badge">{{ v }}</span> {{ k }}
+                                    <span style="{{ v|add_badge_color }}" class="badge">{{ v }} - {{ category }}</span> {{ k }}
                                 </p>
                             </div>
+                            {% endfor %}
                             {% endfor %}
                         </div>
                     </ul>
@@ -283,7 +287,8 @@
                         <hr>
                     </ul>
                     <div id="tendency_list" class="row">
-                        {% for k, v in tendencies.items %}
+                        {% for category, data in tendencies.items %}
+                        {% for k, v in data.items %}
                         <div class="col-lg-6" data-category="{{ k|add_tendency_category }}">
                             <p class="mt-0 mb-0">
                                 {% for key, value in player.coach_suggestion_tendencies.items %}
@@ -291,9 +296,10 @@
                                         <span class="badge bg-light text-dark"><i class="fas fa-tasks"></i> {{ value }}</span>
                                     {% endif %}
                                 {% endfor %}
-                                <span style="{{ v|add_attribute_color }}" class="badge">{{ v }}</span> {{ k }}
+                                <span style="{{ v|add_attribute_color }}" class="badge">{{ v }} - {{ category }}</span> {{ k }}
                             </p>
                         </div>
+                        {% endfor %}
                         {% endfor %}
                     </div>
                 </div>

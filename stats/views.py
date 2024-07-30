@@ -18,13 +18,13 @@ from django_table_sort.table import TableSort
     
 # A function that returns the 'player_averages' page
 def player_averages(request):
-    finder = statfinder.StatFinder(fetch_all_season=True)
+    finder = statfinder.StatFinder(all_season=True)
     players = finder.all_player_averages()
     return render(request, "stats/player_averages.html", {"players": players})
 
 # A function that returns the 'team_averages' page
 def stats_home(request):
-    finder = statfinder.StatFinder(fetch_all_season=True)
+    finder = statfinder.StatFinder(all_season=True)
     standings = finder.league_standings()
     season = Season.objects.filter(current_season=True).first()
     storylines = season.current_storylines
@@ -34,7 +34,7 @@ def stats_home(request):
 def sort_by_stat(request, stat):
     if request.method == "POST":
         # Get the averages for each player
-        players = statfinder.StatFinder(fetch_all_season=True).all_player_averages()
+        players = statfinder.StatFinder(all_season=True).all_player_averages()
         # Sort by the stat & make a dictionary of players
         order_type = request.POST.get("order-type")
         reverse_order = False if order_type == "asc" else True
@@ -50,7 +50,7 @@ def records(request):
 
 # A function that returns the performances page
 def performances(request):
-    finder = statfinder.StatFinder(fetch_all_season=True)
+    finder = statfinder.StatFinder(all_season=True)
     performances = statfinder.get_season_performances()
     accolades = finder.accolade_counts()
     return render(request, "stats/performances.html", {"performances": performances, "accolades": accolades})

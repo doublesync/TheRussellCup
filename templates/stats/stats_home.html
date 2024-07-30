@@ -11,16 +11,13 @@
 </style>
 {% endblock %}
 
+{% block navbar %}
+    {% include 'stats/fragments/stats_navbar.html' %}
+{% endblock %}
+
 {% block content %}
 
 <div class="container-fluid p-md-5">
-
-    <!-- Links to other statistics pages -->
-    <div class="mb-4">
-        <a href="{% url 'performances' %}" class="text-decoration-none"><i class="fas fa-arrow-right"></i> Performances</a><br>
-        <a href="{% url 'records' %}" class="text-decoration-none"><i class="fas fa-arrow-right"></i> Records</a><br>
-        <a href="{% url 'player_averages' %}" class="text-decoration-none"><i class="fas fa-arrow-right"></i> Player Averages</a><br>
-    </div>
 
     <!-- League storylines -->
     <h1>League Storylines</h1>

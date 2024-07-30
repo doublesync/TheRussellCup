@@ -63,9 +63,9 @@ class PlayerFormView(FormView):
 def player_page(request, id):
     # fmt:off
     player = Player.objects.get(pk=id)
-    sorted_attributes = dict(sorted(player.attributes.items(), key=lambda x: x[1], reverse=True))
-    sorted_badges = dict(sorted(player.badges.items(), key=lambda x: x[1], reverse=True))
-    sorted_tendencies = dict(sorted(player.tendencies.items(), key=lambda x: x[1], reverse=True))
+    sorted_attributes = attribute.order_attributes(player.attributes)
+    sorted_badges = badge.order_badges(player.badges)
+    sorted_tendencies = tendency.order_tendencies(player.tendencies)
     return render(request, "players/player_page.html", {
         "user": request.user,
         "player": player, 

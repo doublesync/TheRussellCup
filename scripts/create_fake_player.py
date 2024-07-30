@@ -43,7 +43,6 @@
 #     class Meta:
 #         model = Game
 
-#     game_type = random.choice(['Regular', 'Playoff', 'Final'])
 #     home_team_score = random.randint(50, 150)
 #     away_team_score = random.randint(50, 150)
 #     week = random.randint(1, 18)

@@ -49,6 +49,7 @@ class PlayerGameStatsManager(models.Manager):
             cache.set(cachekey, res, 300)  # Five minutes
             return res
 
+# This is so messy...
 def default_game_highs():
     return {
         "game_id": 0,
@@ -90,6 +91,37 @@ class Season(models.Model):
     def __str__(self):
         return f"S{self.season}"
 
+class Playoff(models.Model):
+    season = models.ForeignKey(Season, on_delete=models.CASCADE)
+    quarterfinals = models.ForeignKey("PlayoffRound", on_delete=models.CASCADE, related_name="quarterfinals", blank=True, null=True)
+    semifinals = models.ForeignKey("PlayoffRound", on_delete=models.CASCADE, related_name="semifinals", blank=True, null=True)
+    finals = models.ForeignKey("PlayoffRound", on_delete=models.CASCADE, related_name="finals", blank=True, null=True)
+
+    def __str__(self):
+        return f"Playoffs | {self.season}"
+
+class PlayoffRound(models.Model):
+    playoff = models.ForeignKey(Playoff, on_delete=models.CASCADE)
+    type = models.CharField(max_length=50, choices=((choice, choice) for choice in default.playoff_round_choices))
+    wins_to_advance = models.IntegerField(default=5)
+
+    def __str__(self):
+        return f"{self.type} | {self.playoff}"
+
+class PlayoffSeries(models.Model):
+    round = models.ForeignKey(PlayoffRound, on_delete=models.CASCADE)
+    team_a = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="team_a")
+    team_b = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="team_b")
+    team_a_seed = models.IntegerField()
+    team_b_seed = models.IntegerField()
+    winner = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="series_winner", blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.round} | {self.team_a.name} vs {self.team_b.name}"
+    
+    class Meta:
+        verbose_name_plural = "Playoff series"
+
 class Game(models.Model):
 
     # Managers
@@ -97,7 +129,6 @@ class Game(models.Model):
 
     # Defined fields
     surge_game = models.BooleanField(default=False)
-    game_type = models.CharField(max_length=100, choices=[(game_type, game_type) for game_type in default.game_type_choices])
     season = models.ForeignKey(Season, on_delete=models.CASCADE)
     week = models.IntegerField()
     home_team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="home_team")
@@ -123,7 +154,17 @@ class Game(models.Model):
         # Prevent non-staff users from saving games that are older than 10 days
         if not self.created or self.created > timezone.now() - datetime.timedelta(days=10):
             super(Game, self).save(*args, **kwargs)
-            
+
+class PlayoffGame(Game):
+    
+    # Defined fields
+    series = models.ForeignKey(PlayoffSeries, on_delete=models.CASCADE)
+    game_number = models.IntegerField()
+
+    def __str__(self):
+        loser = self.home_team if self.winner == self.away_team else self.away_team
+        return f"{self.series.round} | {self.series.team_a.name} vs {self.series.team_b.name} | Game {self.game_number} | {self.winner.name} beat {loser.name} ({self.home_team_score}-{self.away_team_score})"
+
 class TeamGameStats(models.Model):
 
     # Managers
@@ -171,6 +212,9 @@ class TeamGameStats(models.Model):
         # Prevent non-staff users from saving games that are older than 10 days
         if not self.created or self.created > timezone.now() - datetime.timedelta(days=10):
             super(TeamGameStats, self).save(*args, **kwargs)
+
+    class Meta:
+        verbose_name_plural = "Team game stats"
 
 class PlayerGameStats(models.Model):
 
@@ -246,3 +290,7 @@ class PlayerGameStats(models.Model):
         # Prevent non-staff users from saving games that are older than 10 days
         if not self.created or self.created > timezone.now() - datetime.timedelta(days=10):
             super(PlayerGameStats, self).save(*args, **kwargs)
+
+
+    class Meta:
+        verbose_name_plural = "Player game stats"

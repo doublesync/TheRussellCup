@@ -13,7 +13,6 @@ def run():
     season = Season.objects.get(pk=1)
     game = Game.objects.create(
         surge_game=False,
-        game_type="Regular Season",
         season_id=1,
         week=random.randint(1, 18),
         home_team_id=1,

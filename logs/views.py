@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404
 from django.views import View
 
 # Local imports
+import simulation.webhook as webhook
 import simulation.config as config
 import simulation.scripts.attribute as attribute
 import simulation.scripts.badge as badge
@@ -64,7 +65,15 @@ def mark_upgrade_complete(request, id):
     if request.method == "POST":
         # Check if the user has permission to mark upgrades as complete
         if request.user.can_mark_upgrades:
+            # Create the upgrade log
             log = UpgradeLog.objects.get(id=id)
             log.complete = True
             log.save()
+            # Create a discord webhook
+            webhook.send_webhook(
+                url="marked_upgrades",
+                title=f"✅ Updated completed by {request.user.username}",
+                body=f"# Update Details\n## Player\n ### {log.player}\n### Upgrades ```{log.upgrades}```",
+            )
+            # Return a response
             return HttpResponse("✅ Upgrade marked as complete.")

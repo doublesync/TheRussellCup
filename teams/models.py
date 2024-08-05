@@ -1,31 +1,14 @@
 # Python imports
-import hashlib
 
 # Django imports
-from django.core.cache import cache
 from django.db import models
 
 # Local imports
 from players.models import Player
 from accounts.models import CustomUser
 
-# Create your managers here.
-class TeamManager(models.Manager):
-    def queryset_from_cache(self, filterdict):
-        cachekey = 'TeamGameStatsCache' + hashlib.md5(str(filterdict).encode()).hexdigest()
-        res = cache.get(cachekey)
-        if res:
-            return res  # Return only the queryset from cache
-        else:
-            res = Team.objects.filter(**filterdict)
-            cache.set(cachekey, res, 300)  # Five minutes
-            return res
-
 # Create your models here.
 class Team(models.Model):
-
-    # Managers
-    objects = TeamManager()
 
     # Defined fields
     manager = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
@@ -37,6 +20,29 @@ class Team(models.Model):
 
     def __str__(self):
         return f"{self.city} {self.name}"
+
+class TeamLogs(models.Model):
+
+    # Defined fields (positions)
+    team = models.ForeignKey(Team, on_delete=models.CASCADE)
+
+    # Defined fields (positions, playtypes, focus, & sliders)
+    playbook = models.CharField(max_length=32, default="Team Playbook 1")
+    offensive_focus = models.CharField(max_length=32, default="No Preference")
+    offensive_tempo = models.CharField(max_length=32, default="No Preference")
+    offensive_rebounding = models.CharField(max_length=32, default="No Preference")
+    defensive_focus = models.CharField(max_length=32, default="No Preference")
+    defensive_aggression = models.CharField(max_length=32, default="No Preference")
+    defensive_rebounding = models.CharField(max_length=32, default="No Preference")
+    run_plays = models.IntegerField(default=50)
+    zone_usage = models.IntegerField(default=50)
+
+    # Defined fields (position lineups, play initiators, playtypes, & touches)
+    lineup = models.JSONField(default=dict)
+    initiators = models.JSONField(default=dict)
+    playtypes = models.JSONField(default=dict)
+    touches = models.JSONField(default=dict)
+
 
 class Draft(models.Model):
 

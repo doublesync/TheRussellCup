@@ -4,50 +4,13 @@ import datetime
 
 # Django imports
 from django.db import models
-from django.core.cache import cache
-from django.utils.functional import cached_property
 from django.utils import timezone
-from django.contrib import messages
 
 # Local imports
-import simulation.scripts.default as default
+from stats.managers import GameManager, TeamGameStatsManager, PlayerGameStatsManager
 from players.models import Player
+import simulation.scripts.default as default
 from teams.models import Team
-
-
-# Create your managers here.
-class GameManager(models.Manager):
-    def queryset_from_cache(self, filterdict):
-        cachekey = 'GameCache' + hashlib.md5(str(filterdict).encode()).hexdigest()
-        res = cache.get(cachekey)
-        if res:
-            return res  # Return only the queryset from cache
-        else:
-            res = Game.objects.filter(**filterdict)
-            cache.set(cachekey, res, 300)  # Five minutes
-            return res
-
-class TeamGameStatsManager(models.Manager):
-    def queryset_from_cache(self, filterdict):
-        cachekey = 'TeamGameStatsCache' + hashlib.md5(str(filterdict).encode()).hexdigest()
-        res = cache.get(cachekey)
-        if res:
-            return res  # Return only the queryset from cache
-        else:
-            res = TeamGameStats.objects.filter(**filterdict)
-            cache.set(cachekey, res, 300)  # Five minutes
-            return res
-        
-class PlayerGameStatsManager(models.Manager):
-    def queryset_from_cache(self, filterdict):
-        cachekey = 'PlayerGameStatsCache' + hashlib.md5(str(filterdict).encode()).hexdigest()
-        res = cache.get(cachekey)
-        if res:
-            return res  # Return only the queryset from cache
-        else:
-            res = PlayerGameStats.objects.filter(**filterdict)
-            cache.set(cachekey, res, 300)  # Five minutes
-            return res
 
 # This is so messy...
 def default_game_highs():

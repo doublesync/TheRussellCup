@@ -1,8 +1,6 @@
 # Python imports
-import random
 
 # Django imports
-from django.core.cache import cache
 from django.db import models
 
 # Local imports
@@ -18,23 +16,8 @@ class ChoiceFieldNoValidation(models.CharField):
     def validate(self):
         return
 
-# Create your managers here.
-class PlayerManager(models.Manager):
-    def queryset_from_cache(self, filterdict):
-        cachekey = 'PlayerCache'
-        res = cache.get(cachekey)
-        if res:
-            return res  # Return only the queryset from cache
-        else:
-            res = Player.objects.filter(**filterdict)
-            cache.set(cachekey, res, 300)  # Five minutes
-            return res
-
 # Create your models here.
 class Player(models.Model):
-    
-    # Managers
-    objects = PlayerManager()
 
     # User defined fields
     first_name = models.CharField(max_length=16)
@@ -54,12 +37,12 @@ class Player(models.Model):
     weight = models.IntegerField(default=0)
     wingspan = models.IntegerField(default=0)
     # Randomly generated jumpshot fields & anomaly field
-    jumpshot = models.CharField(default="N/A", max_length=32)
-    jumpshot_release_1 = models.CharField(default="N/A", max_length=32)
-    jumpshot_release_2 = models.CharField(default="N/A", max_length=32)
-    jumpshot_blending = models.IntegerField(default=-1)
-    jumpshot_timing = models.CharField(default="N/A", max_length=32)
-    jumpshot_free_throw = models.CharField(default="N/A", max_length=32)
+    jumpshot = models.CharField(default="N/A", max_length=32, null=True, blank=True)
+    jumpshot_release_1 = models.CharField(default="N/A", max_length=32, null=True, blank=True)
+    jumpshot_release_2 = models.CharField(default="N/A", max_length=32, null=True, blank=True)
+    jumpshot_blending = models.IntegerField(default=0, null=True, blank=True)
+    jumpshot_timing = models.CharField(default="N/A", max_length=32, null=True, blank=True)
+    jumpshot_free_throw = models.CharField(default="N/A", max_length=32, null=True, blank=True)
     anomaly = models.BooleanField(default=False)
     # Server defined fields
     attributes = models.JSONField(default=default.default_attributes)
@@ -87,7 +70,7 @@ class Player(models.Model):
         # Set the imperial height based on the height
         self.height_imperial = utility.imperial_height(self.height)
         # Set a random jumpshot if it is not set
-        if self.jumpshot == "N/A": animation.generate_jumpshot(self)
+        if not self.jumpshot or self.jumpshot == "N/A": animation.generate_jumpshot(self)
         # Calculate the lateral quickness after potential upgrades
         self.attributes["Lateral Quickness"] = (self.attributes["Speed"] + self.attributes["Perimeter Defense"]) // 2
         # Calculate the overall rating after potential upgrades

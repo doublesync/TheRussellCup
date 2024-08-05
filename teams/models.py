@@ -4,6 +4,7 @@
 from django.db import models
 
 # Local imports
+from simulation.scripts import default as default
 from players.models import Player
 from accounts.models import CustomUser
 
@@ -38,10 +39,7 @@ class TeamLogs(models.Model):
     zone_usage = models.IntegerField(default=50)
 
     # Defined fields (position lineups, play initiators, playtypes, & touches)
-    lineup = models.JSONField(default=dict)
-    initiators = models.JSONField(default=dict)
-    playtypes = models.JSONField(default=dict)
-    touches = models.JSONField(default=dict)
+    lineup = models.JSONField(default=default.default_lineup)
 
 
 class Draft(models.Model):

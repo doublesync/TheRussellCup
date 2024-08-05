@@ -562,3 +562,13 @@ def default_game_highs():
         "game_id": 0,
         "label": "N/A",
     }
+
+# Callables for default team log fields
+def default_lineup():
+    return {
+        "PG": {"player": "None", "touches": 50, "initiator": "No", "playtype_1": "N/A", "playtype_2": "N/A", "playtype_3": "N/A", "playtype_4": "N/A"},
+        "SG": {"player": "None", "touches": 50, "initiator": "No", "playtype_1": "N/A", "playtype_2": "N/A", "playtype_3": "N/A", "playtype_4": "N/A"},
+        "SF": {"player": "None", "touches": 50, "initiator": "No", "playtype_1": "N/A", "playtype_2": "N/A", "playtype_3": "N/A", "playtype_4": "N/A"},
+        "PF": {"player": "None", "touches": 50, "initiator": "No", "playtype_1": "N/A", "playtype_2": "N/A", "playtype_3": "N/A", "playtype_4": "N/A"},
+        "C": {"player": "None", "touches": 50, "initiator": "No", "playtype_1": "N/A", "playtype_2": "N/A", "playtype_3": "N/A", "playtype_4": "N/A"},
+    }

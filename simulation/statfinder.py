@@ -35,7 +35,7 @@ def safe_division(numerator, denominator):
 # A manager class to find statistics
 class StatFinder:
 
-    def __init__(self, season=current_season, specific_season=None, specific_week=None):
+    def __init__(self, season=current_season, specific_season=None, specific_week=None, only_playoffs=False):
 
         # StatFinder Functions
         # - Get the games, player box scores, and team box scores
@@ -65,8 +65,12 @@ class StatFinder:
             self.kwargs["week"] = specific_week
             self.child_kwargs["game__week"] = specific_week
 
+        # Add playoff game filter if the season is only for playoffs
+        self.kwargs["playoffgame__isnull"] = True if only_playoffs else False
+        self.child_kwargs["game__playoffgame__isnull"] = True if only_playoffs else False
+
         # Get the games, player box scores, and team box scores
-        self.games = Game.objects.filter(playoffgame__isnull=True, **self.kwargs)
+        self.games = Game.objects.filter(**self.kwargs)
         self.player_box_scores = PlayerGameStats.objects.filter(**self.child_kwargs)
         self.team_box_scores = TeamGameStats.objects.filter(**self.child_kwargs)
 

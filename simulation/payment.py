@@ -85,6 +85,9 @@ def get_contract_year(player):
 
 # A method that pays a user's players based on their contract
 def pay_contracts(user):
+
+    return "❌ This feature is disabled until free agency is over."
+
     # Get the user's players
     players = user.player_set.all()
     current_week = config.CONFIG_SEASON["CURRENT_WEEK"]

@@ -80,14 +80,23 @@ def pay_contracts(user):
     if players:
         for player in players:
             if player.contract:
+                # Get the current year of the player's contract
+                payment_years = {
+                    "Year 1": player.contract.year_1_payment,
+                    "Year 2": player.contract.year_2_payment,
+                    "Year 3": player.contract.year_3_payment
+                }
+                current_contract_year = player.contract.current_year
+                current_year_payment = payment_years[current_contract_year]
+                # Check if the player has already been paid for the current week
                 if player.contract.weeks_paid and (str(current_week) in player.contract.weeks_paid):
                     return "❌ Player/s have already been paid for this week."
                 else:
                     # Pay the player
-                    player.user.sp += round(player.contract.current_year_payment * 0.30)
-                    player.user.sp += config.CONFIG_SEASON["CHECKIN_SP"]
-                    player.user.xp += round(player.contract.current_year_payment * 0.70)
-                    player.user.xp += config.CONFIG_SEASON["CHECKIN_XP"]
+                    sp_to_pay = round(current_year_payment * 0.30) + config.CONFIG_SEASON["CHECKIN_SP"]
+                    xp_to_pay = round(current_year_payment * 0.70) + config.CONFIG_SEASON["CHECKIN_XP"]
+                    player.user.sp += sp_to_pay
+                    player.user.xp += xp_to_pay
                     player.user.save()
                     # Update the player's contract
                     if player.contract.weeks_paid:
@@ -95,18 +104,18 @@ def pay_contracts(user):
                     else:
                         player.contract.weeks_paid = {current_week: True}
                     player.contract.save()
-                    players_paid.append(f"{player.first_name} {player.last_name}")
+                    players_paid.append(f"{player.first_name} {player.last_name} ({sp_to_pay} SP, {xp_to_pay} XP)")
             else:
                 player.contract = ContractLog.objects.create(
                     player=player,
                     season=config.CONFIG_SEASON["CURRENT_SEASON"],
                     length=1,
-                    current_year_payment=config.CONFIG_SEASON["DEFAULT_CONTRACT"]
+                    year_1_payment=config.CONFIG_SEASON["DEFAULT_CONTRACT"]
                 )
                 player.save()
                 return f"💴 Contract was created for {player.first_name} {player.last_name}, please try again."
     # Return success message since the payment was successful
-    return f"✅ Player/s paid: {players_paid}"
+    return f"✅ Player/s paid: {players_paid[0]}"
 
 # A method that counts the total salary cap spent for a team
 def get_salary_book(team):
@@ -116,7 +125,7 @@ def get_salary_book(team):
     # Loop through the players
     for player in players:
         if player.contract:
-            salary_book[player.id] = player.contract.current_year_payment
-            salary_book["total_spent"] += player.contract.current_year_payment
+            salary_book[player.id] = current_year_payment
+            salary_book["total_spent"] += current_year_payment
     # Return the total spent
     return salary_book

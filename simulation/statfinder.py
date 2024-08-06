@@ -66,8 +66,8 @@ class StatFinder:
             self.child_kwargs["game__week"] = specific_week
 
         # Add playoff game filter if the season is only for playoffs
-        self.kwargs["playoffgame__isnull"] = True if only_playoffs else False
-        self.child_kwargs["game__playoffgame__isnull"] = True if only_playoffs else False
+        self.kwargs["playoffgame__isnull"] = False if only_playoffs else True
+        self.child_kwargs["game__playoffgame__isnull"] = False if only_playoffs else True
 
         # Get the games, player box scores, and team box scores
         self.games = Game.objects.filter(**self.kwargs)

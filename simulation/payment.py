@@ -70,6 +70,19 @@ class Payment:
         # Return True since the payment was successful
         return f"✅ Payment of {self.amount} XP was successful to {self.receiver.first_name} {self.receiver.last_name}.<br>"
 
+
+# A method that gets the current year of a players contract
+def get_contract_year(player):
+    # Get the current year of the player's contract
+    payment_years = {
+        "Year 1": player.contract.year_1_payment,
+        "Year 2": player.contract.year_2_payment,
+        "Year 3": player.contract.year_3_payment
+    }
+    current_contract_year = player.contract.current_year
+    current_year_payment = payment_years[current_contract_year]
+    return current_year_payment
+
 # A method that pays a user's players based on their contract
 def pay_contracts(user):
     # Get the user's players
@@ -81,13 +94,7 @@ def pay_contracts(user):
         for player in players:
             if player.contract:
                 # Get the current year of the player's contract
-                payment_years = {
-                    "Year 1": player.contract.year_1_payment,
-                    "Year 2": player.contract.year_2_payment,
-                    "Year 3": player.contract.year_3_payment
-                }
-                current_contract_year = player.contract.current_year
-                current_year_payment = payment_years[current_contract_year]
+                current_year_payment = get_contract_year(player)
                 # Check if the player has already been paid for the current week
                 if player.contract.weeks_paid and (str(current_week) in player.contract.weeks_paid):
                     return "❌ Player/s have already been paid for this week."
@@ -125,6 +132,7 @@ def get_salary_book(team):
     # Loop through the players
     for player in players:
         if player.contract:
+            current_year_payment = get_contract_year(player)
             salary_book[player.id] = current_year_payment
             salary_book["total_spent"] += current_year_payment
     # Return the total spent

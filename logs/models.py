@@ -36,13 +36,14 @@ class ContractLog(models.Model):
     season = models.IntegerField()
     length = models.IntegerField()
     option = models.CharField(max_length=32, default="None")
-    current_year_payment = models.IntegerField()
-    subsequent_year_payment = models.IntegerField(default=0)
-    biennium_year_payment = models.IntegerField(default=0)
+    year_1_payment = models.IntegerField()
+    year_2_payment = models.IntegerField(default=0)
+    year_3_payment = models.IntegerField(default=0)
     no_trade_clause = models.BooleanField(default=False)
     no_release_clause = models.BooleanField(default=False)
     incentives = models.CharField(max_length=255, default="None")
     weeks_paid = models.JSONField(default=dict, null=True, blank=True)
+    current_year = models.CharField(max_length=32, choices=(("Year 1", "Year 1"), ("Year 2", "Year 2"), ("Year 3", "Year 3")), default="Year 1")
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

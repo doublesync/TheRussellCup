@@ -14,7 +14,7 @@ def run():
             season=1,
             length=1,
             option="Team Option",
-            current_year_payment=240,
+            year_1_payment=240,
             incentives="None",
         )
         player.contract = contract

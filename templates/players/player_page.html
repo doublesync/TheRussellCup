@@ -54,7 +54,7 @@
                         </li>
                         <li class="list-group-item">
                             <small style="display: block;"><i class="fa-solid fa-gun"></i> Jumpshot</small>
-                            {{ player.jumpshot_timing }} - {{ player.jumpshot }} - {{ player.jumpshot_release_1}} - {{ player.jumpshot_release_2 }} - {{ player.jumpshot_blending }}% Blend
+                            {{ player.jumpshot_timing }} - {{ player.jumpshot }} - {{ player.jumpshot_release_1}} - {{ player.jumpshot_release_2 }} - {{ player.jumpshot_blending }}% Blend - {{ player.jumpshot_free_throw }} FT
                         </li>
                         <li class="list-group-item">
                             <small style="display: block;"><i class="fa-solid fa-location-dot"></i> Position</small>
@@ -82,11 +82,11 @@
                         </li>
                         <li class="list-group-item">
                             <small style="display: block;"><i class="fa-solid fa-gear"></i> Modifications</small>
-                            {% for mod in player.modifications %}
+                            {% for mod, count in player.modifications.items %}
                                 {% if forloop.last %}
-                                    {{ mod }}
+                                    ({{ count }}) {{ mod }}
                                 {% else %}
-                                    {{ mod }},
+                                    ({{ count }}) {{ mod }},
                                 {% endif %}
                             {% endfor %}
                         </li>

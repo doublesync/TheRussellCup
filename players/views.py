@@ -24,6 +24,8 @@ from players.forms import PlayerForm, UpgradeForm
 import simulation.create as create
 import simulation.upgrade as upgrade
 import simulation.webhook as webhook
+import simulation.modification as modification
+import simulation.scripts.animation as animation
 import simulation.scripts.attribute as attribute
 import simulation.scripts.badge as badge
 import simulation.scripts.tendency as tendency
@@ -223,7 +225,7 @@ class ModificationsListView(ListView):
         return super().get_context_data(**kwargs)
 
     def get_queryset(self):
-        return Modification.objects.filter(expired=False).order_by("created")
+        return Modification.objects.all().order_by("created")
     
 
 # This is a function based view that will allow the user to purchase a modification
@@ -239,16 +241,25 @@ def purchase_modification(request, id):
         return None
     if user.xp < mod.xp_price:
         return HttpResponse("❌ You do not have enough XP to purchase this modification")
-    if existing_mods and mod.item in existing_mods:
+    if existing_mods and mod.item in existing_mods and not mod.multi_buy:
         return HttpResponse("❌ You already own this modification")
     # Purchase the modification
     if player.modifications:
-        player.modifications[mod.item] = True
+        count = player.modifications.get(mod.item, 0)
+        player.modifications[mod.item] = count + 1
     else:
-        player.modifications = {mod.item: True}
+        player.modifications = {mod.item: 1}
+    # Update the player and user XP & XP spent
     user.xp -= mod.xp_price
     player.xp_spent += mod.xp_price
+    # Check for a modification function (automatic modifications)
+    function = modification.check_for_function(mod.item)
+    if function:
+        player, message = function(player)
+    else:
+        message = f"✅ {mod.item} purchased successfully"
+    # Save the player and user
     player.save()
     user.save()
     # Return a success message
-    return HttpResponse("✅ Modification purchased successfully")
+    return HttpResponse(message)

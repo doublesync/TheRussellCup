@@ -44,11 +44,6 @@ class UpgradeCreator:
                 self.cart["attributes"][a] = {}
                 self.cart["attributes"][a]["start"] = self.player_attributes[a]
                 self.cart["attributes"][a]["new"] = int(value)
-                # Check if attribute is 'Perimeter Defense'
-                # if a == "Perimeter Defense":
-                #     self.cart["attributes"]["Lateral Quickness"] = {}
-                #     self.cart["attributes"]["Lateral Quickness"]["start"] = self.player_attributes["Lateral Quickness"]
-                #     self.cart["attributes"]["Lateral Quickness"]["new"] = (self.player_attributes["Speed"] + int(value)) // 2
         for b, value in self.data.items():
             if not b in self.player_badges: continue
             if int(value) > self.player_badges[b]:

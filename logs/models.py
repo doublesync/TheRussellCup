@@ -32,6 +32,7 @@ class PaymentLog(models.Model):
     
 # A model to store the contract logs
 class ContractLog(models.Model):
+    # Need: Cap hit functionality
     player = models.ForeignKey("players.Player", on_delete=models.CASCADE)
     season = models.IntegerField()
     length = models.IntegerField()

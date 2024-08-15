@@ -59,7 +59,7 @@
                         {% else %}
                             <tr>
                         {% endif %}
-                            <td>{{ player.contract.year_1_payment }} SP/game</td>
+                            <td>{{ player.contract.year_1_payment }}</td>
                             {% if current_week|stringify not in player.contract.weeks_paid %}
                                 <td>No</td>
                             {% else %}

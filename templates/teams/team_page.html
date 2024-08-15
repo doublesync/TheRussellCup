@@ -39,6 +39,7 @@
                 <table class="table table-dark table-striped">
                     <thead>
                         <tr>
+                            <th><i class="fas fa-coins"></i> Salary</th>
                             <th><i class="fa-solid fa-piggy-bank"></i> Claimed</th>
                             <th><i class="fas fa-user"></i> Player</th>
                             <th><i class="fas fa-star"></i> Rating</th>
@@ -58,6 +59,7 @@
                         {% else %}
                             <tr>
                         {% endif %}
+                            <td>{{ player.contract.year_1_payment }} SP/game</td>
                             {% if current_week|stringify not in player.contract.weeks_paid %}
                                 <td>No</td>
                             {% else %}
@@ -76,6 +78,7 @@
                             <td>{{ player.wingspan }}/100</td>
                             <td>{{ player.sp_spent }} SP</td>
                             <td>{{ player.xp_spent }} XP</td>
+                            <!-- Needs: Year 2 & Year 3 support. -->
                         </tr>
                         {% endfor %}
                     </tbody>

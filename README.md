@@ -13,3 +13,4 @@ Are you a league member? Head over to our [Wiki Page.](https://github.com/double
 - Add Google adsense for revenue.
 - Revamp front end pages with TailwindCSS or something else.
 - Revamp unused posts system (maybe create an on-site social media platform w/ fans, etc.)
+- Expand team pages & player pages to add more contract viewing functionality.

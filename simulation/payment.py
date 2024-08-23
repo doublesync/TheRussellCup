@@ -99,7 +99,8 @@ def pay_contracts(user):
                 # Get the current year of the player's contract
                 current_year_payment = get_contract_year(player)
                 # Check if the player has already been paid for the current week
-                if player.contract.weeks_paid and (str(current_week) in player.contract.weeks_paid):
+                contract_weeks_paid = player.contract.weeks_paid or {}
+                if (str(current_week) in contract_weeks_paid):
                     return "❌ Player/s have already been paid for this week."
                 else:
                     # Pay the player
@@ -109,10 +110,7 @@ def pay_contracts(user):
                     player.user.xp += xp_to_pay
                     player.user.save()
                     # Update the player's contract
-                    if player.contract.weeks_paid:
-                        player.contract.weeks_paid[current_week] = True
-                    else:
-                        player.contract.weeks_paid = {current_week: True}
+                    player.contract.weeks_paid.update({current_week: True})
                     player.contract.save()
                     players_paid.append(f"{player.first_name} {player.last_name} ({sp_to_pay} SP, {xp_to_pay} XP)")
             else:

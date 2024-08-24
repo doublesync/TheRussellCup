@@ -5,6 +5,7 @@ from django.db import models
 
 # Local imports
 from simulation.frivolity import SimulationRating
+import simulation.config as config
 import simulation.scripts.default as default
 import simulation.scripts.animation as animation
 import simulation.scripts.utility as utility
@@ -84,11 +85,18 @@ class Modification(models.Model):
     # User defined fields
     item = models.CharField(max_length=64)
     xp_price = models.IntegerField(default=0)
+    xp_price_with_discount = models.IntegerField(default=0, help_text="This is automatically calculated.")
     multi_buy = models.BooleanField(default=False)
     # Timestamp fields
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.item} - {self.xp_price} XP"
+    
+    def save(self, *args, **kwargs):
+        # Calculate the price with the discount
+        self.xp_price_with_discount = self.xp_price - (self.xp_price * config.CONFIG_USER["CARE_PACKAGE_MOD_DISCOUNT"])
+        # Call the parent save method
+        super(Modification, self).save(*args, **kwargs)
 
 # fmt:on

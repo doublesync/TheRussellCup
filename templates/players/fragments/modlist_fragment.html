@@ -8,6 +8,7 @@
                     <th><i class="fa-solid fa-gear"></i> Modification</th>
                     <th><i class="fa-solid fa-clock"></i> Multi Buy</th>
                     <th><i class="fa-solid fa-star"></i> XP Price</th>
+                    <th><i class="fa-solid fa-star"></i> w/ Discount</th>
                 </tr>
             </thead>
             <tbody class="table table-dark table-hover">
@@ -19,6 +20,7 @@
                             <td>{{ mod.item }}</td>
                             <td>{{ mod.multi_buy }}</td>
                             <td>{{ mod.xp_price }}</td>
+                            <td>{{ mod.xp_price_with_discount }}</td>
                         </tr>
                         <!-- Let's make a hidden row that contains the submit button -->
                         <tr class="collapse" id="purchase-{{ mod.id }}">

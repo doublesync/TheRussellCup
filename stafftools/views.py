@@ -53,8 +53,8 @@ def pay_auto_collections(request):
     if not request.user.can_pay_players:
         return HttpResponse("You are not authorized to pay users.")
     # Make the function to pay players
-    # Get all players that have auto_collect_for set to True
-    users = CustomUser.objects.filter(auto_collect_for=True)
+    # Get all players that have has_care_package set to True
+    users = CustomUser.objects.filter(has_care_package=True)
     response = "💸 Auto Collection Results 💸<br>"
     # Run Payment.pay_contracts for each player
     for user in users:

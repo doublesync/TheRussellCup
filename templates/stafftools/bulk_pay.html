@@ -5,11 +5,20 @@
 
 {% block content %}
     <div class="container-fluid">
-        <h1>Bulk Pay</h1>
+        <form id="auto-collections-form" class="p-4 rounded shadow-sm">
+            {% csrf_token %}
+            <div class="card-body">
+                <h5 class="card-title mb-3">Auto Collections Form</h5>
+                <!-- auto collections button (make it take up 25% on medium screens and above) -->
+                <div id="auto-collections-status" class="mb-3">
+                    <button type="submit" class="btn btn-info btn-sm" hx-trigger="click throttle:1s" hx-target="#auto-collections-status" hx-swap="innerHTML" hx-post="{% url 'pay_auto_collections' %}"><i class="fas fa-coins"></i> Auto Collections</button>
+                </div>
+            </div>
+        </form>
         <form id="pay-users-form" class="p-4 rounded shadow-sm">
             {% csrf_token %}
             <div class="card-body">
-                <h5 class="card-title mb-3">Payment Form</h5>
+                <h5 class="card-title mb-3">Bulk Payments Form</h5>
         
                 <div class="mb-3">
                     <label for="pay-list" class="form-label">Select players to pay</label>

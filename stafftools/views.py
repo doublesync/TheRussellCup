@@ -9,7 +9,7 @@ from accounts.models import CustomUser
 from logs.models import PaymentLog
 from players.models import Player
 from teams.models import Team
-from simulation.payment import Payment
+from simulation.payment import Payment, pay_contracts
 
 # Create your views here.
 @login_required
@@ -46,6 +46,22 @@ def pay_user(request, id, payment_type):
             response = setup_payment(player)
         # Return the response
         return HttpResponse(response)
+
+@login_required
+def pay_auto_collections(request):
+    # Check staff status
+    if not request.user.can_pay_players:
+        return HttpResponse("You are not authorized to pay users.")
+    # Make the function to pay players
+    # Get all players that have auto_collect_for set to True
+    users = CustomUser.objects.filter(auto_collect_for=True)
+    response = "💸 Auto Collection Results 💸<br>"
+    # Run Payment.pay_contracts for each player
+    for user in users:
+        result = pay_contracts(user)
+        response += f"{user.username}: {result}<br>" 
+    # Return the response
+    return HttpResponse(response)
 
 class BulkPayView(View):
     template_name = "stafftools/bulk_pay.html"

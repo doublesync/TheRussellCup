@@ -6,10 +6,10 @@ class CustomUserCreationForm(UserCreationForm):
 
     class Meta(UserCreationForm.Meta):
         model = CustomUser
-        fields = ('email', 'username', 'can_pay_players', 'can_mark_upgrades')
+        fields = ('email', 'username', 'can_pay_players', 'can_mark_upgrades', 'auto_collect_for',)
 
 class CustomUserChangeForm(UserChangeForm):
 
     class Meta:
         model = CustomUser
-        fields = ('email', 'username', 'can_pay_players', 'can_mark_upgrades')
+        fields = ('email', 'username', 'can_pay_players', 'can_mark_upgrades', 'auto_collect_for',)

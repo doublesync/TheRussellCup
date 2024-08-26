@@ -49,12 +49,11 @@
                 <tr>
                     <td>{{ forloop.counter }}</td>
                     <td>{{ data.team.city }} {{ data.team.name }}</td>
-                    <td>{{ data.totals.games }}</td>
-                    <td>{{ data.totals.games_won }}</td>
-                    <td>{{ data.totals.games_lost }}</td>
-                    <td>{{ data.totals.point_differential }}</td>
+                    <td>{{ data.season_stats.games_played }}</td>
+                    <td>{{ data.season_stats.wins }}</td>
+                    <td>{{ data.season_stats.losses }}</td>
+                    <td>{{ data.season_stats.point_differential }}</td>
                     <td>
-                        <!-- Make a badge for each team in tiebreakers -->
                         {% for tiebreaker in data.tiebreakers %}
                         <span class="badge bg-info">> {{ tiebreaker }}</span>
                         {% endfor %}

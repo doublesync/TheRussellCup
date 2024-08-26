@@ -1,7 +1,5 @@
 # Python imports
-from collections import namedtuple
 import json
-import types
 
 # Django imports
 from django.contrib.auth.decorators import login_required
@@ -9,8 +7,6 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.http import HttpResponse
-from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.template.loader import render_to_string
@@ -21,16 +17,13 @@ from django.views.generic.list import ListView
 # Local imports
 from players.models import Player, Modification
 from players.forms import PlayerForm, UpgradeForm
-import simulation.config as config
+import simulation.artificial as ai
 import simulation.create as create
 import simulation.upgrade as upgrade
-import simulation.webhook as webhook
 import simulation.modification as modification
-import simulation.scripts.animation as animation
 import simulation.scripts.attribute as attribute
 import simulation.scripts.badge as badge
 import simulation.scripts.tendency as tendency
-import simulation.payment as payment
 
 
 # This is a class based view that will render the form to create a player
@@ -266,3 +259,15 @@ def purchase_modification(request, id):
     user.save()
     # Return a success message
     return HttpResponse(message)
+
+# This is a function based view that will allow the user to get upgrade advice from GPT-4o
+def htmx_upgrade_advice(request, id):
+    # Get the player
+    player = Player.objects.get(pk=id)
+    # Check if the player belongs to the user
+    if player and player.user != request.user:
+        return render(request, "500.html", {"reason": "You do not own this player or the player does not exist"})
+    # Initialize the prompt
+    response = ai.prompt_upgrade_advice(player)
+    # Return the response
+    return HttpResponse(response)

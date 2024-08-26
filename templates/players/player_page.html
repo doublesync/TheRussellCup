@@ -144,6 +144,15 @@
                         </div>
                     </div>
                 {% endif %}
+                <!-- Upgrade advice column -->
+                <form>
+                    {% csrf_token %}
+                    <div id="upgrade-advice-container" class="col-12">
+                        <button id="upgrade-advice-btn" class="btn btn-sm btn-info mt-2" hx-post="{% url 'htmx_upgrade_advice' player.id %}" hx-trigger="click throttle:10s" hx-swap="innerHTML" hx-target="#upgrade-advice-container">
+                            <i class="fas fa-robot"></i> Get Upgrade Advice
+                        </button>
+                    </div>
+                </form>
                 <!-- Attributes column -->
                 <div class="col-md-6">
                     <h4>Attributes</h4>

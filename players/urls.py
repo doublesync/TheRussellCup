@@ -16,5 +16,6 @@ urlpatterns = [
     path("player/list/search/", views.htmx_search_players, name="htmx_search_players"),
     path("player/mods/list/", views.ModificationsListView.as_view(), name="mods_list"),
     path("player/mods/purchase/<int:id>/", views.purchase_modification, name="purchase_modification"),
+    path("player/<int:id>/upgrade/advice/", views.htmx_upgrade_advice, name="htmx_upgrade_advice"),
     # fmt:on
 ]

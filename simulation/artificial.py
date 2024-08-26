@@ -18,6 +18,41 @@ load_dotenv()
 api_key = os.getenv("OPENAI_API_KEY")
 client = OpenAI(api_key=api_key)
 
+def prompt_upgrade_advice(player):
+    
+    # Check if the players user has this seasons care package
+    if not player.user.has_care_package: 
+        return """
+        <h2>Upgrade Advice</h2>
+        You need to buy this seasons care package to get upgrade advice.
+        """
+
+    # Prompts upgrade advice for players (based on vitals, attributes, badges, & tendencies)
+    prompt = "You are an upgrade advisor for an NBA2K basketball player. Here are the player's vitals, attributes, badges, and tendencies:\n"
+    prompt += f"Name: {player.first_name} {player.last_name}\n"
+    prompt += f"Position: {player.position}\n"
+    prompt += f"Height: {player.height_imperial}\n"
+    prompt += f"Weight: {player.weight} lbs\n"
+    prompt += f"Wingspan: {player.wingspan}/100\n"
+    prompt += f"Attributes:{player.attributes}\n"
+    prompt += f"Badges:{player.badges}\n"
+    prompt += f"Tendencies:{player.tendencies}\n"
+    prompt += "Based on the player's vitals, attributes, badges, and tendencies, what would you recommend for the player to upgrade? (for tendencies note whether they should increase or decrease the tendency)\n"
+    prompt += "Please provide a short, 75charcter-ish simplified list of attributes, badges, and tendencies that the player should upgrade.\n"
+    prompt += "At the top of the list, provide the 'plan' for the player (e.g. 'Focus on shooting, playmaking, and defense').\n"
+    prompt += "Your response should be in HTML list format (titled 'Upgrade Advice' at the top) ready to be sent directly in a HttpResponse using Django (just the HTML, no need to notate with markdown).\n"
+
+    # Get the completion from the API
+    completion = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {"role": "system", "content": prompt}
+        ]
+    )
+    response = completion.choices[0].message.content
+    return response
+
+
 def prompt_storylines(season, week):
 
     # Initialize the prompts list & other data points

@@ -78,24 +78,18 @@ class StatFinder:
         # Get all the players on the team
         player_list = team.player_set.all()
         # Get player averages and totals
-        player_averages = {}
-        player_totals = {}
+        player_season_stats = {}
         for player in player_list:
-            player_averages[player] = self.player_averages(player)
-            player_totals[player] = self.player_totals(player)
-        # Get team averages and totals
-        team_averages = self.team_averages(team)
-        team_totals = self.team_totals(team)
+            player_season_stats[player] = self.player_stats(player)
         # Return all the data
         return {
-            "player_averages": player_averages,
-            "player_totals": player_totals,
-            "team_averages": team_averages,
-            "team_totals": team_totals
+            "player_season_stats": player_season_stats,
+            "team_season_stats": self.team_stats(team)
         }
 
     # Returns 'PlayerSeasonStats' objects for every eligible player in the season
     def all_player_stats(self):
+        # include_surge = self.kwargs["surge_game"]
         return PlayerSeasonStats.objects.filter(season=self.kwargs["season"])
 
     # Returns 'PlayerSeasonStats' object for a specific player in the season
@@ -137,8 +131,8 @@ class StatFinder:
 
     def league_standings(self):
         # Get all the teams and get their totals
-        surge = self.kwargs["surge_game"]
-        teams = Team.objects.filter(surge=surge)
+        include_surge = self.kwargs["surge_game"]
+        teams = Team.objects.filter(surge=include_surge)
         team_standings = {}
         for team in teams:
             season_stats = self.team_stats(team)

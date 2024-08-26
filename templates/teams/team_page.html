@@ -113,26 +113,26 @@
                     </tr>
                 </thead>
                 <tbody class="table table-dark table-hover">
-                    {% for name, player in team_stats.player_averages.items %}
-                    {% if player.games > 0 %}
+                    {% for player, season_stats in team_stats.player_season_stats.items %}
+                    {% if season_stats.games_played > 0 %}
                         <tr>
-                            <td>{{ name }}</td>
-                            <td>{{ player.games }}</td>
-                            <td>{{ player.points__avg}}</td>
-                            <td>{{ player.rebounds__avg }}</td>
-                            <td>{{ player.assists__avg }}</td>
-                            <td>{{ player.steals__avg }}</td>
-                            <td>{{ player.blocks__avg }}</td>
-                            <td>{{ player.turnovers__avg }}</td>
-                            <td>{{ player.field_goal_percentage }}</td>
-                            <td>{{ player.three_point_percentage }}</td>
-                            <td>{{ player.free_throw_percentage }}</td>
-                            <td>{{ player.offensive_rebounds__avg }}</td>
-                            <td>{{ player.defensive_rebounds__avg }}</td>
-                            <td>{{ player.personal_fouls__avg }}</td>
-                            <td>{{ player.plus_minus__avg }}</td>
-                            <td>{{ player.points_responsible_for__avg }}</td>
-                            <td>{{ player.dunks__avg }}</td>
+                            <td>{{ player.first_name }} {{ player.last_name }}</td>
+                            <td>{{ season_stats.games_played }}</td>
+                            <td>{{ season_stats.average_points}}</td>
+                            <td>{{ season_stats.average_rebounds }}</td>
+                            <td>{{ season_stats.average_assists }}</td>
+                            <td>{{ season_stats.average_steals }}</td>
+                            <td>{{ season_stats.average_blocks }}</td>
+                            <td>{{ season_stats.average_turnovers }}</td>
+                            <td>{{ season_stats.average_field_goal_percentage }}</td>
+                            <td>{{ season_stats.average_three_point_percentage }}</td>
+                            <td>{{ season_stats.average_free_throw_percentage }}</td>
+                            <td>{{ season_stats.average_offensive_rebounds }}</td>
+                            <td>{{ season_stats.average_defensive_rebounds }}</td>
+                            <td>{{ season_stats.average_personal_fouls }}</td>
+                            <td>{{ season_stats.average_plus_minus }}</td>
+                            <td>{{ season_stats.average_points_responsible_for }}</td>
+                            <td>{{ season_stats.average_dunks }}</td>
                         </tr>
                     {% endif %}
                     {% endfor %}
@@ -169,27 +169,27 @@
                     </tr>
                 </thead>
                 <tbody class="table table-dark table-hover">
-                {% for name, player in team_stats.player_totals.items %}
+                {% for player, season_stats in team_stats.player_season_stats.items %}
                     <tr>
-                        <td>{{ name }}</td>
-                        <td>{{ player.points__sum}}</td>
-                        <td>{{ player.rebounds__sum }}</td>
-                        <td>{{ player.assists__sum }}</td>
-                        <td>{{ player.steals__sum }}</td>
-                        <td>{{ player.blocks__sum }}</td>
-                        <td>{{ player.turnovers__sum }}</td>
-                        <td>{{ player.field_goals_made__sum }}</td>
-                        <td>{{ player.field_goals_attempted__sum }}</td>
-                        <td>{{ player.three_pointers_made__sum }}</td>
-                        <td>{{ player.three_pointers_attempted__sum }}</td>
-                        <td>{{ player.free_throws_made__sum }}</td>
-                        <td>{{ player.free_throws_attempted__sum }}</td>
-                        <td>{{ player.offensive_rebounds__sum }}</td>
-                        <td>{{ player.defensive_rebounds__sum }}</td>
-                        <td>{{ player.personal_fouls__sum }}</td>
-                        <td>{{ player.plus_minus__sum }}</td>
-                        <td>{{ player.points_responsible_for__sum }}</td>
-                        <td>{{ player.dunks__sum }}</td>
+                        <td>{{ player.first_name }} {{ player.last_name }}</td>
+                        <td>{{ season_stats.points}}</td>
+                        <td>{{ season_stats.rebounds }}</td>
+                        <td>{{ season_stats.assists }}</td>
+                        <td>{{ season_stats.steals }}</td>
+                        <td>{{ season_stats.blocks }}</td>
+                        <td>{{ season_stats.turnovers }}</td>
+                        <td>{{ season_stats.field_goals_made }}</td>
+                        <td>{{ season_stats.field_goals_attempted }}</td>
+                        <td>{{ season_stats.three_pointers_made }}</td>
+                        <td>{{ season_stats.three_pointers_attempted }}</td>
+                        <td>{{ season_stats.free_throws_made }}</td>
+                        <td>{{ season_stats.free_throws_attempted }}</td>
+                        <td>{{ season_stats.offensive_rebounds }}</td>
+                        <td>{{ season_stats.defensive_rebounds }}</td>
+                        <td>{{ season_stats.personal_fouls }}</td>
+                        <td>{{ season_stats.plus_minus }}</td>
+                        <td>{{ season_stats.points_responsible_for }}</td>
+                        <td>{{ season_stats.dunks }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>

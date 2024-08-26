@@ -54,7 +54,7 @@ class StatFinder:
         # - If a specific season and week are provided, it will get the statistics for that season and week
 
         # Set the kwargs
-        self.kwargs = {"season": season} # Kwargs for game models
+        self.kwargs = {"season": season, "surge_game": False} # Kwargs for game models
         self.child_kwargs = {"game__season": season} # Child kwargs for playergamestats and teamgamestats models
 
         # Add to the kwargs if a specific season or week is provided
@@ -305,7 +305,7 @@ class StatFinder:
 
     def league_standings(self):
         # Get all the teams and get their totals
-        teams = Team.objects.all()
+        teams = Team.objects.filter(surge=False)
         team_standings = {}
         for team in teams:
             team_standings[team.id] = {

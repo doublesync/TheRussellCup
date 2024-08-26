@@ -20,7 +20,7 @@ def team_page(request, id):
     current_week = config.CONFIG_SEASON["CURRENT_WEEK"]
     # Get the players' averages & totals
     stat_finder = statfinder.StatFinder()
-    team_stats = stat_finder.team_averages_totals(team)
+    team_stats = stat_finder.team_player_stats(team)
     # Loop through the players
     return render(request, "teams/team_page.html", {"team": team, "current_week": current_week, "salary_book": salary_book, "team_stats": team_stats})
 

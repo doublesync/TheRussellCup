@@ -19,7 +19,7 @@ from django_table_sort.table import TableSort
 # A function that returns the 'player_averages' page
 def player_averages(request):
     finder = statfinder.StatFinder()
-    players = finder.all_player_averages()
+    players = finder.all_player_stats()
     return render(request, "stats/player_averages.html", {"players": players})
 
 # A function that returns the 'team_averages' page
@@ -34,11 +34,12 @@ def stats_home(request):
 def sort_by_stat(request, stat):
     if request.method == "POST":
         # Get the averages for each player
-        players = statfinder.StatFinder().all_player_averages()
+        players = statfinder.StatFinder().all_player_stats()
         # Sort by the stat & make a dictionary of players
         order_type = request.POST.get("order-type")
         reverse_order = False if order_type == "asc" else True
-        sorted_players = {k: v for k, v in sorted(players.items(), key=lambda item: item[1][stat], reverse=reverse_order)}
+        # Sort queryset by stat
+        sorted_players = players.order_by(stat) if reverse_order else players.order_by(f"-{stat}")
         # Render to string
         fragment_html = render_to_string("stats/fragments/list_fragment.html", {"players": sorted_players})
         return HttpResponse(fragment_html)

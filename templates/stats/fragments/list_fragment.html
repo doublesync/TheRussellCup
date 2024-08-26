@@ -1,29 +1,29 @@
 <tbody id="stat-body" class="table table-dark table-hover">
-{% for id, player in players.items %}
-{% if player.games > 0 %}
+{% for player in players %}
+{% if player.games_played > 0 %}
     <tr>
-        <td>{{ player.full_name }}</td>
-        <td>{{ player.position }}</td>
-        <td>{{ player.games }}</td>
-        <td>{{ player.points__avg}}</td>
-        <td>{{ player.rebounds__avg }}</td>
-        <td>{{ player.assists__avg }}</td>
-        <td>{{ player.steals__avg }}</td>
-        <td>{{ player.blocks__avg }}</td>
-        <td>{{ player.turnovers__avg }}</td>
-        <td>{{ player.field_goal_percentage }}</td>
-        <td>{{ player.three_point_percentage }}</td>
-        <td>{{ player.free_throw_percentage }}</td>
-        <td>{{ player.offensive_rebounds__avg }}</td>
-        <td>{{ player.defensive_rebounds__avg }}</td>
-        <td>{{ player.personal_fouls__avg }}</td>
-        <td>{{ player.plus_minus__avg }}</td>
-        <td>{{ player.points_responsible_for__avg }}</td>
-        <td>{{ player.dunks__avg }}</td>
-        <td>{{ player.game_score__avg }}</td>
-        <td>{{ player.effective_field_goal_percentage__avg }}</td>
-        <td>{{ player.true_shooting_percentage__avg }}</td>
-        <td>{{ player.turnover_percentage__avg }}</td>
+        <td>{{ player.player.first_name }} {{ player.player.last_name }}</td>
+        <td>{{ player.player.position }}</td>
+        <td>{{ player.games_played }}</td>
+        <td>{{ player.average_points}}</td>
+        <td>{{ player.average_rebounds }}</td>
+        <td>{{ player.average_assists }}</td>
+        <td>{{ player.average_steals }}</td>
+        <td>{{ player.average_blocks }}</td>
+        <td>{{ player.average_turnovers }}</td>
+        <td>{{ player.average_field_goal_percentage }}</td>
+        <td>{{ player.average_three_point_percentage }}</td>
+        <td>{{ player.average_free_throw_percentage }}</td>
+        <td>{{ player.average_offensive_rebounds }}</td>
+        <td>{{ player.average_defensive_rebounds }}</td>
+        <td>{{ player.average_personal_fouls }}</td>
+        <td>{{ player.average_plus_minus }}</td>
+        <td>{{ player.average_points_responsible_for }}</td>
+        <td>{{ player.average_dunks }}</td>
+        <td>{{ player.average_game_score }}</td>
+        <td>{{ player.average_effective_field_goal_percentage }}</td>
+        <td>{{ player.average_true_shooting_percentage }}</td>
+        <td>{{ player.average_turnover_percentage }}</td>
     </tr>
 {% endif %}
 {% endfor %}

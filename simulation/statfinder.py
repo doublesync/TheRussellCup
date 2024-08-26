@@ -9,7 +9,7 @@ from django.db.models import Q
 import simulation.config as config
 from players.models import Player
 from teams.models import Team
-from stats.models import Season, Game, TeamGameStats, PlayerGameStats
+from stats.models import Season, Game, TeamGameStats, PlayerGameStats, PlayerSeasonStats, TeamSeasonStats
 
 # Set the current week and season
 current_week = config.CONFIG_SEASON["CURRENT_WEEK"]
@@ -35,7 +35,7 @@ def safe_division(numerator, denominator):
 # A manager class to find statistics
 class StatFinder:
 
-    def __init__(self, season=current_season, specific_season=None, specific_week=None, only_playoffs=False):
+    def __init__(self, season=current_season, specific_season=None, specific_week=None, only_playoffs=False, surge=False):
 
         # StatFinder Functions
         # - Get the games, player box scores, and team box scores
@@ -54,7 +54,7 @@ class StatFinder:
         # - If a specific season and week are provided, it will get the statistics for that season and week
 
         # Set the kwargs
-        self.kwargs = {"season": season, "surge_game": False} # Kwargs for game models
+        self.kwargs = {"season": season, "surge_game": surge} # Kwargs for game models
         self.child_kwargs = {"game__season": season} # Child kwargs for playergamestats and teamgamestats models
 
         # Add to the kwargs if a specific season or week is provided
@@ -74,7 +74,7 @@ class StatFinder:
         self.player_box_scores = PlayerGameStats.objects.filter(**self.child_kwargs)
         self.team_box_scores = TeamGameStats.objects.filter(**self.child_kwargs)
 
-    def team_averages_totals(self, team):
+    def team_player_stats(self, team):
         # Get all the players on the team
         player_list = team.player_set.all()
         # Get player averages and totals
@@ -94,186 +94,18 @@ class StatFinder:
             "team_totals": team_totals
         }
 
-    def all_player_averages(self):
-        # Get all the players and get their averages
-        player_averages = {}
-        players = Player.objects.all()
-        for player in players:
-            player_averages[player] = self.player_averages(player)
-        # Return all the player averages
-        return player_averages
+    # Returns 'PlayerSeasonStats' objects for every eligible player in the season
+    def all_player_stats(self):
+        return PlayerSeasonStats.objects.filter(season=self.kwargs["season"])
 
-    def player_averages(self, player):
-        box_scores = self.player_box_scores.filter(player=player)
-        aggregates = box_scores.aggregate(
-            # Basic stats
-            models.Avg("minutes"),
-            models.Avg("points"), 
-            models.Avg("rebounds"), 
-            models.Avg("assists"),
-            models.Avg("steals"),
-            models.Avg("blocks"),
-            models.Avg("turnovers"),
-            models.Avg("field_goals_made"),
-            models.Avg("field_goals_attempted"),
-            models.Avg("three_pointers_made"),
-            models.Avg("three_pointers_attempted"),
-            models.Avg("free_throws_made"),
-            models.Avg("free_throws_attempted"),
-            models.Avg("offensive_rebounds"),
-            models.Avg("defensive_rebounds"),
-            models.Avg("personal_fouls"),
-            models.Avg("plus_minus"),
-            models.Avg("points_responsible_for"),
-            models.Avg("dunks"),
-            # Advanced stats
-            models.Avg("game_score"),
-            models.Avg("effective_field_goal_percentage"),
-            models.Avg("true_shooting_percentage"),
-            models.Avg("turnover_percentage"),
-        )
-        # Calculate shooting percentages
-        fgm, fga = aggregates["field_goals_made__avg"], aggregates["field_goals_attempted__avg"]
-        tpm, tpa = aggregates["three_pointers_made__avg"], aggregates["three_pointers_attempted__avg"]
-        ftm, fta = aggregates["free_throws_made__avg"], aggregates["free_throws_attempted__avg"]
-        aggregates["field_goal_percentage"] = safe_division(fgm, fga)
-        aggregates["three_point_percentage"] = safe_division(tpm, tpa)
-        aggregates["free_throw_percentage"] = safe_division(ftm, fta)
-        aggregates["games"] = box_scores.count()
-        # Round all aggregates
-        for key in aggregates:
-            if aggregates[key] and key != "games":
-                aggregates[key] = round(aggregates[key], 2)
-        # Set None values to 0
-        aggregates["full_name"] = f"{player.first_name} {player.last_name}"
-        aggregates["position"] = player.position
-        aggregates = none_to_zero(aggregates)
-        # If team is provided, calculate team averages
-        return aggregates
-    
-    def team_averages(self, team):
-        # Get all the box scores for the team & get their averages
-        box_scores = self.team_box_scores.filter(team=team)
-        aggregates = box_scores.aggregate(
-            models.Avg("field_goals_made"), 
-            models.Avg("field_goals_attempted"),
-            models.Avg("three_pointers_made"),
-            models.Avg("three_pointers_attempted"),
-            models.Avg("free_throws_made"),
-            models.Avg("free_throws_attempted"),
-            models.Avg("fast_break_points"),
-            models.Avg("points_in_paint"),
-            models.Avg("second_chance_points"),
-            models.Avg("bench_points"),
-            models.Avg("assists"),
-            models.Avg("offensive_rebounds"),
-            models.Avg("defensive_rebounds"),
-            models.Avg("steals"),
-            models.Avg("blocks"),
-            models.Avg("turnovers"),
-            models.Avg("points_off_turnovers"),
-            models.Avg("personal_fouls"),
-            models.Avg("dunks"),
-            models.Avg("biggest_lead"),
-        )
-        # Calculate shooting percentages
-        fgm, fga = aggregates["field_goals_made__avg"], aggregates["field_goals_attempted__avg"]
-        tpm, tpa = aggregates["three_pointers_made__avg"], aggregates["three_pointers_attempted__avg"]
-        ftm, fta = aggregates["free_throws_made__avg"], aggregates["free_throws_attempted__avg"]
-        aggregates["field_goal_percentage"] = safe_division(fgm, fga)
-        aggregates["three_point_percentage"] = safe_division(tpm, tpa)
-        aggregates["free_throw_percentage"] = safe_division(ftm, fta)
-        aggregates["games"] = box_scores.count()
-        # Round all aggregates
-        for key in aggregates:
-            if aggregates[key] and key != "games":
-                aggregates[key] = round(aggregates[key], 2)
-        # Find some more standing statistics
-        point_differentials = []
-        for box_score in box_scores:
-            standing_stats = box_score.get_point_differential()
-            point_differentials.append(standing_stats["point_differential"])
-        aggregates["point_differential"] = round(safe_division(sum(point_differentials), len(point_differentials)), 2)
-        # Set None values to 0
-        aggregates = none_to_zero(aggregates)
-        # If team is provided, calculate team averages
-        return aggregates
-    
-    def player_totals(self, player):
-        # Get all the box scores for the player & get their totals
-        box_scores = self.player_box_scores.filter(player=player)
-        aggregates = box_scores.aggregate(
-            # Basic stats
-            models.Sum("minutes"),
-            models.Sum("points"), 
-            models.Sum("rebounds"), 
-            models.Sum("assists"),
-            models.Sum("steals"),
-            models.Sum("blocks"),
-            models.Sum("turnovers"),
-            models.Sum("field_goals_made"),
-            models.Sum("field_goals_attempted"),
-            models.Sum("three_pointers_made"),
-            models.Sum("three_pointers_attempted"),
-            models.Sum("free_throws_made"),
-            models.Sum("free_throws_attempted"),
-            models.Sum("offensive_rebounds"),
-            models.Sum("defensive_rebounds"),
-            models.Sum("personal_fouls"),
-            models.Sum("plus_minus"),
-            models.Sum("points_responsible_for"),
-            models.Sum("dunks"),
-            # Advanced stats
-            models.Sum("game_score"),
-            models.Sum("effective_field_goal_percentage"),
-            models.Sum("true_shooting_percentage"),
-            models.Sum("turnover_percentage"),
-        )
-        # Set None values to 0
-        aggregates["full_name"] = f"{player.first_name} {player.last_name}"
-        aggregates = none_to_zero(aggregates)
-        return aggregates
-    
-    def team_totals(self, team):
-        # Get all the players on the team & get their totals
-        box_scores = self.team_box_scores.filter(team=team)
-        aggregates = box_scores.aggregate(
-            models.Sum("field_goals_made"), 
-            models.Sum("field_goals_attempted"),
-            models.Sum("three_pointers_made"),
-            models.Sum("three_pointers_attempted"),
-            models.Sum("free_throws_made"),
-            models.Sum("free_throws_attempted"),
-            models.Sum("fast_break_points"),
-            models.Sum("points_in_paint"),
-            models.Sum("second_chance_points"),
-            models.Sum("bench_points"),
-            models.Sum("assists"),
-            models.Sum("offensive_rebounds"),
-            models.Sum("defensive_rebounds"),
-            models.Sum("steals"),
-            models.Sum("blocks"),
-            models.Sum("turnovers"),
-            models.Sum("points_off_turnovers"),
-            models.Sum("personal_fouls"),
-            models.Sum("dunks"),
-            models.Sum("biggest_lead"),
-            models.Sum("time_of_possession"),
-        )
-        # Add the games played, won, and lost
-        aggregates["games"] = box_scores.count()
-        aggregates["games_won"] = box_scores.filter(game__winner=team).count()
-        aggregates["games_lost"] = (aggregates["games"] - aggregates["games_won"])
-        # Find some more standing statistics
-        point_differentials = []
-        for box_score in box_scores:
-            standing_stats = box_score.get_point_differential()
-            point_differentials.append(standing_stats["point_differential"])
-        aggregates["point_differential"] = sum(point_differentials)
-        # Set None values to 0
-        aggregates = none_to_zero(aggregates)
-        return aggregates
-    
+    # Returns 'PlayerSeasonStats' object for a specific player in the season
+    def player_stats(self, player):
+        return PlayerSeasonStats.objects.filter(player=player).first()
+
+    # Returns 'TeamSeasonStats' object for a specific team in the season
+    def team_stats(self, team):
+        return TeamSeasonStats.objects.filter(team=team).first()
+
     def tie_breakers(self, team):
         # Check for tiebreakers in the cache first
         if cache.get(f"tiebreakers_{team.id}"):
@@ -305,16 +137,19 @@ class StatFinder:
 
     def league_standings(self):
         # Get all the teams and get their totals
-        teams = Team.objects.filter(surge=False)
+        surge = self.kwargs["surge_game"]
+        teams = Team.objects.filter(surge=surge)
         team_standings = {}
         for team in teams:
-            team_standings[team.id] = {
-                "team": team,
-                "totals": self.team_totals(team)
-            }
+            season_stats = self.team_stats(team)
+            if season_stats:
+                team_standings[team.id] = {
+                    "team": team,
+                    "season_stats": season_stats
+                }
         # Sort the teams by wins
         # Let's set a secondary sorter using the "point_differential" key
-        sorted_teams = {k: v for k, v in sorted(team_standings.items(), key=lambda item: (item[1]["totals"]["games_won"], item[1]["totals"]["point_differential"]), reverse=True)}
+        sorted_teams = {k: v for k, v in sorted(team_standings.items(), key=lambda item: (item[1]["season_stats"].wins, item[1]["season_stats"].point_differential), reverse=True)}
         # Add tiebreakers to the team standings
         for team_id in sorted_teams:
             team = sorted_teams[team_id]["team"]

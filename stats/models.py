@@ -136,6 +136,8 @@ class TeamGameStats(models.Model):
     # Defined fields
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
+    points = models.IntegerField(default=0, help_text="Automatically calculated field")
+    rebounds = models.IntegerField(default=0, help_text="Automatically calculated field")
     field_goals_made = models.IntegerField()
     field_goals_attempted = models.IntegerField()
     three_pointers_made = models.IntegerField()
@@ -157,6 +159,7 @@ class TeamGameStats(models.Model):
     dunks = models.IntegerField()
     biggest_lead = models.IntegerField()
     time_of_possession = models.DurationField()
+    point_differential = models.IntegerField(default=0)
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -170,10 +173,17 @@ class TeamGameStats(models.Model):
             "point_differential": point_differential,
         }
 
-
     def save(self, *args, **kwargs):
         # Prevent non-staff users from saving games that are older than 10 days
         if not self.created or self.created > timezone.now() - datetime.timedelta(days=10):
+            # Calculate points, point differential, & rebounds
+            self.points = (self.field_goals_made * 2) + (self.three_pointers_made * 3) + self.free_throws_made
+            self.point_differential = self.get_point_differential()["point_differential"]
+            self.rebounds = (self.defensive_rebounds + self.offensive_rebounds)
+            # Save the season stats model (or create it if it doesn't exist)
+            season_stats, created = TeamSeasonStats.objects.get_or_create(season=self.game.season, team=self.team)
+            season_stats.save()
+            # Save the model
             super(TeamGameStats, self).save(*args, **kwargs)
 
     class Meta:
@@ -252,8 +262,279 @@ class PlayerGameStats(models.Model):
         self.set_advanced_stats()
         # Prevent non-staff users from saving games that are older than 10 days
         if not self.created or self.created > timezone.now() - datetime.timedelta(days=10):
+            # Save the season stats model (or create it if it doesn't exist)
+            season_stats, created = PlayerSeasonStats.objects.get_or_create(season=self.game.season, player=self.player)
+            season_stats.save()
+            # Save the model
             super(PlayerGameStats, self).save(*args, **kwargs)
-
 
     class Meta:
         verbose_name_plural = "Player game stats"
+
+class PlayerSeasonStats(models.Model):
+
+    # Defined fields
+    season = models.ForeignKey(Season, on_delete=models.CASCADE)
+    player = models.ForeignKey(Player, on_delete=models.CASCADE)
+
+    # Basic stats
+    games_played = models.IntegerField(default=0)
+    minutes = models.IntegerField(default=0)
+    points = models.IntegerField(default=0)
+    rebounds = models.IntegerField(default=0)
+    assists = models.IntegerField(default=0)
+    steals = models.IntegerField(default=0)
+    blocks = models.IntegerField(default=0)
+    turnovers = models.IntegerField(default=0)
+    field_goals_made = models.IntegerField(default=0)
+    field_goals_attempted = models.IntegerField(default=0)
+    three_pointers_made = models.IntegerField(default=0)
+    three_pointers_attempted = models.IntegerField(default=0)
+    free_throws_made = models.IntegerField(default=0)
+    free_throws_attempted = models.IntegerField(default=0)
+    offensive_rebounds = models.IntegerField(default=0)
+    personal_fouls = models.IntegerField(default=0)
+    plus_minus = models.IntegerField(default=0)
+    points_responsible_for = models.IntegerField(default=0)
+    dunks = models.IntegerField(default=0)
+    defensive_rebounds = models.IntegerField(default=0)
+    game_score = models.FloatField(default=0.0)
+    effective_field_goal_percentage = models.FloatField(default=0.0)
+    true_shooting_percentage = models.FloatField(default=0.0)
+    turnover_percentage = models.FloatField(default=0.0)
+
+    # Average stats
+    average_minutes = models.FloatField(default=0.0)
+    average_points = models.FloatField(default=0.0)
+    average_rebounds = models.FloatField(default=0.0)
+    average_assists = models.FloatField(default=0.0)
+    average_steals = models.FloatField(default=0.0)
+    average_blocks = models.FloatField(default=0.0)
+    average_turnovers = models.FloatField(default=0.0)
+    average_field_goals_made = models.FloatField(default=0.0)
+    average_field_goals_attempted = models.FloatField(default=0.0)
+    average_field_goal_percentage = models.FloatField(default=0.0)
+    average_three_pointers_made = models.FloatField(default=0.0)
+    average_three_pointers_attempted = models.FloatField(default=0.0)
+    average_three_point_percentage = models.FloatField(default=0.0)
+    average_free_throws_made = models.FloatField(default=0.0)
+    average_free_throws_attempted = models.FloatField(default=0.0)
+    average_free_throw_percentage = models.FloatField(default=0.0)
+    average_offensive_rebounds = models.FloatField(default=0.0)
+    average_personal_fouls = models.FloatField(default=0.0)
+    average_plus_minus = models.FloatField(default=0.0)
+    average_points_responsible_for = models.FloatField(default=0.0)
+    average_dunks = models.FloatField(default=0.0)
+    average_defensive_rebounds = models.FloatField(default=0.0)
+    average_game_score = models.FloatField(default=0.0)
+    average_effective_field_goal_percentage = models.FloatField(default=0.0)
+    average_true_shooting_percentage = models.FloatField(default=0.0)
+    average_turnover_percentage = models.FloatField(default=0.0)
+
+    # Game high stats
+    game_high_points = models.IntegerField(default=0)
+    game_high_rebounds = models.IntegerField(default=0)
+    game_high_assists = models.IntegerField(default=0)
+    game_high_steals = models.IntegerField(default=0)
+    game_high_blocks = models.IntegerField(default=0)
+    game_high_turnovers = models.IntegerField(default=0)
+    game_high_field_goals_made = models.IntegerField(default=0)
+    game_high_field_goals_attempted = models.IntegerField(default=0)
+    game_high_three_pointers_made = models.IntegerField(default=0)
+    game_high_three_pointers_attempted = models.IntegerField(default=0)
+    game_high_free_throws_made = models.IntegerField(default=0)
+    game_high_free_throws_attempted = models.IntegerField(default=0)
+    game_high_offensive_rebounds = models.IntegerField(default=0)
+    game_high_personal_fouls = models.IntegerField(default=0)
+    game_high_plus_minus = models.IntegerField(default=0)
+    game_high_points_responsible_for = models.IntegerField(default=0)
+    game_high_dunks = models.IntegerField(default=0)
+    game_high_defensive_rebounds = models.IntegerField(default=0)
+    game_high_game_score = models.FloatField(default=0.0)
+    game_high_effective_field_goal_percentage = models.FloatField(default=0.0)
+    game_high_true_shooting_percentage = models.FloatField(default=0.0)
+    game_high_turnover_percentage = models.FloatField(default=0.0)
+
+    def __str__(self):
+        return f"{self.player} | {self.season}"
+    
+    def save(self, *args, **kwargs):
+        # Get the number of games played by the player in the season
+        self.games_played = self.player.playergamestats_set.filter(game__season=self.season).count()
+        if self.games_played > 0:
+            # Make a list of fields to get the sum of
+            aggregate_fields = [
+                "minutes", "points", "rebounds", "assists", "steals", "blocks", "turnovers",
+                "field_goals_made", "field_goals_attempted", "three_pointers_made", "three_pointers_attempted",
+                "free_throws_made", "free_throws_attempted", "offensive_rebounds", "personal_fouls", 
+                "plus_minus", "points_responsible_for", "dunks", "defensive_rebounds", "game_score", "effective_field_goal_percentage",
+                "true_shooting_percentage", "turnover_percentage"
+            ]
+            # Get the sum of the fields in 'aggregate_fields'
+            aggregates = self.player.playergamestats_set.filter(game__season=self.season).aggregate(
+                **{f"{field}__sum": models.Sum(field) for field in aggregate_fields}
+            )
+            # Set the sum of the fields in 'aggregate_fields' to the model
+            for field in aggregate_fields:
+                setattr(self, field, aggregates[f"{field}__sum"])
+            # Calculate the average of the fields in 'aggregate_fields' based on the fields above
+            for field in aggregate_fields:
+                total = getattr(self, field)
+                setattr(self, f"average_{field}", round(total / self.games_played, 2))
+            # Set field goal percentages
+            if self.average_field_goals_attempted > 0:
+                self.average_field_goal_percentage = round(self.average_field_goals_made / self.average_field_goals_attempted, 2)
+            if self.average_three_pointers_attempted > 0:
+                self.average_three_point_percentage = round(self.average_three_pointers_made / self.average_three_pointers_attempted, 2)
+            if self.average_free_throws_attempted > 0:
+                self.average_free_throw_percentage = round(self.average_free_throws_made / self.average_free_throws_attempted, 2)
+            # Calculate game highs
+            game_high_fields = [
+                "points", "rebounds", "assists", "steals", "blocks", "turnovers",
+                "field_goals_made", "field_goals_attempted", "three_pointers_made", "three_pointers_attempted",
+                "free_throws_made", "free_throws_attempted", "offensive_rebounds", "personal_fouls", 
+                "plus_minus", "points_responsible_for", "dunks", "defensive_rebounds", "game_score", "effective_field_goal_percentage",
+                "true_shooting_percentage", "turnover_percentage"
+            ]
+            for field in game_high_fields:
+                game_high = self.player.playergamestats_set.filter(game__season=self.season).order_by(f"-{field}").first()
+                game_high_value = getattr(game_high, field)
+                setattr(self, f"game_high_{field}", game_high_value)
+        # Save the model
+        super(PlayerSeasonStats, self).save(*args, **kwargs)
+
+    class Meta:
+        verbose_name_plural = "Player season stats"
+
+class TeamSeasonStats(models.Model):
+
+    # Defined fields
+    season = models.ForeignKey(Season, on_delete=models.CASCADE)
+    team = models.ForeignKey(Team, on_delete=models.CASCADE)
+
+    # Basic stats
+    games_played = models.IntegerField(default=0)
+    wins = models.IntegerField(default=0)
+    losses = models.IntegerField(default=0)
+    points = models.IntegerField(default=0)
+    rebounds = models.IntegerField(default=0)
+    assists = models.IntegerField(default=0)
+    steals = models.IntegerField(default=0)
+    blocks = models.IntegerField(default=0)
+    turnovers = models.IntegerField(default=0)
+    field_goals_made = models.IntegerField(default=0)
+    field_goals_attempted = models.IntegerField(default=0)
+    three_pointers_made = models.IntegerField(default=0)
+    three_pointers_attempted = models.IntegerField(default=0)
+    free_throws_made = models.IntegerField(default=0)
+    free_throws_attempted = models.IntegerField(default=0)
+    defensive_rebounds = models.IntegerField(default=0)
+    offensive_rebounds = models.IntegerField(default=0)
+    personal_fouls = models.IntegerField(default=0)
+    points_off_turnovers = models.IntegerField(default=0)
+    points_in_paint = models.IntegerField(default=0)
+    second_chance_points = models.IntegerField(default=0)
+    dunks = models.IntegerField(default=0)
+    biggest_lead = models.IntegerField(default=0)
+    point_differential = models.IntegerField(default=0)
+
+    # Average stats
+    average_points = models.FloatField(default=0.0)
+    average_rebounds = models.FloatField(default=0.0)
+    average_assists = models.FloatField(default=0.0)
+    average_steals = models.FloatField(default=0.0)
+    average_blocks = models.FloatField(default=0.0)
+    average_turnovers = models.FloatField(default=0.0)
+    average_field_goals_made = models.FloatField(default=0.0)
+    average_field_goals_attempted = models.FloatField(default=0.0)
+    average_field_goal_percentage = models.FloatField(default=0.0)
+    average_three_pointers_made = models.FloatField(default=0.0)
+    average_three_pointers_attempted = models.FloatField(default=0.0)
+    average_three_point_percentage = models.FloatField(default=0.0)
+    average_free_throws_made = models.FloatField(default=0.0)
+    average_free_throws_attempted = models.FloatField(default=0.0)
+    average_free_throw_percentage = models.FloatField(default=0.0)
+    average_defensive_rebounds = models.FloatField(default=0.0)
+    average_offensive_rebounds = models.FloatField(default=0.0)
+    average_personal_fouls = models.FloatField(default=0.0)
+    average_points_off_turnovers = models.FloatField(default=0.0)
+    average_points_in_paint = models.FloatField(default=0.0)
+    average_second_chance_points = models.FloatField(default=0.0)
+    average_dunks = models.FloatField(default=0.0)
+    average_biggest_lead = models.FloatField(default=0.0)
+    average_point_differential = models.FloatField(default=0.0)
+
+    # Game high stats
+    game_high_points = models.IntegerField(default=0)
+    game_high_rebounds = models.IntegerField(default=0)
+    game_high_assists = models.IntegerField(default=0)
+    game_high_steals = models.IntegerField(default=0)
+    game_high_blocks = models.IntegerField(default=0)
+    game_high_turnovers = models.IntegerField(default=0)
+    game_high_field_goals_made = models.IntegerField(default=0)
+    game_high_field_goals_attempted = models.IntegerField(default=0)
+    game_high_three_pointers_made = models.IntegerField(default=0)
+    game_high_three_pointers_attempted = models.IntegerField(default=0)
+    game_high_free_throws_made = models.IntegerField(default=0)
+    game_high_free_throws_attempted = models.IntegerField(default=0)
+    game_high_defensive_rebounds = models.IntegerField(default=0)
+    game_high_offensive_rebounds = models.IntegerField(default=0)
+    game_high_personal_fouls = models.IntegerField(default=0)
+    game_high_points_off_turnovers = models.IntegerField(default=0)
+    game_high_points_in_paint = models.IntegerField(default=0)
+    game_high_second_chance_points = models.IntegerField(default=0)
+    game_high_dunks = models.IntegerField(default=0)
+    game_high_biggest_lead = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.team} | {self.season}"
+
+    def save(self, *args, **kwargs):
+        # Get the number of games played by the team in the season
+        self.games_played = self.team.teamgamestats_set.filter(game__season=self.season).count()
+        if self.games_played > 0:
+            # Make a list of fields to get the sum of
+            aggregate_fields = [
+                "points", "rebounds", "assists", "steals", "blocks", "turnovers",
+                "field_goals_made", "field_goals_attempted", "three_pointers_made", "three_pointers_attempted",
+                "free_throws_made", "free_throws_attempted", "defensive_rebounds", "offensive_rebounds", "personal_fouls", 
+                "points_off_turnovers", "points_in_paint", "second_chance_points", "dunks", "biggest_lead", "point_differential"
+            ]
+            # Get the sum of the fields in 'aggregate_fields'
+            aggregates = self.team.teamgamestats_set.filter(game__season=self.season).aggregate(
+                **{f"{field}__sum": models.Sum(field) for field in aggregate_fields}
+            )
+            # Set the sum of the fields in 'aggregate_fields' to the model
+            for field in aggregate_fields:
+                setattr(self, field, aggregates[f"{field}__sum"])
+            # Calculate the average of the fields in 'aggregate_fields' based on the fields above
+            for field in aggregate_fields:
+                total = getattr(self, field)
+                setattr(self, f"average_{field}", round(total / self.games_played, 2))
+            # Set field goal percentages
+            if self.average_field_goals_attempted > 0:
+                self.average_field_goal_percentage = round(self.average_field_goals_made / self.average_field_goals_attempted, 2)
+            if self.average_three_pointers_attempted > 0:
+                self.average_three_point_percentage = round(self.average_three_pointers_made / self.average_three_pointers_attempted, 2)
+            if self.average_free_throws_attempted > 0:
+                self.average_free_throw_percentage = round(self.average_free_throws_made / self.average_free_throws_attempted, 2)
+            # Calculate game highs
+            game_high_fields = [
+                "points", "rebounds", "assists", "steals", "blocks", "turnovers",
+                "field_goals_made", "field_goals_attempted", "three_pointers_made", "three_pointers_attempted", "free_throws_made",
+                "free_throws_attempted", "defensive_rebounds", "offensive_rebounds", "personal_fouls", "points_off_turnovers", "points_in_paint", 
+                "second_chance_points", "dunks", "biggest_lead"
+            ]
+            for field in game_high_fields:
+                game_high = self.team.teamgamestats_set.filter(game__season=self.season).order_by(f"-{field}").first()
+                game_high_value = getattr(game_high, field)
+                setattr(self, f"game_high_{field}", game_high_value)
+            # Calculate the number of wins and losses, points, total rebounds
+            self.wins = self.team.teamgamestats_set.filter(game__season=self.season, game__winner=self.team).count()
+            self.losses = self.games_played - self.wins
+
+        # Save the model
+        super(TeamSeasonStats, self).save(*args, **kwargs) 
+
+    class Meta:
+        verbose_name_plural = "Team season stats"

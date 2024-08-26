@@ -4,7 +4,7 @@ from unfold.admin import ModelAdmin
 
 # Local imports
 from stats.models import Season, Playoff, PlayoffRound, PlayoffSeries
-from stats.models import Game, PlayoffGame, TeamGameStats, PlayerGameStats
+from stats.models import Game, PlayoffGame, TeamGameStats, PlayerGameStats, PlayerSeasonStats, TeamSeasonStats
 
 # Register your models here.
 class SeasonAdmin(ModelAdmin):
@@ -44,6 +44,14 @@ class PlayerGameStatsStatsAdmin(ModelAdmin):
     search_fields = ['player__first_name', 'player__last_name']
     autocomplete_fields = ['game', 'player']
 
+class PlayerSeasonStatsAdmin(ModelAdmin):
+    search_fields = ['player__first_name', 'player__last_name']
+    autocomplete_fields = ['season', 'player']
+
+class TeamSeasonStatsAdmin(ModelAdmin):
+    search_fields = ['team__city', 'team__name']
+    autocomplete_fields = ['season', 'team']
+
 admin.site.register(Season, SeasonAdmin)
 admin.site.register(Playoff, PlayoffAdmin)
 admin.site.register(PlayoffRound, PlayoffRoundAdmin)
@@ -52,3 +60,5 @@ admin.site.register(Game, GameAdmin)
 admin.site.register(PlayoffGame, PlayoffGameAdmin)
 admin.site.register(TeamGameStats, TeamGameStatsAdmin)
 admin.site.register(PlayerGameStats, PlayerGameStatsStatsAdmin)
+admin.site.register(PlayerSeasonStats, PlayerSeasonStatsAdmin)
+admin.site.register(TeamSeasonStats, TeamSeasonStatsAdmin)

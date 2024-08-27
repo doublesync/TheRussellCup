@@ -115,7 +115,8 @@ class Game(models.Model):
         # Automatically set the winner of the game
         self.winner = self.get_winner()
         # Prevent non-staff users from saving games that are older than 10 days
-        if not self.created or self.created > timezone.now() - datetime.timedelta(days=10):
+        bypass = kwargs.pop("bypass", False)
+        if bypass or not self.created or self.created > timezone.now() - datetime.timedelta(days=10):
             super(Game, self).save(*args, **kwargs)
 
 class PlayoffGame(Game):
@@ -175,7 +176,8 @@ class TeamGameStats(models.Model):
 
     def save(self, *args, **kwargs):
         # Prevent non-staff users from saving games that are older than 10 days
-        if not self.created or self.created > timezone.now() - datetime.timedelta(days=10):
+        bypass = kwargs.pop("bypass", False)
+        if bypass or not self.created or self.created > timezone.now() - datetime.timedelta(days=10):
             # Calculate points, point differential, & rebounds
             self.points = (self.field_goals_made * 2) + (self.three_pointers_made * 3) + self.free_throws_made
             self.point_differential = self.get_point_differential()["point_differential"]
@@ -261,7 +263,8 @@ class PlayerGameStats(models.Model):
         self.defensive_rebounds = (self.rebounds - self.offensive_rebounds)
         self.set_advanced_stats()
         # Prevent non-staff users from saving games that are older than 10 days
-        if not self.created or self.created > timezone.now() - datetime.timedelta(days=10):
+        bypass = kwargs.pop("bypass", False)
+        if bypass or not self.created or self.created > timezone.now() - datetime.timedelta(days=10):
             # Save the season stats model (or create it if it doesn't exist)
             season_stats, created = PlayerSeasonStats.objects.get_or_create(season=self.game.season, player=self.player)
             season_stats.save()

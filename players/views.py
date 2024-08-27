@@ -153,6 +153,7 @@ class PlayerListView(ListView):
     def get_queryset(self):
         return Player.objects.all().order_by("-sim_rating")
 
+
 # This is a function based view that will render a filtered player list
 def htmx_filter_players(request):
     
@@ -251,6 +252,7 @@ def purchase_modification(request, id):
     user.save()
     # Return a success message
     return HttpResponse(message)
+
 
 # This is a function based view that will allow the user to get upgrade advice from GPT-4o
 def htmx_upgrade_advice(request, id):

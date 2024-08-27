@@ -40,6 +40,8 @@ class FilterListParams:
                 self.query &= Q(team__surge=False)
             elif league_filter == "surge_league_only":
                 self.query &= Q(team__surge=True)
+            elif league_filter == "both_leagues":
+                self.query &= Q(team__exists=True)
 
     def anomaly_filter(self): # Input must be configured as is in 'templates/players/player_list.html' template
         anomaly_filter = self.request.POST.get("anomaly-filter")

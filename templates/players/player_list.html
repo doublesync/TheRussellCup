@@ -3,54 +3,75 @@
 
 {% block title %}Players{% endblock %}
 
-{% block styles %}
-<style>
-    input::placeholder {
-        color: gray!important;
-    }
-</style>
-{% endblock %}
-
 {% block content %}
 <div class="container-fluid p-md-5">
     <small class="text-muted">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</small>
     <h1>Player List</h1>
     <form>
         {% csrf_token %}
-        <div class="form-group pull-right col-lg-4">
-            <input name="search-query" id="search-query" class="search form-control mb-2" type="text" placeholder="Search for players" hx-post="{% url 'htmx_search_players' %}" hx-trigger="input changed delay:500ms, search" hx-target="#search-table" hx-swap="innerHTML"/>
+        <div class="form-group pull-right col-12">
             <!-- Search query -->
-            <select name="sort-query" id="sort-query" class="form-select mb-2" hx-post="{% url 'htmx_search_players' %}" hx-trigger="change" hx-target="#search-table" hx-swap="innerHTML">
-                <optgroup label="Name">
-                    <option value="first_name:asc">First Name (A-Z)</option>
-                    <option value="first_name:desc">First Name (Z-A)</option>
-                    <option value="last_name:asc">Last Name (A-Z)</option>
-                    <option value="last_name:desc">Last Name (Z-A)</option>
-                    <option value="team:asc">Team (A-Z)</option>
-                    <option value="team:desc">Team (Z-A)</option>
-                </optgroup>
-                <optgroup label="Physical Attributes">
-                    <option value="height:asc">Height (lowest)</option>
-                    <option value="height:desc">Height (highest)</option>
-                    <option value="weight:asc">Weight (lowest)</option>
-                    <option value="weight:desc">Weight (highest)</option>
-                    <option value="wingspan:asc">Wingspan (lowest)</option>
-                    <option value="wingspan:desc">Wingspan (highest)</option>
-                </optgroup>
-                <optgroup label="Other">
-                    <option value="sp_spent:asc">SP Spent (lowest)</option>
-                    <option value="sp_spent:desc">SP Spent (highest)</option>
-                    <option value="xp_spent:asc">XP Spent (lowest)</option>
-                    <option value="xp_spent:desc">XP Spent (highest)</option>
-                    <option value="sim_rating:asc">Sim Rating (lowest)</option>
-                    <option value="sim_rating:desc">Sim Rating (highest)</option>
-                    <option value="position:asc">Position (A-Z)</option>
-                    <option value="position:desc">Position (Z-A)</option>
-                    <option value="anomaly:desc">Anomalies</option>
-                </optgroup>
-            </select>
+            <div class="mb-3 row">
+                <!-- Search for players -->
+                <div class="col-12 mb-2">
+                    <label for="name-filter" class="form-label mb-0">Search for players</label>
+                    <input name="name-filter" id="name-filter" class="search form-control" type="text" placeholder="Enter a name"/>
+                </div>
+                <!-- Position filtering -->
+                <div class="col-12 mb-2">
+                    <label for="position-filter" class="form-label">Filter by position</label>
+                    <select id="position-filter" class="js-multiple-select form-select" name="position-filter" multiple="multiple">
+                        <option value="PG" selected>PG</option>
+                        <option value="SG" selected>SG</option>
+                        <option value="SF" selected>SF</option>
+                        <option value="PF" selected>PF</option>
+                        <option value="C" selected>C</option>
+                    </select>
+                </div>
+                <!-- League filtering -->
+                <div class="col-12 mb-2">
+                    <label for="league-filter" class="form-label">Filter by league</label>
+                    <select id="league-filter" class="js-multiple-select form-select" name="league-filter">
+                        <option value="main_league_only" selected>Main League Only</option>
+                        <option value="surge_league_only">Surge League Only</option>
+                        <option value="both_leagues">Both Leagues</option>
+                    </select>
+                </div>
+                <!-- Anomaly filtering -->
+                <div class="col-12 mb-2">
+                    <label for="anomaly-filter" class="form-label">Filter by anomalies</label>
+                    <select id="anomaly-filter" class="js-multiple-select form-select" name="anomaly-filter">
+                        <option value="include_anomalies" selected>Include Anomalies</option>
+                        <option value="exclude_anomalies">Exclude Anomalies</option>
+                        <option value="only_anomalies">Only Anomalies</option>
+                    </select>
+                </div>
+                <!-- Custom filtering -->
+                <div class="col-12 mb-2">
+                    <label for="custom-filter" class="mb-0 form-label">Filter by other</label>
+                    <!-- What we're filtering -->
+                    <select id="custom-filter" name="custom-filter" class="form-select" name="custom-filter">
+                        <option value="height">Height</option>
+                        <option value="weight">Weight</option>
+                        <option value="wingspan">Wingspan</option>
+                        <option value="sp_spent">SP Spent</option>
+                        <option value="xp_spent">XP Spent</option>
+                        <option value="sim_rating">Sim Rating</option>
+                    </select>
+                    <!-- Greater than or less than -->
+                    <select id="custom-filter-type" name="custom-filter-type" class="form-select" name="custom-filter-type">
+                        <option value="gt">Greater Than</option>
+                        <option value="lt">Less Than</option>
+                        <option value="eq">Equal To</option>
+                    </select>
+                    <!-- Value -->
+                    <input type="number" id="custom-filter-value" class="form-control" name="custom-filter-value" placeholder="Enter a value">
+                </div>
+            </div>
         </div>
-        <span class="counter pull-right"></span>
+        <!-- Filter button -->
+        <button type="button" class="btn btn-primary" hx-post="{% url 'htmx_filter_players' %}" hx-trigger="click delay:1s" hx-target="#search-table" hx-swap="innerHTML"><i class="fas fa-filter"></i> Filter Players</button>
+        <!-- Results table  -->
         <div id="search-table">
             {% include 'players/fragments/list_fragment.html' %}
         </div>
@@ -60,4 +81,14 @@
 {% endblock %}
 
 {% block scripts %}
+{% include 'stafftools/fragments/select2_scripts.html' %}
+{% endblock %}
+
+{% block styles %}
+<style>
+    input::placeholder {
+        color: gray!important;
+    }
+</style>
+{% include 'stafftools/fragments/select2_styles.html' %}
 {% endblock %}

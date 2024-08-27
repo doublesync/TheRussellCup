@@ -68,41 +68,9 @@
 {% endblock %}
 
 {% block scripts %}
-<script>
-    $(document).ready(function() {
-        $('.js-multiple-select').select2({
-            allowClear: true,
-            closeOnSelect: true,
-            placeholder: 'Select players to pay',
-        });
-    });
-</script>
+{% include 'stafftools/fragments/select2_scripts.html' %}
 {% endblock %}
 
 {% block styles %}
-<style>
-    input[type="radio"] {
-        margin: 0 10px 0 1px;
-    }
-    input::placeholder {
-        color: gray!important;
-    }
-    .select2-container--default .select2-selection--multiple {
-        background-color: #333;
-        border: 1px solid #333;
-        border-radius: 0.25rem;
-        color: black;
-    }
-    .select2-results__option {
-        background-color: #333;
-        color: white;
-    }
-    .select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
-        background-color: #444;
-    }
-    .select2-container--default .select2-results__option--selected {
-        background-color: #333
-    }
-
-</style>
+{% include 'stafftools/fragments/select2_styles.html' %}
 {% endblock %}

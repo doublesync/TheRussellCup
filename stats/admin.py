@@ -26,15 +26,42 @@ class PlayoffSeriesAdmin(ModelAdmin):
     autocomplete_fields = ['team_a', 'team_b', 'round']
     ordering = ['-round__playoff__season']
 
+# Inlines for the GameAdmin and PlayoffGameAdmin classes
+class TeamGameStatsInline(admin.TabularInline):
+    search_fields = ['team__city', 'team__name']
+    autocomplete_fields = ['game', 'team']
+    model = TeamGameStats
+    show_change_link = True
+
+    def get_extra(self, request, obj=None, **kwargs):
+        if obj:
+            user_created_forms = obj.playergamestats_set.count()
+            return max(2 - user_created_forms, 0)
+        return 2
+
+class PlayerGameStatsInline(admin.TabularInline):
+    search_fields = ['player__first_name', 'player__last_name']
+    autocomplete_fields = ['game', 'player']
+    model = PlayerGameStats
+    show_change_link = True
+
+    def get_extra(self, request, obj=None, **kwargs):
+        if obj:
+            user_created_forms = obj.playergamestats_set.count()
+            return max(10 - user_created_forms, 0)
+        return 10
+
 class GameAdmin(ModelAdmin):
     search_fields = ['week', 'home_team__name', 'away_team__name']
     autocomplete_fields = ['home_team', 'away_team']
-    ordering = ['-season', '-week']    
+    ordering = ['-season', '-week']   
+    inlines = [TeamGameStatsInline, PlayerGameStatsInline] 
 
 class PlayoffGameAdmin(ModelAdmin):
     search_fields = ['week', 'home_team__name', 'away_team__name']
     autocomplete_fields = ['home_team', 'away_team', 'series']
     ordering = ['-season', '-week']
+    inlines = [TeamGameStatsInline, PlayerGameStatsInline]
 
 class TeamGameStatsAdmin(ModelAdmin):
     search_fields = ['team__city', 'team__name']

@@ -15,7 +15,7 @@ CONFIG_SEASON = {
     "MAX_SP_SEASON": 1620,
     "CHECKIN_SP": 25,
     "CHECKIN_XP": 75,
-    "DEFAULT_CONTRACT": 240,
+    "DEFAULT_CONTRACT": 150,
 }
 
 # Player configuration

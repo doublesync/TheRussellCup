@@ -8,7 +8,7 @@ from django.db.models import Q
 # Local imports
 
 
-class FilterListParams:
+class PlayerListParams:
 
     def __init__(self, request):
         self.request = request
@@ -71,13 +71,23 @@ class FilterListParams:
         self.custom_filter()
         return self.query
     
+class AveragesListParams:
+
+    def __init__(self, request):
+        self.request = request
+        self.query = Q()
+
+    
+
+    def build_averages_list_query(self):
+        pass
 
 def build_player_list_params(request):
-    params = FilterListParams(request)
+    params = PlayerListParams(request)
     query = params.build_player_list_query()
     return query
 
 def build_averages_list_params(request):
-    params = FilterListParams(request)
+    params = AveragesListParams(request)
     query = params.build_averages_list_query()
-    return query
+    pass

@@ -74,6 +74,7 @@ class StatFinder:
         self.player_box_scores = PlayerGameStats.objects.filter(**self.child_kwargs)
         self.team_box_scores = TeamGameStats.objects.filter(**self.child_kwargs)
 
+    # Returns team & player averages and totals for a specific team
     def team_player_stats(self, team):
         # Get all the players on the team
         player_list = team.player_set.all()
@@ -100,6 +101,7 @@ class StatFinder:
     def team_stats(self, team):
         return TeamSeasonStats.objects.filter(team=team).first()
 
+    # Returns specific teams a team has tiebreakers against
     def tie_breakers(self, team):
         # Check for tiebreakers in the cache first
         if cache.get(f"tiebreakers_{team.id}"):
@@ -129,6 +131,7 @@ class StatFinder:
             # Return the tie breakers
             return tiebreakers
 
+    # Returns the league standings for the season
     def league_standings(self):
         # Get all the teams and get their totals
         include_surge = self.kwargs["surge_game"]
@@ -152,6 +155,7 @@ class StatFinder:
         # Return all the team standings
         return sorted_teams
 
+    # Returns the best performance from configured game list
     def best_performance(self):
         # Get the highest gamescore from the list of games
         box_scores_exist = self.player_box_scores.exists()
@@ -162,6 +166,7 @@ class StatFinder:
         else:
             return None
     
+    # Returns the worst performance from configured game list
     def worst_performance(self):
         # Get the lowest gamescore from the list of games
         box_scores_exist = self.player_box_scores.exists()
@@ -171,6 +176,7 @@ class StatFinder:
         else:
             return None
 
+    # Returns accolade counts for the season
     def accolade_counts(self):
         # Let's initialize the accolade counts dictionary
         accolade_counts = {}
@@ -190,6 +196,7 @@ class StatFinder:
         # Return the accolade counts
         return accolade_counts
 
+    # Set the game highs for the season
     def set_game_highs(self, season):
 
         highest_points = self.player_box_scores.latest("points")
@@ -282,6 +289,8 @@ class StatFinder:
 
         season.save()
 
+
+# Returns the season performances for the current season
 def get_season_performances():
     performances = {}
     current_week = config.CONFIG_SEASON["CURRENT_WEEK"]

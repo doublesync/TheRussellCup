@@ -56,7 +56,7 @@ def performances(request):
     accolades = finder.accolade_counts()
     return render(request, "stats/performances.html", {"performances": performances, "accolades": accolades})
 
-# A class that returns the recent games for a player
+# A function that returns the recent games for a player
 def recent_season_games(request, id):
     season = Season.objects.filter(current_season=True).first()
     games = PlayerGameStats.objects.filter(Q(player_id=id) & Q(game__season=season)).order_by("-game__week")

@@ -22,11 +22,14 @@
                         </form>
                     </ul>
                     <p>Thank you to our Care Package Supporters!</p>
-                    <ul>
+                    <p>
                         {% for user in care_package_users %}
-                        <small><li class="list-group-item mt-2 text-light"><i class="fa-solid fa-gem text-danger fw-bold"></i> {{ user }}</li></small>
+                        <small>
+                            <i class="fa-solid fa-gem text-danger fw-bold"></i> {{ user }}
+                            {% if not forloop.last %} &middot; {% endif %}
+                        </small>
                         {% endfor %}
-                    </ul>
+                    </p>
                 </div>
                 <div class="card-footer p-3">
                     <a href="https://github.com/doublesync/TheRussellCup/wiki" class="btn btn-sm btn-dark"><i class="fa-brands fa-github"></i> Compendium</a>

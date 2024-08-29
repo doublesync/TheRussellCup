@@ -77,3 +77,6 @@ def mark_upgrade_complete(request, id):
             )
             # Return a response
             return HttpResponse("✅ Upgrade marked as complete.")
+        
+def google_adsense(request):
+    return HttpResponse("google.com, pub-4085265783135188, DIRECT, f08c47fec0942fa0")

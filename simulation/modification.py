@@ -5,7 +5,7 @@
 # Local imports
 import simulation.webhook as webhook
 from simulation.scripts import animation as animation
-
+from simulation.scripts import weight as weight
 
 # Modification connector functions 
 def modify_jumpshot(player):
@@ -20,13 +20,27 @@ def modify_jumpshot(player):
     Free Throw: {player.jumpshot_free_throw}"""
     webhook.send_webhook("jumpshot_rolls", title=f"🔥 {player.first_name} {player.last_name} has a new jumpshot!", body=jumpshot_string)
     # Return the player object and a message
-    return [player, "✅ Jumpshot Roll applied, check on the players page for the new animation."]
+    return [player, "✅ Jumpshot Roll applied, check the player page for the new animation."]
+
+def modify_weight(player):
+    # Apply the weight roll
+    weight_roll_result = weight.weight_roll(player.position)
+    # Set the weight roll results
+    player.weight = weight_roll_result["weight"]
+    player.strength = weight_roll_result["strength"]
+    # Create a string for the weight roll & send a webhook
+    weight_string = f"Weight: {player.weight} lbs\nStrength: {player.strength}"
+    webhook.send_webhook("weight_rolls", title=f"🏋️ {player.first_name} {player.last_name} has a new weight!", body=weight_string)
+    # Return the player object and a message
+    return [player, f"✅ Weight Roll applied - Weight: {player.weight} lbs, Strength: {player.strength}"]
+
 
 # Modification functions 
 # Parameters: player object
 # Returns: [player object, message]
 MODIFICATION_FUNCTIONS = {
     'Jumpshot Roll': modify_jumpshot,
+    'Weight Roll': modify_weight,
 }
 
 # Checker function

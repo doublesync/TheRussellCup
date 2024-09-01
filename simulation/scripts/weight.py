@@ -3,11 +3,11 @@ import random
 
 # The weight is cosmetic
 position_weight_ranges = {
-    "PG": range(170, 211),  # Weight range
-    "SG": range(180, 231),
-    "SF": range(190, 251),
-    "PF": range(200, 271),
-    "C": range(210, 291),
+    "PG": range(170, 205),  # Weight range
+    "SG": range(180, 220),
+    "SF": range(190, 240),
+    "PF": range(215, 250),
+    "C": range(230, 275),
 }
 
 # Strength is a random number between ranges
@@ -19,7 +19,7 @@ physical_effect_ranges = {
     "C": range(75, 100),
 }
 
-
+# A function to roll the weight
 def weight_roll(position):
     weight_range = position_weight_ranges[position]
     physical_range = physical_effect_ranges[position]

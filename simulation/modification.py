@@ -18,7 +18,7 @@ def modify_jumpshot(player):
     Blending: {player.jumpshot_blending}
     Timing: {player.jumpshot_timing}
     Free Throw: {player.jumpshot_free_throw}"""
-    webhook.send_webhook("jumpshot_rolls", title=f"🔥 {player.first_name} {player.last_name} has a new jumpshot!", body=jumpshot_string)
+    webhook.send_webhook("specialty_rolls", title=f"🔥 {player.first_name} {player.last_name} has a new jumpshot!", body=jumpshot_string)
     # Return the player object and a message
     return [player, "✅ Jumpshot Roll applied, check the player page for the new animation."]
 
@@ -30,7 +30,7 @@ def modify_weight(player):
     player.strength = weight_roll_result["strength"]
     # Create a string for the weight roll & send a webhook
     weight_string = f"Weight: {player.weight} lbs\nStrength: {player.strength}"
-    webhook.send_webhook("weight_rolls", title=f"🏋️ {player.first_name} {player.last_name} has a new weight!", body=weight_string)
+    webhook.send_webhook("specialty_rolls", title=f"🏋️ {player.first_name} {player.last_name} has a new weight!", body=weight_string)
     # Return the player object and a message
     return [player, f"✅ Weight Roll applied - Weight: {player.weight} lbs, Strength: {player.strength}"]
 

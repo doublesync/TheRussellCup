@@ -55,7 +55,7 @@ class StatFinder:
 
         # Set the kwargs
         self.kwargs = {"season": season, "surge_game": surge} # Kwargs for game models
-        self.child_kwargs = {"game__season": season} # Child kwargs for playergamestats and teamgamestats models
+        self.child_kwargs = {"game__season": season, "team__surge": surge} # Child kwargs for playergamestats and teamgamestats models
 
         # Add to the kwargs if a specific season or week is provided
         if specific_season:

@@ -27,12 +27,12 @@ def modify_weight(player):
     weight_roll_result = weight.weight_roll(player.position)
     # Set the weight roll results
     player.weight = weight_roll_result["weight"]
-    player.strength = weight_roll_result["strength"]
+    player.attributes["Strength"] = weight_roll_result["strength"]
     # Create a string for the weight roll & send a webhook
-    weight_string = f"Weight: {player.weight} lbs\nStrength: {player.strength}"
+    weight_string = f"Weight: {player.weight} lbs\nStrength: {player.attributes['Strength']}"
     webhook.send_webhook("specialty_rolls", title=f"🏋️ {player.first_name} {player.last_name} has a new weight!", body=weight_string)
     # Return the player object and a message
-    return [player, f"✅ Weight Roll applied - Weight: {player.weight} lbs, Strength: {player.strength}"]
+    return [player, f"✅ Weight Roll applied - Weight: {player.weight} lbs, Strength: {player.attributes['Strength']}"]
 
 
 # Modification functions 

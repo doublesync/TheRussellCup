@@ -104,7 +104,7 @@ class AveragesListParams(PlayerListParams):
         stat_filter_order_by = self.request.POST.get("stat-filter-order-by")
 
         # Add filter to query
-        if stat_filter_value:
+        if stat_filter and stat_filter_value:
             # Add GTE, LTE, or EQ filter to query
             if stat_filter_type == "gt":
                 self.query &= Q(**{f"{stat_filter}__gte": stat_filter_value})

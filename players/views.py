@@ -180,7 +180,7 @@ def htmx_filter_players(request, model):
     page = request.GET.get("page")
     # Check search_query (if it exists)
     # Eventually we will want to add past season functionality
-    if model_sorting == "stats":
+    if model_sorting == PlayerSeasonStats:
         player_list = model_sorting.objects.filter(query, season__season=current_season).order_by(f"{params.order_direction}{params.ordering}")
     else:
         player_list = model_sorting.objects.filter(query).order_by(f"{params.order_direction}{params.ordering}")

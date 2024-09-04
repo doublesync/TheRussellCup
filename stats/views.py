@@ -10,7 +10,7 @@ from django.db.models import Q
 
 # Local imports
 import simulation.artificial as artificial
-from stats.models import Season, Game, PlayerGameStats, TeamGameStats
+from stats.models import Season, Game, PlayerGameStats, TeamGameStats, PlayerSeasonStats
 import simulation.statfinder as statfinder
 from django_table_sort.table import TableSort
 
@@ -18,9 +18,61 @@ from django_table_sort.table import TableSort
     
 # A function that returns the 'player_averages' page
 def player_averages(request):
+    stat_fields = [
+        'games_played',
+        'minutes',
+        'points',
+        'rebounds',
+        'assists',
+        'steals',
+        'blocks',
+        'turnovers',
+        'field_goals_made',
+        'field_goals_attempted',
+        'three_pointers_made',
+        'three_pointers_attempted',
+        'free_throws_made',
+        'free_throws_attempted',
+        'offensive_rebounds',
+        'personal_fouls',
+        'plus_minus',
+        'points_responsible_for',
+        'dunks',
+        'defensive_rebounds',
+        'game_score',
+        'effective_field_goal_percentage',
+        'true_shooting_percentage',
+        'turnover_percentage',
+        'average_minutes',
+        'average_points',
+        'average_rebounds',
+        'average_assists',
+        'average_steals',
+        'average_blocks',
+        'average_turnovers',
+        'average_field_goals_made',
+        'average_field_goals_attempted',
+        'average_field_goal_percentage',
+        'average_three_pointers_made',
+        'average_three_pointers_attempted',
+        'average_three_point_percentage',
+        'average_free_throws_made',
+        'average_free_throws_attempted',
+        'average_free_throw_percentage',
+        'average_offensive_rebounds',
+        'average_personal_fouls',
+        'average_plus_minus',
+        'average_points_responsible_for',
+        'average_dunks',
+        'average_defensive_rebounds',
+        'average_game_score',
+        'average_effective_field_goal_percentage',
+        'average_true_shooting_percentage',
+        'average_turnover_percentage'
+    ]
     finder = statfinder.StatFinder()
-    players = finder.all_player_stats()
-    return render(request, "stats/player_averages.html", {"players": players})
+    season_stats = finder.all_player_stats()
+    return render(request, "stats/player_averages.html", {"page_obj": season_stats, "stat_fields": stat_fields})
 
 # A function that returns the 'team_averages' page
 def stats_home(request):

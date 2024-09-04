@@ -71,7 +71,7 @@
             </div>
         </div>
         <!-- Filter button -->
-        <button type="button" class="btn btn-primary" hx-post="{% url 'htmx_filter_players' %}" hx-trigger="click delay:1s" hx-target="#search-table" hx-swap="innerHTML"><i class="fas fa-filter"></i> Filter Players</button>
+        <button type="button" class="btn btn-primary" hx-post="{% url 'htmx_filter_players' 'players' %}" hx-trigger="click delay:1s" hx-target="#search-table" hx-swap="innerHTML"><i class="fas fa-filter"></i> Filter Players</button>
         <!-- Results table  -->
         <div id="search-table">
             {% include 'players/fragments/list_fragment.html' %}

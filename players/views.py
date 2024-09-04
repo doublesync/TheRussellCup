@@ -17,6 +17,7 @@ from django.views.generic.list import ListView
 # Local imports
 from players.models import Player, Modification
 from players.forms import PlayerForm, UpgradeForm
+from stats.models import PlayerSeasonStats, TeamSeasonStats
 import simulation.artificial as ai
 import simulation.create as create
 import simulation.upgrade as upgrade
@@ -145,6 +146,8 @@ class UpgradeFormView(FormView):
 # This is a list based view that will render the player list
 class PlayerListView(ListView):
 
+    # Sends 'page_obj' to the template
+
     model = Player
     template_name = "players/player_list.html"
     context_object_name = "players"
@@ -155,20 +158,34 @@ class PlayerListView(ListView):
 
 
 # This is a function based view that will render a filtered player list
-def htmx_filter_players(request):
-    
+def htmx_filter_players(request, model):
+
+    # Initialize some objects
+    model_sorting = model
+    fragment_name = None
+    query_function = None
+    # Determine the model and query function
+    if model == "players":
+        model_sorting = Player
+        fragment_name = "players/fragments/list_fragment.html"
+        query_function = sorting.build_player_list_params
+    elif model == "stats":
+        model_sorting = PlayerSeasonStats
+        fragment_name = "stats/fragments/list_fragment.html"
+        query_function = sorting.build_averages_list_params
     # Get the query from our custom query builder
-    query = sorting.build_player_list_params(request)
+    params, query = query_function(request)
     # Get the page
     page = request.GET.get("page")
     # Check search_query (if it exists)
-    player_list = Player.objects.filter(query).order_by("-sim_rating")
+    player_list = model_sorting.objects.filter(query)
+    player_list = player_list.order_by(f"{params.order_direction}{params.ordering}")
     # Paginate the page
     paginator = Paginator(player_list, 10)
     players = paginator.get_page(page)
     # Return the page
     context: dict = {"page_obj": players}
-    html: str = render_to_string("players/fragments/list_fragment.html", context)
+    html: str = render_to_string(fragment_name, context) # Render a fragment based on what HTMX requested
     return HttpResponse(html)
 
 

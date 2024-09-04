@@ -33,21 +33,21 @@
     </div>
     <ul class="pagination mt-4">
         {% if page_obj.has_previous %}
-            <li class="page-item m-1"><a class="btn btn-sm"  hx-post="{% url 'htmx_filter_players' %}?page=1" hx-trigger="click throttle:1s" hx-target="#search-table" hx-swap="innerHTML">First</a></li>
-            <li class="page-item m-1"><a class="btn btn-sm" hx-post="{% url 'htmx_filter_players' %}?page={{ page_obj.previous_page_number }}" hx-trigger="click throttle:1s" hx-target="#search-table" hx-swap="innerHTML">Previous</a></li>
+            <li class="page-item m-1"><a class="btn btn-sm"  hx-post="{% url 'htmx_filter_players' 'players' %}?page=1" hx-trigger="click throttle:1s" hx-target="#search-table" hx-swap="innerHTML">First</a></li>
+            <li class="page-item m-1"><a class="btn btn-sm" hx-post="{% url 'htmx_filter_players' 'players' %}?page={{ page_obj.previous_page_number }}" hx-trigger="click throttle:1s" hx-target="#search-table" hx-swap="innerHTML">Previous</a></li>
         {% endif %}
 
         {% for num in page_obj.paginator.page_range %}
             {% if page_obj.number == num %}
                 <li class="active m-1"><span class="btn btn-sm btn-primary">{{ num }}</span></li>
             {% else %}
-                <li class=" m-1"><a class="btn btn-sm" hx-post="{% url 'htmx_filter_players' %}?page={{ num }}" hx-trigger="click throttle:1s" hx-target="#search-table" hx-swap="innerHTML">{{ num }}</a></li>
+                <li class=" m-1"><a class="btn btn-sm" hx-post="{% url 'htmx_filter_players' 'players' %}?page={{ num }}" hx-trigger="click throttle:1s" hx-target="#search-table" hx-swap="innerHTML">{{ num }}</a></li>
             {% endif %}
         {% endfor %}
 
         {% if page_obj.has_next %}
-            <li class="page-item m-1"><a class="btn btn-sm" hx-post="{% url 'htmx_filter_players' %}?page={{ page_obj.next_page_number }}" hx-trigger="click throttle:1s" hx-target="#search-table" hx-swap="innerHTML">Next</a></li>
-            <li class="page-item m-1"><a class="btn btn-sm" hx-post="{% url 'htmx_filter_players' %}?page={{ page_obj.paginator.num_pages }}" hx-trigger="click throttle:1s" hx-target="#search-table" hx-swap="innerHTML">Last</a></li>
+            <li class="page-item m-1"><a class="btn btn-sm" hx-post="{% url 'htmx_filter_players' 'players' %}?page={{ page_obj.next_page_number }}" hx-trigger="click throttle:1s" hx-target="#search-table" hx-swap="innerHTML">Next</a></li>
+            <li class="page-item m-1"><a class="btn btn-sm" hx-post="{% url 'htmx_filter_players' 'players' %}?page={{ page_obj.paginator.num_pages }}" hx-trigger="click throttle:1s" hx-target="#search-table" hx-swap="innerHTML">Last</a></li>
         {% endif %}
     </ul>
 </div>

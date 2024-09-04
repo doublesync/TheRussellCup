@@ -131,6 +131,10 @@ def build_player_list_params(request):
     return params, params.query
 
 def build_averages_list_params(request):
+
+    # We need to add playoff functionality to this
+    # We need to add a way to filter by each season
+
     params = AveragesListParams(request)
     params.build_averages_list_query()
     return params, params.query

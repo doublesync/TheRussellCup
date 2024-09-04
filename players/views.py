@@ -17,7 +17,7 @@ from django.views.generic.list import ListView
 # Local imports
 from players.models import Player, Modification
 from players.forms import PlayerForm, UpgradeForm
-from stats.models import PlayerSeasonStats, TeamSeasonStats
+from stats.models import Season, PlayerSeasonStats, TeamSeasonStats
 import simulation.artificial as ai
 import simulation.create as create
 import simulation.upgrade as upgrade
@@ -164,6 +164,7 @@ def htmx_filter_players(request, model):
     model_sorting = model
     fragment_name = None
     query_function = None
+    current_season = Season.objects.filter(current_season=True).first()
     # Determine the model and query function
     if model == "players":
         model_sorting = Player
@@ -178,8 +179,11 @@ def htmx_filter_players(request, model):
     # Get the page
     page = request.GET.get("page")
     # Check search_query (if it exists)
-    player_list = model_sorting.objects.filter(query)
-    player_list = player_list.order_by(f"{params.order_direction}{params.ordering}")
+    # Eventually we will want to add past season functionality
+    if model_sorting == "stats":
+        player_list = model_sorting.objects.filter(query, season__season=current_season).order_by(f"{params.order_direction}{params.ordering}")
+    else:
+        player_list = model_sorting.objects.filter(query).order_by(f"{params.order_direction}{params.ordering}")
     # Paginate the page
     paginator = Paginator(player_list, 10)
     players = paginator.get_page(page)

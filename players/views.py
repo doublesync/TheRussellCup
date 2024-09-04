@@ -164,7 +164,7 @@ def htmx_filter_players(request, model):
     model_sorting = model
     fragment_name = None
     query_function = None
-    current_season = Season.objects.filter(current_season=True).first()
+    current_season = Season.objects.filter(current_season=True).first().season
     # Determine the model and query function
     if model == "players":
         model_sorting = Player

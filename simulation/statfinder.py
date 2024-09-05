@@ -197,7 +197,9 @@ class StatFinder:
         return accolade_counts
 
     # Set the game highs for the season
-    def set_game_highs(self, season):
+    def set_game_highs(self):
+
+        season = self.kwargs["season"]
 
         highest_points = self.player_box_scores.latest("points")
         season.highest_points["game_id"] = highest_points.game.id

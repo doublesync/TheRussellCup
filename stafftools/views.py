@@ -11,6 +11,10 @@ from players.models import Player
 from teams.models import Team
 from simulation.payment import Payment, pay_contracts
 
+# TODO:
+# from django.core.management import call_command
+# call_command('myadmincmd')
+
 # Create your views here.
 @login_required
 def pay_user(request, id, payment_type):

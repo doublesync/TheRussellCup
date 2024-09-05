@@ -47,7 +47,7 @@ class Season(models.Model):
     highest_effective_field_goal_percentage = models.JSONField(default=default_game_highs, null=True, blank=True)
     highest_true_shooting_percentage = models.JSONField(default=default_game_highs, null=True, blank=True)
     highest_turnover_percentage = models.JSONField(default=default_game_highs, null=True, blank=True)
-    
+
     # OpenAI fields
     current_storylines = models.TextField(default="There are no current storylines", blank=True, null=True)
 

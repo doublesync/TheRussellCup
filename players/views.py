@@ -164,7 +164,7 @@ def htmx_filter_players(request, model):
     model_sorting = model
     fragment_name = None
     query_function = None
-    current_season = Season.objects.filter(current_season=True).first().season
+    selected_season = request.POST.get("selected-season")
     # Determine the model and query function
     if model == "players":
         model_sorting = Player
@@ -181,7 +181,7 @@ def htmx_filter_players(request, model):
     # Check search_query (if it exists)
     # Eventually we will want to add past season functionality
     if model_sorting == PlayerSeasonStats:
-        player_list = model_sorting.objects.filter(query, season__season=current_season).order_by(f"{params.order_direction}{params.ordering}")
+        player_list = model_sorting.objects.filter(query, season__season=selected_season).order_by(f"{params.order_direction}{params.ordering}")
     else:
         player_list = model_sorting.objects.filter(query).order_by(f"{params.order_direction}{params.ordering}")
     # Paginate the page

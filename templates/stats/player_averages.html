@@ -18,8 +18,21 @@
             <i class="fas fa-filter"></i> Toggle Filters
         </button>
         <!-- Filters -->
-        <div class="mb-3 row" id="filter-collapse">
+        <div class="mb-3 row" id="filter-collapse" aria-expanded="false" style="display: none;">
             <h3 class="mt-2">Player Filters</h3>
+            <!-- Choose season -->
+            <div class="col-12 mb-2">
+                <label for="season-filter" class="form-label">Filter by season</label>
+                <select id="season-filter" class="js-multiple-select form-select" name="season-filter">
+                    {% for season in season_list %}
+                    {% if forloop.last %}
+                        <option value="{{ season }}" selected>{{ season }}</option>
+                    {% else %}
+                        <option value="{{ season }}">{{ season }}</option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
             <!-- Search for players -->
             <div class="col-12 mb-2">
                 <label for="name-filter" class="form-label mb-0">Search for players</label>

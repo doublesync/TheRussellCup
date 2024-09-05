@@ -10,6 +10,13 @@ from stats.models import Game, PlayoffGame, TeamGameStats, PlayerGameStats, Play
 class SeasonAdmin(ModelAdmin):
     search_fields = ['season']
     ordering = ['-season']
+    exclude = [
+        "highest_points", "highest_rebounds", "highest_assists", "highest_steals", "highest_blocks", "highest_turnovers",
+        "highest_field_goals_made", "highest_field_goals_attempted", "highest_three_pointers_made", "highest_three_pointers_attempted",
+        "highest_free_throws_made", "highest_free_throws_attempted", "highest_offensive_rebounds", "highest_personal_fouls",
+        "highest_plus_minus", "highest_points_responsible_for", "highest_dunks", "highest_defensive_rebounds", "highest_game_score",
+        "highest_effective_field_goal_percentage", "highest_true_shooting_percentage", "highest_turnover_percentage"
+    ]
 
 class PlayoffAdmin(ModelAdmin):
     search_fields = ['season__season']

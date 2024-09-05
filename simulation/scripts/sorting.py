@@ -123,6 +123,7 @@ class AveragesListParams(PlayerListParams):
         self.name_filter()
         self.position_filter()
         self.league_filter()
+        self.anomaly_filter()
         self.custom_filter()
 
 def build_player_list_params(request):

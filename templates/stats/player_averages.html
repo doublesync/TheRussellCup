@@ -22,8 +22,8 @@
             <h3 class="mt-2">Player Filters</h3>
             <!-- Choose season -->
             <div class="col-12 mb-2">
-                <label for="season-filter" class="form-label">Filter by season</label>
-                <select id="season-filter" class="js-multiple-select form-select" name="season-filter">
+                <label for="selected-season" class="form-label">Filter by season</label>
+                <select id="selected-season" class="js-multiple-select form-select" name="selected-season">
                     {% for season in season_list %}
                     {% if forloop.last %}
                         <option value="{{ season }}" selected>{{ season }}</option>

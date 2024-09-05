@@ -79,18 +79,18 @@
             <!-- Statistic filtering -->
             <h3 class="mt-2">Statistic Filters</h3>
             <div class="col-12 mb-2">
-                <label for="stat-filter" class="form-label mb-2">Statistic</label>
-                <!-- Statistic filter (what we're filtering) -->
-                <select id="stat-filter" name="stat-filter" class="form-select form-select-sm js-multiple-select">
-                    <option value="" selected disabled>Choose a statistic</option>
-                    {% for stat_field in stat_fields %}
-                        <option value="{{ stat_field }}">{{ stat_field }}</option>
-                    {% endfor %}
-                </select>
                 <!-- Order by -->
                 <label for="stat-filter-order-by" class="form-label mb-2">Order by</label>
                 <select id="stat-filter-order-by" name="stat-filter-order-by" class="form-select form-select-sm js-multiple-select">
                     <option value="" selected disabled>Order by</option>
+                    {% for stat_field in stat_fields %}
+                        <option value="{{ stat_field }}">{{ stat_field }}</option>
+                    {% endfor %}
+                </select>
+                <!-- Statistic filter (what we're filtering) -->
+                <label for="stat-filter" class="form-label mb-2">Filter by</label>
+                <select id="stat-filter" name="stat-filter" class="form-select form-select-sm js-multiple-select">
+                    <option value="" selected disabled>Choose a statistic</option>
                     {% for stat_field in stat_fields %}
                         <option value="{{ stat_field }}">{{ stat_field }}</option>
                     {% endfor %}
@@ -103,10 +103,10 @@
                     <option value="eq">Equal To</option>
                 </select>
                 <!-- Value -->
-                <label for="stat-filter-value" class="form-label mb-2">Specific Value</label>
+                <label for="stat-filter-value" class="form-label mb-2">Filter value</label>
                 <input type="number" id="stat-filter-value" name="stat-filter-value" class="form-control form-control-sm" placeholder="Specific value">
                 <!-- Order -->
-                <label for="stat-filter-order" class="form-label mb-2">Ordered In</label>
+                <label for="stat-filter-order" class="form-label mb-2">Ordered in</label>
                 <select id="stat-filter-order" name="stat-filter-order" class="form-select form-select-sm">
                     <option value="asc">Ascending Order</option>
                     <option value="desc" selected>Descending Order</option>

@@ -166,6 +166,7 @@ def htmx_filter_players(request, model):
     fragment_name = None
     query_function = None
     selected_season = request.POST.get("selected-season")
+    selected_season_object = Season.objects.filter(season=selected_season).first()
     # Determine the model and query function
     if model == "players":
         model_sorting = Player
@@ -180,7 +181,7 @@ def htmx_filter_players(request, model):
     params, query = query_function(request)
     # Check if we are filtering by PlayerSeasonStats or Player
     if model_sorting == PlayerSeasonStats:
-        finder = statfinder.StatFinder(specific_season=selected_season)
+        finder = statfinder.StatFinder(specific_season=selected_season_object)
         order_by_str = f"{params.order_direction}{params.ordering}"
         player_list = finder.all_player_stats(query=query, order_by=order_by_str)
     else:

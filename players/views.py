@@ -18,6 +18,7 @@ from django.views.generic.list import ListView
 from players.models import Player, Modification
 from players.forms import PlayerForm, UpgradeForm
 from stats.models import Season, PlayerSeasonStats, TeamSeasonStats
+import simulation.statfinder as statfinder
 import simulation.artificial as ai
 import simulation.create as create
 import simulation.upgrade as upgrade
@@ -159,7 +160,7 @@ class PlayerListView(ListView):
 
 # This is a function based view that will render a filtered player list
 def htmx_filter_players(request, model):
-
+    
     # Initialize some objects
     model_sorting = model
     fragment_name = None
@@ -174,14 +175,14 @@ def htmx_filter_players(request, model):
         model_sorting = PlayerSeasonStats
         fragment_name = "stats/fragments/list_fragment.html"
         query_function = sorting.build_averages_list_params
-    # Get the query from our custom query builder
-    params, query = query_function(request)
-    # Get the page
+    # Get the page & query from our custom query builder
     page = request.GET.get("page")
-    # Check search_query (if it exists)
-    # Eventually we will want to add past season functionality
+    params, query = query_function(request)
+    # Check if we are filtering by PlayerSeasonStats or Player
     if model_sorting == PlayerSeasonStats:
-        player_list = model_sorting.objects.filter(query, season__season=selected_season).order_by(f"{params.order_direction}{params.ordering}")
+        finder = statfinder.StatFinder(specific_season=selected_season)
+        order_by_str = f"{params.order_direction}{params.ordering}"
+        player_list = finder.all_player_stats(query=query, order_by=order_by_str)
     else:
         player_list = model_sorting.objects.filter(query).order_by(f"{params.order_direction}{params.ordering}")
     # Paginate the page

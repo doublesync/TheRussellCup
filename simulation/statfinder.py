@@ -89,9 +89,13 @@ class StatFinder:
         }
 
     # Returns 'PlayerSeasonStats' objects for every eligible player in the season
-    def all_player_stats(self):
-        # include_surge = self.kwargs["surge_game"]
-        return PlayerSeasonStats.objects.filter(season=self.kwargs["season"])
+    def all_player_stats(self, query=None, order_by=None):
+        player_list = PlayerSeasonStats.objects.filter(season=self.kwargs["season"])
+        if query:
+            player_list = player_list.filter(query)
+            if order_by:
+                player_list = player_list.order_by(order_by)
+        return player_list
 
     # Returns 'PlayerSeasonStats' object for a specific player in the season
     def player_stats(self, player):

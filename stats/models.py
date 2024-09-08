@@ -534,10 +534,9 @@ class TeamSeasonStats(models.Model):
             game_high_value = getattr(game_high, field)
             setattr(self, f"game_high_{field}", game_high_value)
         # Calculate the number of wins and losses, points, total rebounds
-        self.games_played = self.team.teamgamestats_set.filter(game__season=self.season)
+        self.games_played = self.team.teamgamestats_set.filter(game__season=self.season).count()
         self.wins = self.team.teamgamestats_set.filter(game__season=self.season, game__winner=self.team).count()
         self.losses = self.games_played - self.wins
-
 
         # Save the model
         super(TeamSeasonStats, self).save(*args, **kwargs) 

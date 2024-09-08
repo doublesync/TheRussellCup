@@ -73,18 +73,22 @@ class PlayoffGameAdmin(ModelAdmin):
 class TeamGameStatsAdmin(ModelAdmin):
     search_fields = ['team__city', 'team__name']
     autocomplete_fields = ['game', 'team']
+    ordering = ['-game__season', '-game__week']
 
 class PlayerGameStatsStatsAdmin(ModelAdmin):
     search_fields = ['player__first_name', 'player__last_name']
     autocomplete_fields = ['game', 'player']
+    ordering = ['-game__season', '-game__week']
 
 class PlayerSeasonStatsAdmin(ModelAdmin):
     search_fields = ['player__first_name', 'player__last_name']
     autocomplete_fields = ['season', 'player']
+    ordering = ['-season']
 
 class TeamSeasonStatsAdmin(ModelAdmin):
     search_fields = ['team__city', 'team__name']
     autocomplete_fields = ['season', 'team']
+    ordering = ['-season']
 
 admin.site.register(Season, SeasonAdmin)
 admin.site.register(Playoff, PlayoffAdmin)

@@ -7,9 +7,10 @@ from django.db import models
 from django.utils import timezone
 
 # Local imports
+import simulation.scripts.default as default
+import simulation.webhook as webhook
 from stats.managers import GameManager, TeamGameStatsManager, PlayerGameStatsManager
 from players.models import Player
-import simulation.scripts.default as default
 from teams.models import Team
 
 # This is so messy...
@@ -362,49 +363,51 @@ class PlayerSeasonStats(models.Model):
         return f"{self.player} | {self.season}"
     
     def save(self, *args, **kwargs):
-        # Get the number of games played by the player in the season
-        self.games_played = self.player.playergamestats_set.filter(game__season=self.season).count()
-        if self.games_played > 0:
-            # Make a list of fields to get the sum of
-            aggregate_fields = [
-                "minutes", "points", "rebounds", "assists", "steals", "blocks", "turnovers",
-                "field_goals_made", "field_goals_attempted", "three_pointers_made", "three_pointers_attempted",
-                "free_throws_made", "free_throws_attempted", "offensive_rebounds", "personal_fouls", 
-                "plus_minus", "points_responsible_for", "dunks", "defensive_rebounds", "game_score", "effective_field_goal_percentage",
-                "true_shooting_percentage", "turnover_percentage"
-            ]
-            # Get the sum of the fields in 'aggregate_fields'
-            aggregates = self.player.playergamestats_set.filter(game__season=self.season).aggregate(
-                **{f"{field}__sum": models.Sum(field) for field in aggregate_fields}
-            )
-            # Set the sum of the fields in 'aggregate_fields' to the model
-            for field in aggregate_fields:
-                setattr(self, field, aggregates[f"{field}__sum"])
-            # Calculate the average of the fields in 'aggregate_fields' based on the fields above
-            for field in aggregate_fields:
-                total = getattr(self, field)
-                setattr(self, f"average_{field}", round(total / self.games_played, 2))
-            # Set field goal percentages
-            if self.average_field_goals_attempted > 0:
-                self.average_field_goal_percentage = round(self.average_field_goals_made / self.average_field_goals_attempted, 2)
-            if self.average_three_pointers_attempted > 0:
-                self.average_three_point_percentage = round(self.average_three_pointers_made / self.average_three_pointers_attempted, 2)
-            if self.average_free_throws_attempted > 0:
-                self.average_free_throw_percentage = round(self.average_free_throws_made / self.average_free_throws_attempted, 2)
-            # Calculate game highs
-            game_high_fields = [
-                "points", "rebounds", "assists", "steals", "blocks", "turnovers",
-                "field_goals_made", "field_goals_attempted", "three_pointers_made", "three_pointers_attempted",
-                "free_throws_made", "free_throws_attempted", "offensive_rebounds", "personal_fouls", 
-                "plus_minus", "points_responsible_for", "dunks", "defensive_rebounds", "game_score", "effective_field_goal_percentage",
-                "true_shooting_percentage", "turnover_percentage"
-            ]
-            for field in game_high_fields:
-                game_high = self.player.playergamestats_set.filter(game__season=self.season).order_by(f"-{field}").first()
-                game_high_value = getattr(game_high, field)
-                setattr(self, f"game_high_{field}", game_high_value)
+
+        # Make a list of fields to get the sum of
+        aggregate_fields = [
+            "minutes", "points", "rebounds", "assists", "steals", "blocks", "turnovers",
+            "field_goals_made", "field_goals_attempted", "three_pointers_made", "three_pointers_attempted",
+            "free_throws_made", "free_throws_attempted", "offensive_rebounds", "personal_fouls", 
+            "plus_minus", "points_responsible_for", "dunks", "defensive_rebounds", "game_score", "effective_field_goal_percentage",
+            "true_shooting_percentage", "turnover_percentage"
+        ]
+        # Get the sum of the fields in 'aggregate_fields'
+        aggregates = self.player.playergamestats_set.filter(game__season=self.season).aggregate(
+            **{f"{field}__sum": models.Sum(field) for field in aggregate_fields}
+        )
+        # Set the sum of the fields in 'aggregate_fields' to the model
+        for field in aggregate_fields:
+            setattr(self, field, aggregates[f"{field}__sum"])
+        # Calculate the average of the fields in 'aggregate_fields' based on the fields above
+        for field in aggregate_fields:
+            total = getattr(self, field)
+            setattr(self, f"average_{field}", round(total / self.games_played, 2))
+        # Set field goal percentages
+        if self.average_field_goals_attempted > 0:
+            self.average_field_goal_percentage = round(self.average_field_goals_made / self.average_field_goals_attempted, 2)
+        if self.average_three_pointers_attempted > 0:
+            self.average_three_point_percentage = round(self.average_three_pointers_made / self.average_three_pointers_attempted, 2)
+        if self.average_free_throws_attempted > 0:
+            self.average_free_throw_percentage = round(self.average_free_throws_made / self.average_free_throws_attempted, 2)
+        # Calculate game highs
+        game_high_fields = [
+            "points", "rebounds", "assists", "steals", "blocks", "turnovers",
+            "field_goals_made", "field_goals_attempted", "three_pointers_made", "three_pointers_attempted",
+            "free_throws_made", "free_throws_attempted", "offensive_rebounds", "personal_fouls", 
+            "plus_minus", "points_responsible_for", "dunks", "defensive_rebounds", "game_score", "effective_field_goal_percentage",
+            "true_shooting_percentage", "turnover_percentage"
+        ]
+        for field in game_high_fields:
+            game_high = self.player.playergamestats_set.filter(game__season=self.season).order_by(f"-{field}").first()
+            game_high_value = getattr(game_high, field)
+            setattr(self, f"game_high_{field}", game_high_value)
+    
         # Save the model
         super(PlayerSeasonStats, self).save(*args, **kwargs)
+
+        # Send a webhook to the Discord server
+        webhook.send_webhook(url="stat_updates", title="Player Season Stats Updated", body=f"{self.player.first_name} {self.player.last_name}'s season stats have been updated for the {self.season} season.")
 
     class Meta:
         verbose_name_plural = "Player season stats"
@@ -493,51 +496,52 @@ class TeamSeasonStats(models.Model):
         return f"{self.team} | {self.season}"
 
     def save(self, *args, **kwargs):
-        # Get the number of games played by the team in the season
-        self.games_played = self.team.teamgamestats_set.filter(game__season=self.season).count()
-        if self.games_played > 0:
-            # Make a list of fields to get the sum of
-            aggregate_fields = [
-                "points", "rebounds", "assists", "steals", "blocks", "turnovers",
-                "field_goals_made", "field_goals_attempted", "three_pointers_made", "three_pointers_attempted",
-                "free_throws_made", "free_throws_attempted", "defensive_rebounds", "offensive_rebounds", "personal_fouls", 
-                "points_off_turnovers", "points_in_paint", "second_chance_points", "dunks", "biggest_lead", "point_differential"
-            ]
-            # Get the sum of the fields in 'aggregate_fields'
-            aggregates = self.team.teamgamestats_set.filter(game__season=self.season).aggregate(
-                **{f"{field}__sum": models.Sum(field) for field in aggregate_fields}
-            )
-            # Set the sum of the fields in 'aggregate_fields' to the model
-            for field in aggregate_fields:
-                setattr(self, field, aggregates[f"{field}__sum"])
-            # Calculate the average of the fields in 'aggregate_fields' based on the fields above
-            for field in aggregate_fields:
-                total = getattr(self, field)
-                setattr(self, f"average_{field}", round(total / self.games_played, 2))
-            # Set field goal percentages
-            if self.average_field_goals_attempted > 0:
-                self.average_field_goal_percentage = round(self.average_field_goals_made / self.average_field_goals_attempted, 2)
-            if self.average_three_pointers_attempted > 0:
-                self.average_three_point_percentage = round(self.average_three_pointers_made / self.average_three_pointers_attempted, 2)
-            if self.average_free_throws_attempted > 0:
-                self.average_free_throw_percentage = round(self.average_free_throws_made / self.average_free_throws_attempted, 2)
-            # Calculate game highs
-            game_high_fields = [
-                "points", "rebounds", "assists", "steals", "blocks", "turnovers",
-                "field_goals_made", "field_goals_attempted", "three_pointers_made", "three_pointers_attempted", "free_throws_made",
-                "free_throws_attempted", "defensive_rebounds", "offensive_rebounds", "personal_fouls", "points_off_turnovers", "points_in_paint", 
-                "second_chance_points", "dunks", "biggest_lead"
-            ]
-            for field in game_high_fields:
-                game_high = self.team.teamgamestats_set.filter(game__season=self.season).order_by(f"-{field}").first()
-                game_high_value = getattr(game_high, field)
-                setattr(self, f"game_high_{field}", game_high_value)
-            # Calculate the number of wins and losses, points, total rebounds
-            self.wins = self.team.teamgamestats_set.filter(game__season=self.season, game__winner=self.team).count()
-            self.losses = self.games_played - self.wins
+
+        # Make a list of fields to get the sum of
+        aggregate_fields = [
+            "points", "rebounds", "assists", "steals", "blocks", "turnovers",
+            "field_goals_made", "field_goals_attempted", "three_pointers_made", "three_pointers_attempted",
+            "free_throws_made", "free_throws_attempted", "defensive_rebounds", "offensive_rebounds", "personal_fouls", 
+            "points_off_turnovers", "points_in_paint", "second_chance_points", "dunks", "biggest_lead", "point_differential"
+        ]
+        # Get the sum of the fields in 'aggregate_fields'
+        aggregates = self.team.teamgamestats_set.filter(game__season=self.season).aggregate(
+            **{f"{field}__sum": models.Sum(field) for field in aggregate_fields}
+        )
+        # Set the sum of the fields in 'aggregate_fields' to the model
+        for field in aggregate_fields:
+            setattr(self, field, aggregates[f"{field}__sum"])
+        # Calculate the average of the fields in 'aggregate_fields' based on the fields above
+        for field in aggregate_fields:
+            total = getattr(self, field)
+            setattr(self, f"average_{field}", round(total / self.games_played, 2))
+        # Set field goal percentages
+        if self.average_field_goals_attempted > 0:
+            self.average_field_goal_percentage = round(self.average_field_goals_made / self.average_field_goals_attempted, 2)
+        if self.average_three_pointers_attempted > 0:
+            self.average_three_point_percentage = round(self.average_three_pointers_made / self.average_three_pointers_attempted, 2)
+        if self.average_free_throws_attempted > 0:
+            self.average_free_throw_percentage = round(self.average_free_throws_made / self.average_free_throws_attempted, 2)
+        # Calculate game highs
+        game_high_fields = [
+            "points", "rebounds", "assists", "steals", "blocks", "turnovers",
+            "field_goals_made", "field_goals_attempted", "three_pointers_made", "three_pointers_attempted", "free_throws_made",
+            "free_throws_attempted", "defensive_rebounds", "offensive_rebounds", "personal_fouls", "points_off_turnovers", "points_in_paint", 
+            "second_chance_points", "dunks", "biggest_lead"
+        ]
+        for field in game_high_fields:
+            game_high = self.team.teamgamestats_set.filter(game__season=self.season).order_by(f"-{field}").first()
+            game_high_value = getattr(game_high, field)
+            setattr(self, f"game_high_{field}", game_high_value)
+        # Calculate the number of wins and losses, points, total rebounds
+        self.wins = self.team.teamgamestats_set.filter(game__season=self.season, game__winner=self.team).count()
+        self.losses = self.games_played - self.wins
 
         # Save the model
         super(TeamSeasonStats, self).save(*args, **kwargs) 
+
+        # Send a webhook to the Discord server
+        webhook.send_webhook(url="stat_updates", title="Team Season Stats Updated", body=f"{self.team.city} {self.team.name}'s season stats have been updated for the {self.season} season.")
 
     class Meta:
         verbose_name_plural = "Team season stats"

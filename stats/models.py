@@ -407,7 +407,7 @@ class PlayerSeasonStats(models.Model):
         super(PlayerSeasonStats, self).save(*args, **kwargs)
 
         # Send a webhook to the Discord server
-        webhook.send_webhook(url="stat_updates", title="Player Season Stats Updated", body=f"{self.player.first_name} {self.player.last_name}'s season stats have been updated for the {self.season} season.")
+        # webhook.send_webhook(url="stat_updates", title="Player Season Stats Updated", body=f"{self.player.first_name} {self.player.last_name}'s season stats have been updated for the {self.season} season.")
 
     class Meta:
         verbose_name_plural = "Player season stats"
@@ -536,6 +536,11 @@ class TeamSeasonStats(models.Model):
         # Calculate the number of wins and losses, points, total rebounds
         self.wins = self.team.teamgamestats_set.filter(game__season=self.season, game__winner=self.team).count()
         self.losses = self.games_played - self.wins
+
+        print(self.team.name)
+        print("GP:", self.games_played)
+        print("Wins:", self.wins)
+        print("Losses:", self.losses)
 
         # Save the model
         super(TeamSeasonStats, self).save(*args, **kwargs) 

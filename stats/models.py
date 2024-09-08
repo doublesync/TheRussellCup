@@ -179,7 +179,7 @@ class TeamGameStats(models.Model):
         bypass = kwargs.pop("bypass", False)
         if bypass or not self.created or self.created > timezone.now() - datetime.timedelta(days=10):
             # Calculate points, point differential, & rebounds
-            self.points = (self.field_goals_made * 2) + (self.three_pointers_made * 3) + self.free_throws_made
+            self.points = (self.field_goals_made * 2) + (self.three_pointers_made) + self.free_throws_made
             self.point_differential = self.get_point_differential()["point_differential"]
             self.rebounds = (self.defensive_rebounds + self.offensive_rebounds)
             # Save the season stats model (or create it if it doesn't exist)

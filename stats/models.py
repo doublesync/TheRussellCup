@@ -536,7 +536,7 @@ class TeamSeasonStats(models.Model):
         # Calculate the number of wins and losses, points, total rebounds
         season_games = self.team.teamgamestats_set.filter(game__season=self.season)
         for game in season_games:
-            print(f"Winner: {game.winner} {game}")
+            print(f"Winner: {game.game.winner} {game.game}")
         self.wins = self.team.teamgamestats_set.filter(game__season=self.season, game__winner=self.team).count()
         self.losses = self.games_played - self.wins
 

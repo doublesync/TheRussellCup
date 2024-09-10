@@ -7,6 +7,7 @@ from django.db import models
 from django.utils import timezone
 
 # Local imports
+import simulation.config as config
 import simulation.scripts.default as default
 import simulation.webhook as webhook
 from stats.managers import GameManager, TeamGameStatsManager, PlayerGameStatsManager
@@ -361,43 +362,33 @@ class PlayerSeasonStats(models.Model):
 
     def __str__(self):
         return f"{self.player} | {self.season}"
-    
+        
     def save(self, *args, **kwargs):
 
-        # Make a list of fields to get the sum of
-        aggregate_fields = [
-            "minutes", "points", "rebounds", "assists", "steals", "blocks", "turnovers",
-            "field_goals_made", "field_goals_attempted", "three_pointers_made", "three_pointers_attempted",
-            "free_throws_made", "free_throws_attempted", "offensive_rebounds", "personal_fouls", 
-            "plus_minus", "points_responsible_for", "dunks", "defensive_rebounds", "game_score", "effective_field_goal_percentage",
-            "true_shooting_percentage", "turnover_percentage"
-        ]
+# Make a list of fields to get the sum of
+
         # Get the sum of the fields in 'aggregate_fields'
+        # Set the sum of the fields in 'aggregate_fields' to the model
+        # Calculate the average of the fields in 'aggregate_fields' based on the fields above
+        # Set field goal percentages
+        aggregate_fields = config.CONFIG_STATS["TRACKED_TOTALS_FIELDS"]
         aggregates = self.player.playergamestats_set.filter(game__season=self.season).aggregate(
             **{f"{field}__sum": models.Sum(field) for field in aggregate_fields}
         )
-        # Set the sum of the fields in 'aggregate_fields' to the model
         for field in aggregate_fields:
-            setattr(self, field, aggregates[f"{field}__sum"])
-        # Calculate the average of the fields in 'aggregate_fields' based on the fields above
+            setattr(self, field, aggregates[f"{field}__sum"]) # Setting each total 
         for field in aggregate_fields:
             total = getattr(self, field)
-            setattr(self, f"average_{field}", round(total / self.games_played, 2))
-        # Set field goal percentages
+            setattr(self, f"average_{field}", round(total / self.games_played, 2)) # Setting each average
         if self.average_field_goals_attempted > 0:
             self.average_field_goal_percentage = round(self.average_field_goals_made / self.average_field_goals_attempted, 2)
         if self.average_three_pointers_attempted > 0:
             self.average_three_point_percentage = round(self.average_three_pointers_made / self.average_three_pointers_attempted, 2)
         if self.average_free_throws_attempted > 0:
             self.average_free_throw_percentage = round(self.average_free_throws_made / self.average_free_throws_attempted, 2)
+        
         # Calculate game highs
-        game_high_fields = [
-            "points", "rebounds", "assists", "steals", "blocks", "turnovers",
-            "field_goals_made", "field_goals_attempted", "three_pointers_made", "three_pointers_attempted",
-            "free_throws_made", "free_throws_attempted", "offensive_rebounds", "personal_fouls", 
-            "plus_minus", "points_responsible_for", "dunks", "defensive_rebounds", "game_score", "effective_field_goal_percentage",
-            "true_shooting_percentage", "turnover_percentage"
-        ]
+        game_high_fields = config.CONFIG_STATS["TRACKED_GAME_HIGH_FIELDS"]
         for field in game_high_fields:
             game_high = self.player.playergamestats_set.filter(game__season=self.season).order_by(f"-{field}").first()
             game_high_value = getattr(game_high, field)
@@ -405,9 +396,6 @@ class PlayerSeasonStats(models.Model):
     
         # Save the model
         super(PlayerSeasonStats, self).save(*args, **kwargs)
-
-        # Send a webhook to the Discord server
-        # webhook.send_webhook(url="stat_updates", title="Player Season Stats Updated", body=f"{self.player.first_name} {self.player.last_name}'s season stats have been updated for the {self.season} season.")
 
     class Meta:
         verbose_name_plural = "Player season stats"

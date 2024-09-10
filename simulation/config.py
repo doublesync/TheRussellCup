@@ -34,7 +34,7 @@ CONFIG_PLAYER = {
 
 CONFIG_STATS = {
     "TRACKED_TOTALS_FIELDS": [
-        "minutes", "points", "rebounds", "assists", "steals", "blocks", "turnovers",
+        "games_played", "minutes", "points", "rebounds", "assists", "steals", "blocks", "turnovers",
         "field_goals_made", "field_goals_attempted", "three_pointers_made", "three_pointers_attempted",
         "free_throws_made", "free_throws_attempted", "offensive_rebounds", "personal_fouls", 
         "plus_minus", "points_responsible_for", "dunks", "defensive_rebounds", "game_score", "effective_field_goal_percentage",

@@ -378,8 +378,9 @@ class PlayerSeasonStats(models.Model):
         for field in aggregate_fields:
             setattr(self, field, aggregates[f"{field}__sum"]) # Setting each total 
         for field in aggregate_fields:
-            total = getattr(self, field)
-            setattr(self, f"average_{field}", round(total / self.games_played, 2)) # Setting each average
+            if not field == "games_played":
+                total = getattr(self, field)
+                setattr(self, f"average_{field}", round(total / self.games_played, 2)) # Setting each average
         if self.average_field_goals_attempted > 0:
             self.average_field_goal_percentage = round(self.average_field_goals_made / self.average_field_goals_attempted, 2)
         if self.average_three_pointers_attempted > 0:

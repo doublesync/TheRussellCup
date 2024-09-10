@@ -12,7 +12,6 @@ from django.db.models import Q
 import simulation.artificial as artificial
 from stats.models import Season, Game, PlayerGameStats, TeamGameStats, PlayerSeasonStats
 import simulation.statfinder as statfinder
-from django_table_sort.table import TableSort
 
 # Create your views here.
     

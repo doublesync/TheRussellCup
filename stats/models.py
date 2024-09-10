@@ -368,6 +368,7 @@ class PlayerSeasonStats(models.Model):
 # Make a list of fields to get the sum of
 
         # Get the sum of the fields in 'aggregate_fields'
+        # Manually set the games played field
         # Set the sum of the fields in 'aggregate_fields' to the model
         # Calculate the average of the fields in 'aggregate_fields' based on the fields above
         # Set field goal percentages
@@ -377,10 +378,10 @@ class PlayerSeasonStats(models.Model):
         )
         for field in aggregate_fields:
             setattr(self, field, aggregates[f"{field}__sum"]) # Setting each total 
+        self.games_played = self.player.playergamestats_set.filter(game__season=self.season).count() # Setting games played
         for field in aggregate_fields:
-            if not field == "games_played":
-                total = getattr(self, field)
-                setattr(self, f"average_{field}", round(total / self.games_played, 2)) # Setting each average
+            total = getattr(self, field)
+            setattr(self, f"average_{field}", round(total / self.games_played, 2)) # Setting each average
         if self.average_field_goals_attempted > 0:
             self.average_field_goal_percentage = round(self.average_field_goals_made / self.average_field_goals_attempted, 2)
         if self.average_three_pointers_attempted > 0:

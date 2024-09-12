@@ -31,7 +31,7 @@ def height_anomaly(player):
 
 # Changes the chance of an anomaly occurring
 # Each anomaly points to a function that applies the anomaly
-anomaly_chances = 0.05
+anomaly_chances = 0.015
 anomalies = {
     "Height": height_anomaly,
 }

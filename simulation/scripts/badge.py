@@ -1,3 +1,63 @@
+# 2K25 Badge System
+refundable_badges = [
+    "Giant Slayer",
+    "Masher",
+    "Pro Touch",
+    "Slithery",
+    "Bunny",
+    "Precision Dunker",
+    "Whistle",
+    "Comeback Kid",
+    "Corner Specialist",
+    "Green Machine",
+    "Guard Up",
+    "Space Creator",
+    "Free Points",
+    "Open Looks",
+    "Hyperdrive",
+    "Killer Combos",
+    "Post Playmaker",
+    "Big Driver",
+    "Blow-By",
+    "Relay Passer",
+    "Touch Passer",
+    "Triple Spike",
+    "Ankle Braces",
+    "Work Horse",
+    "Fast Feet",
+    "Right Stick Ripper",
+    "Bulldozer",
+]
+
+# If multiple badges convert to the same new bdage
+# Convert to the 'max'
+convertable_badges = {
+    "Acrobat": "Layup Mixmaster",
+    "Scooper": "Layup Mixmaster",
+    "Spin Cycle": "Layup Mixmaster",
+    "Two Step": "Layup Mixmaster",
+    "Backdown Punisher": "Post Powerhouse",
+    "Dropstepper": "Post Powerhouse",
+    "Dream Shake": "Post-Up Poet",
+    "Post Spin Technician": "Post-Up Poet",
+    "Post Lockdown": "Post Defender",
+    "Blinders": "Deadeye",
+    "Catch & Shoot": "Set Shot Specialist",
+    "Claymore": "Set Shot Specialist",
+    "Agent 3": "Shifty Shooter",
+    "Middy Magician": "Shifty Shooter",
+    "Ankle Breaker": "Ankle Assassin",
+    "Speed Booster": "Lightning Launch",
+    "Physical Handles": "Strong Handle",
+    "Needle Threader": "Versatile Visionary",
+    "Special Delivery": "Versatile Visionary",
+    "Chase Down Artist": "High-Flying Denier",
+    "Clamps": "On-Ball Menace",
+    "Anchor": "Paint Patroller",
+    "Fast Twitch": "Paint Prodigy",
+    "Fearless Finisher": "Physical Finisher",
+}
+
 # Badge categories
 badge_categories = {
     "Inside Scoring": [

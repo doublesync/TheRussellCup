@@ -70,6 +70,9 @@ class PlayerCreator:
         webhook.send_webhook(url="new_players", title=title, body=body)
 
     def create(self):
+
+        return "Player creation is currently disabled."  # Placeholder for toggle creation
+
         # Validate the user
         validation = self.validate()
         if validation:

@@ -356,11 +356,10 @@ def default_attributes():
         "Offensive Consistency": 55,
         "Intangibles": 55,
         "Speed": 55,
-        "Acceleration": 55,
+        "Agility": 55,
         "Vertical": 55,
         "Strength": 55,
     }
-
 
 # Callable for badges
 def default_badges():

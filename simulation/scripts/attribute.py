@@ -4,7 +4,7 @@ from simulation.scripts.utility import real_range
 # Physical attributes that don't change
 physical_attributes = [
     "Speed",  # Set based on height
-    "Acceleration",  # Set based on speed
+    "Agility",  # Set based on speed
     "Vertical",  # Set based on height
     "Strength",  # Randomly generated based on weight
     "Speed with Ball",  # Set based on height

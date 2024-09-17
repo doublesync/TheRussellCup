@@ -14,13 +14,13 @@ def height_anomaly(player):
     player.user.sp += config.CONFIG_PLAYER["SP_ANOMALY_BONUS"]
     # Set the random boost values
     speed_boost = random.randint(5, 10)
-    acceleration_boost = random.randint(5, 10)
+    agility_boost = random.randint(5, 10)
     strength_boost = random.randint(5, 10)
     vertical_boost = random.randint(5, 10)
     # Boost the player's attributes (capped at 99)
     player.attributes["Speed"] = min(99, player.attributes["Speed"] + speed_boost)
     player.attributes["Speed with Ball"] = player.attributes["Speed"]
-    player.attributes["Acceleration"] = min(99, player.attributes["Acceleration"] + acceleration_boost)
+    player.attributes["Agility"] = min(99, player.attributes["Agility"] + agility_boost)
     player.attributes["Strength"] = min(99, player.attributes["Strength"] + strength_boost)
     player.attributes["Vertical"] = min(99, player.attributes["Vertical"] + vertical_boost)
     # Save the user

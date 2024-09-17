@@ -77,13 +77,6 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- Add 'Lateral Quickness' -->
-                            <tr>
-                                <td>Physical</td>
-                                <td>Lateral Quickness</td>
-                                <td class="fw-bold text-success"><i class="fa-solid fa-level-up"></i>{{ log.player.attributes|get_item:'Lateral Quickness' }}</td>
-                                <td><span class="badge bg-info"><i class="fa-solid fa-link"></i> Speed & Per. D</span></td>
-                            </tr>
                             <!-- Add the rest of the attributes inside the log -->
                             {% for category, data in log.upgrades.attributes.items %}
                                 {% for attribute, data in data.items %}

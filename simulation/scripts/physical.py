@@ -79,7 +79,6 @@ def set_starting_physicals(player: any) -> any:
     player.attributes["Speed with Ball"] = starting_height_physicals[player.height]["Speed"]
     player.attributes["Agility"] = starting_height_physicals[player.height]["Speed"]
     player.attributes["Vertical"] = starting_height_physicals[player.height]["Vertical"]
-    player.attributes["Lateral Quickness"] = (player.attributes["Speed"] + player.attributes["Perimeter Defense"]) // 2 
     # These are the physical attributes that are set based on weight
     weight_roll_result = weight.weight_roll(player.position)
     player.weight = weight_roll_result["weight"]

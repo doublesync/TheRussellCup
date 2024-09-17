@@ -72,8 +72,6 @@ class Player(models.Model):
         self.height_imperial = utility.imperial_height(self.height)
         # Set a random jumpshot if it is not set
         if not self.jumpshot or self.jumpshot == "N/A": animation.generate_jumpshot(self)
-        # Calculate the lateral quickness after potential upgrades
-        self.attributes["Lateral Quickness"] = (self.attributes["Speed"] + self.attributes["Perimeter Defense"]) // 2
         # Calculate the overall rating after potential upgrades
         rating_manager = SimulationRating(self)
         self.sim_rating = rating_manager.get_rating()

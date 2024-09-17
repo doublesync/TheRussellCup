@@ -347,7 +347,6 @@ def default_attributes():
         "Perimeter Defense": 55,
         "Block": 55,
         "Steal": 55,
-        "Lateral Quickness": 55,
         "Speed with Ball": 55,
         "Hustle": 55,
         "Pass Perception": 55,

@@ -8,7 +8,6 @@ physical_attributes = [
     "Vertical",  # Set based on height
     "Strength",  # Randomly generated based on weight
     "Speed with Ball",  # Set based on height
-    "Lateral Quickness",  # Set based on speed and perimeter defense
 ]
 
 # Attribute categories

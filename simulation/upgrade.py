@@ -129,6 +129,9 @@ class UpgradeCreator:
         existing_log.save()
 
     def purchase(self):
+
+        return [False, "Player upgrades are currently disabled."]
+
         # Format the data
         validate_format = self.format()
         # Validate the user, price, and upgrades

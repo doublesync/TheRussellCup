@@ -71,7 +71,7 @@ class PlayerCreator:
 
     def create(self):
 
-        return "Player creation is currently disabled."  # Placeholder for toggle creation
+        # return "Player creation is currently disabled."
 
         # Validate the user
         validation = self.validate()

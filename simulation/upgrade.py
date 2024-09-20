@@ -93,7 +93,7 @@ class UpgradeCreator:
             self.cart["tendencies"][t]["price"] = price
             self.cart["total_xp"] += price
         # Add surcharge (based on 'sp_spent') to the 'total_sp' price
-        upgrade_surcharge = frivolity.get_surcharge_tier(self, self.player)
+        upgrade_surcharge = frivolity.get_surcharge_tier(self.player)
         if upgrade_surcharge:
             rounded_surcharge = round(self.cart["total_sp"] * upgrade_surcharge)
             self.cart["total_sp"] += rounded_surcharge

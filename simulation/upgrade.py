@@ -4,6 +4,7 @@
 import simulation.scripts.attribute as attribute
 import simulation.scripts.badge as badge
 import simulation.scripts.tendency as tendency
+import simulation.frivolity as frivolity
 from logs.models import UpgradeLog
 
 # fmt: off
@@ -91,6 +92,11 @@ class UpgradeCreator:
             price = tendency.check_tendency_price(start_value, new_value)
             self.cart["tendencies"][t]["price"] = price
             self.cart["total_xp"] += price
+        # Add surcharge (based on 'sp_spent') to the 'total_sp' price
+        upgrade_surcharge = frivolity.get_surcharge_tier(self, self.player)
+        if upgrade_surcharge:
+            rounded_surcharge = round(self.cart["total_sp"] * upgrade_surcharge)
+            self.cart["total_sp"] += rounded_surcharge
         # Check if user can afford the upgrades
         if validate:
             if self.user.sp < self.cart["total_sp"]:

@@ -115,10 +115,12 @@ class UpgradeFormView(FormView):
             original_attributes = json.loads(self.request.POST.get("original_attributes").replace("'", '"'))
             original_badges = json.loads(self.request.POST.get("original_badges").replace("'", '"'))
             original_tendencies = json.loads(self.request.POST.get("original_tendencies").replace("'", '"'))
+            original_sp_spent = int(self.request.POST.get("original_sp_spent"))
             original_player = {
                 "attributes": original_attributes,
                 "badges": original_badges,
                 "tendencies": original_tendencies,
+                "sp_spent": original_sp_spent,
             }
             # Get 'validate_price's return cart dictionary and render the cart fragment
             upg = upgrade.UpgradeCreator(user=self.request.user, player=original_player, data=form.data)

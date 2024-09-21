@@ -14,11 +14,18 @@ class SimulationRating:
         return rating
     
 # Function that returns the surcharge tier/percentage for a player for dynamic pricing
-def get_surcharge_tier(player):
-    # Returns 'None' if the player hasn't spent enough SP to reach the first tier
-    surcharge_tiers = config.CONFIG_PLAYER["SURCHARGE_TIERS"]
-    surcharge_tiers = dict(sorted(surcharge_tiers.items(), key=lambda item: item[0], reverse=True))
-    sp_spent = player.sp_spent
-    for threshold, percentage in surcharge_tiers.items():
-        if sp_spent >= threshold:
-            return percentage
+def get_sp_surcharge(new_sp_spent):
+    # Define the surcharge interest variables
+    surcharge_threshold = config.CONFIG_PLAYER["SURCHARGE_THRESHOLD"] # 1000 SP
+    surcharge_step = config.CONFIG_PLAYER["SURCHARGE_STEP"] # 500 SP
+    surcharge_interest = config.CONFIG_PLAYER["SURCHARGE_DEFAULT_INTEREST"] # 0.05 (5%)
+    surcharge_interest_step = config.CONFIG_PLAYER["SURCHARGE_INTEREST_INCREMENT"] # 0.01 (1%)
+    surcharge_steps = round(new_sp_spent / surcharge_step)
+    # Check if the player has spent enough SP to reach the kick-in threshold
+    if new_sp_spent < surcharge_threshold:
+        return 0
+    # Calculate the number of steps above the threshold
+    surcharge_steps = (new_sp_spent - surcharge_threshold) // surcharge_step # Calculate the number of steps above the threshold
+    total_interest = surcharge_interest + (surcharge_steps * surcharge_interest_step) # Add base interest to (steps above threshold * interest step)
+    # Return the surcharge interest (rounded to 2 decimal places)
+    return round(total_interest, 2)

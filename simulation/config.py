@@ -30,20 +30,10 @@ CONFIG_PLAYER = {
         3: "🟨 Gold",
         4: "🟪 Hall of Fame",
     },
-    "SURCHARGE_TIERS": {
-        1000: 0.02,
-        2500: 0.05,
-        5000: 0.10,
-        7500: 0.15,
-        10000: 0.20,
-        15000: 0.30,
-        20000: 0.40,
-        25000: 0.50,
-        30000: 0.60,
-        40000: 0.80,
-        50000: 1.00,
-        60000: 1.20,
-    }
+    "SURCHARGE_STEP": 1000, # Every 1000 SP spent, the surcharge increases
+    "SURCHARGE_INTEREST_INCREMENT": 0.02, # The surcharge interest rate increases by 2% for every 1000 SP spent
+    "SURCHARGE_DEFAULT_INTEREST": 0.02, # The default surcharge interest rate
+    "SURCHARGE_THRESHOLD": 1000, # The threshold for when the surcharge interest starts to apply
 }
 
 CONFIG_STATS = {

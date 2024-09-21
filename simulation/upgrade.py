@@ -29,10 +29,12 @@ class UpgradeCreator:
             self.player_attributes = self.player["attributes"]
             self.player_badges = self.player["badges"]
             self.player_tendencies = self.player["tendencies"]
+            self.player_sp_spent = self.player["sp_spent"]
         else:
             self.player_attributes = self.player.attributes
             self.player_badges = self.player.badges
             self.player_tendencies = self.player.tendencies
+            self.player_sp_spent = self.player.sp_spent
 
     # Remove attributes and badges that are the same as the players
     def format(self):
@@ -93,10 +95,12 @@ class UpgradeCreator:
             self.cart["tendencies"][t]["price"] = price
             self.cart["total_xp"] += price
         # Add surcharge (based on 'sp_spent') to the 'total_sp' price
-        upgrade_surcharge = frivolity.get_surcharge_tier(self.player)
-        if upgrade_surcharge:
-            rounded_surcharge = round(self.cart["total_sp"] * upgrade_surcharge)
-            self.cart["total_sp"] += rounded_surcharge
+        # We factor in the SP being spent in the cart to calculate the surcharge percentage
+        new_sp_spent = (self.player_sp_spent + self.cart["total_sp"])
+        upgrade_surcharge = frivolity.get_sp_surcharge(new_sp_spent)
+        rounded_surcharge = round(self.cart["total_sp"] * upgrade_surcharge)
+        self.cart["total_sp_surcharge"] = rounded_surcharge
+        self.cart["total_sp"] += rounded_surcharge
         # Check if user can afford the upgrades
         if validate:
             if self.user.sp < self.cart["total_sp"]:

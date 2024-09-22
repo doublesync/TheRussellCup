@@ -1,5 +1,20 @@
+# Python imports
+from math import ceil
+
 # Local imports
 from simulation.scripts.utility import real_range
+
+# Surcharged attributes
+surcharged_attributes = {
+    # Surcharged attributes
+    "3pt Shot": 0.61,
+    "Interior Defense": 0.58,
+    "Driving Dunk": 0.56,
+    "Perimeter Defense": 0.56,
+    "Driving Layup": 0.53,
+    # Discounted attributes
+
+}
 
 # Physical attributes that don't change
 physical_attributes = [
@@ -63,13 +78,19 @@ attribute_prices = {
 }
 
 # Checks the price of an attribute and returns the cost
-def check_attribute_price(start_level, end_level):
+def check_attribute_price(attribute, start_level, end_level):
+    # Get base cost of the attribute upgrade
     cost = 0
     start, end = (start_level + 1), (end_level + 1)
     for i in range(start, end):
         for price_range in attribute_prices:
             if i in price_range:
                 cost += attribute_prices[price_range]
+    # Get (base cost + surcharge) or (base cost - discount) for the attribute upgrade
+    if attribute in surcharged_attributes:
+        surcharge_percent = surcharged_attributes[attribute]
+        cost = ceil(cost + (cost * surcharge_percent)) # Must round up to a whole number
+    # Return the total upgrade cost
     return cost
 
 def order_attributes(attributes):

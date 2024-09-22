@@ -79,7 +79,7 @@ class UpgradeCreator:
         for a in self.cart["attributes"]:
             start_value = self.cart["attributes"][a]["start"]
             new_value = self.cart["attributes"][a]["new"]
-            price = attribute.check_attribute_price(start_value, new_value)
+            price = attribute.check_attribute_price(a, start_value, new_value)
             self.cart["attributes"][a]["price"] = price
             self.cart["total_sp"] += price
         for b in self.cart["badges"]:

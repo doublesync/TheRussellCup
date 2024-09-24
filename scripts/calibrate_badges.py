@@ -15,7 +15,8 @@ def red(message):
 
 # Create your tests here.
 def run():
-    players = [Player.objects.get(pk=12)]
+    # players = [Player.objects.get(pk=12)]
+    players = Player.objects.all()
     d_attributes = default.default_attributes()
     d_badges = default.default_badges()
     badge_prices = badge.badge_prices
@@ -43,6 +44,7 @@ def run():
                 badges[new_badge] = 0
         # red(f"[B] Added new badges!")
 
+        # Refund & merge badges
         for b in badges:
             badge_level = badges[b]
 
@@ -91,6 +93,9 @@ def run():
                             # red(f"[B] Refunded | {m_badge} | BG Leftover | {badge_group} : {m_refund_amount} SP")
 
                 groups_merged.add(merges_into)
+
+        # Set 'player.badges' to 'badge_copy'
+
 
         # Display badge refund amount
         yellow(f"[B-REF] Refunding {p.first_name} {p.last_name} {badge_refund} SP for badges")

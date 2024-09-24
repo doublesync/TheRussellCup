@@ -7,7 +7,7 @@ from simulation.scripts.utility import real_range
 # Surcharged attributes
 surcharged_attributes = {
     # Surcharged attributes
-    "3pt Shot": 0.61,
+    "Three-Point Shot": 0.61,
     "Interior Defense": 0.58,
     "Driving Dunk": 0.56,
     "Perimeter Defense": 0.56,
@@ -77,7 +77,7 @@ attribute_categories = {
 # Attribute prices (in SP)
 attribute_prices = {
     real_range(55, 60): 1,
-    real_range(60, 65): 3,
+    real_range(61, 65): 3,
     real_range(66, 70): 5,
     real_range(71, 75): 7,
     real_range(76, 80): 10,

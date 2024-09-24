@@ -40,7 +40,6 @@ convertable_badges = {
     "Dropstepper": "Post Powerhouse",
     "Dream Shake": "Post-Up Poet",
     "Post Spin Technician": "Post-Up Poet",
-    "Post Lockdown": "Post Defender",
     "Blinders": "Deadeye",
     "Catch & Shoot": "Set Shot Specialist",
     "Claymore": "Set Shot Specialist",

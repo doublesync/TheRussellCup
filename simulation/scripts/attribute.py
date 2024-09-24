@@ -7,7 +7,7 @@ from simulation.scripts.utility import real_range
 # Surcharged attributes
 surcharged_attributes = {
     # Surcharged attributes
-    "Three-Point Shot": 0.61,
+    "3pt Shot": 0.61,
     "Interior Defense": 0.58,
     "Driving Dunk": 0.56,
     "Perimeter Defense": 0.56,
@@ -35,20 +35,20 @@ attribute_categories = {
         "Driving Layup",
         "Post Fade",
         "Post Hook",
-        "Post Control",
+        "Post Moves",
         "Draw Foul",
         "Close Shot",
-        "Mid-Range Shot",
-        "Three-Point Shot",
+        "Midrange Shot",
+        "3pt Shot",
         "Free Throw",
-        "Ball Handle",
-        "Pass IQ",
+        "Ball Control",
+        "Passing IQ",
         "Pass Accuracy",
         "Offensive Rebound",
         "Standing Dunk",
         "Driving Dunk",
         "Shot IQ",
-        "Pass Vision",
+        "Passing Vision",
         "Hands",
     ],
     "Defense": [
@@ -57,34 +57,28 @@ attribute_categories = {
         "Perimeter Defense",
         "Block",
         "Steal",
-    ],
-    "Physical": [
-        "Speed",
-        "Speed with Ball",
-        "Vertical",
-        "Strength", 
-        "Hustle"
-        "Agility"
+        "Hustle", 
     ],
     "Mental": [
         "Pass Perception",
         "Defensive Consistency",
         "Help Defense IQ",
         "Offensive Consistency",
-    ] 
+    ],
+    "Physical": physical_attributes,
 }
 
 # Attribute prices (in SP)
 attribute_prices = {
     real_range(55, 60): 1,
-    real_range(61, 65): 3,
-    real_range(66, 70): 5,
-    real_range(71, 75): 7,
+    real_range(60, 65): 2,
+    real_range(66, 70): 4,
+    real_range(71, 75): 5,
     real_range(76, 80): 10,
     real_range(81, 85): 20,
-    real_range(86, 90): 30,
-    real_range(91, 94): 40,
-    real_range(95, 99): 50,
+    real_range(86, 90): 25,
+    real_range(91, 94): 30,
+    real_range(95, 99): 40,
 }
 
 # Checks the price of an attribute and returns the cost

@@ -67,14 +67,14 @@ attribute_categories = {
 # Attribute prices (in SP)
 attribute_prices = {
     real_range(55, 60): 1,
-    real_range(60, 65): 2,
-    real_range(66, 70): 4,
-    real_range(71, 75): 5,
-    real_range(76, 80): 10,
-    real_range(81, 85): 20,
-    real_range(86, 90): 25,
-    real_range(91, 94): 30,
-    real_range(95, 99): 40,
+    real_range(60, 65): 3,
+    real_range(66, 70): 5,
+    real_range(71, 75): 8,
+    real_range(76, 80): 15,
+    real_range(81, 85): 25,
+    real_range(86, 90): 30,
+    real_range(91, 94): 40,
+    real_range(95, 99): 55,
 }
 
 # Checks the price of an attribute and returns the cost

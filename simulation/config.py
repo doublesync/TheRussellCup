@@ -29,6 +29,7 @@ CONFIG_PLAYER = {
         2: "🌫️ Silver",
         3: "🟨 Gold",
         4: "🟪 Hall of Fame",
+        5: "💎 Legend",
     },
     "SURCHARGE_STEP": 1000, # Every 1000 SP spent, the surcharge increases
     "SURCHARGE_INTEREST_INCREMENT": 0.04, # The surcharge interest rate increases by 4% for every 1000 SP spent

@@ -115,10 +115,10 @@ badge_categories = {
 
 # Badge prices (in SP)
 badge_prices = {
-    1: 100,
-    2: 150,
-    3: 300,
-    4: 600,
+    1: 130,
+    2: 195,
+    3: 390,
+    4: 760,
 }
 
 

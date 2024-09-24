@@ -32,8 +32,8 @@ CONFIG_PLAYER = {
         5: "💎 Legend",
     },
     "SURCHARGE_STEP": 1000, # Every 1000 SP spent, the surcharge increases
-    "SURCHARGE_INTEREST_INCREMENT": 0.04, # The surcharge interest rate increases by 4% for every 1000 SP spent
-    "SURCHARGE_DEFAULT_INTEREST": 0.04, # The default surcharge interest rate
+    "SURCHARGE_INTEREST_INCREMENT": 0.02, # The surcharge interest rate increases by 2% for every 1000 SP spent
+    "SURCHARGE_DEFAULT_INTEREST": 0.02, # The default surcharge interest rate
     "SURCHARGE_THRESHOLD": 1000, # The threshold for when the surcharge interest starts to apply
 }
 

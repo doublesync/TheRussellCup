@@ -140,7 +140,7 @@ class UpgradeCreator:
 
     def purchase(self):
 
-        # return [False, "Player upgrades are currently disabled."]
+        return [False, "Player upgrades are currently disabled."]
 
         # Format the data
         validate_format = self.format()

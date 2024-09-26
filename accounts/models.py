@@ -13,6 +13,7 @@ class CustomUser(AbstractUser):
     can_pay_players = models.BooleanField(default=False)
     can_mark_upgrades = models.BooleanField(default=False)
     has_care_package = models.BooleanField(default=False)
+    has_second_player_slot = models.BooleanField(default=False)
 
     def __str__(self):
         return self.username

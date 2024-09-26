@@ -30,7 +30,9 @@ class PlayerCreator:
         def validate_max_players():
             user = self.object.user
             count = Player.objects.filter(user=user).count()
-            max_players = config.CONFIG_USER["MAX_PLAYERS"]
+            max_players = config.CONFIG_USER["MAX_PLAYERS"] + (int(user.has_second_player_slot))
+            # has_second_player_slot = True : int(has_second_player_slot) = 1
+            # has_second_player_slot = False : int(has_second_player_slot) = 0
             if count >= max_players:
                 return "You have reached the maximum amount of players."
 

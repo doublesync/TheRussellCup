@@ -12,7 +12,7 @@ CONFIG_SEASON = {
     "GAME_WEEK": 0,
     "CURRENT_SEASON": 3,
     "MAX_SP_WEEK": 90,
-    "MAX_SP_SEASON": 1800,
+    "MAX_SP_SEASON": 2340, # Raised from 1800 SP
     "CHECKIN_SP": 30,
     "CHECKIN_XP": 100,
     "DEFAULT_CONTRACT": 150,
@@ -20,7 +20,7 @@ CONFIG_SEASON = {
 
 # Player configuration
 CONFIG_PLAYER = {
-    "SP_DEFAULT": 5750,
+    "SP_DEFAULT": 6000, # Raised from 5750 SP
     "SP_ANOMALY_BONUS": 1500, # 30% of the starting SP
     "XP_DEFAULT": 8500,
     "BADGE_LABELS": {

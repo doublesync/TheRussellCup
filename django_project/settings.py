@@ -214,6 +214,7 @@ DEFAULT_FROM_EMAIL = "root@localhost"
 # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html
 # https://docs.djangoproject.com/en/dev/ref/settings/#internal-ips
 INTERNAL_IPS = []
+USE_X_FORWARDED_HOST = True # For IP Catching (alt accounts)
 
 # https://docs.djangoproject.com/en/dev/topics/auth/customizing/#substituting-a-custom-user-model
 AUTH_USER_MODEL = "accounts.CustomUser"

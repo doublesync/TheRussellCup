@@ -13,7 +13,11 @@ surcharged_attributes = {
     "Perimeter Defense": 0.56,
     "Driving Layup": 0.53,
     # Discounted attributes
-
+    "Post Hook": -0.25,
+    "Post Fade": -0.25,
+    "Pass Perception": -0.25,
+    "Hustle": -0.25,
+    "Help Defense IQ": -0.25,
 }
 
 # Physical attributes that don't change

@@ -36,13 +36,11 @@ def run():
         for a in list(attributes):  # Create a list to avoid modifying during iteration
             if a not in d_attributes:
                 del attributes[a]
-        # red(f"[A] Removed old attributes!")
 
         # Add new badges
         for new_badge in d_badges:
             if new_badge not in badges:
-                badges[new_badge] = 0
-        # red(f"[B] Added new badges!")
+                badges_copy[new_badge] = 0 
 
         # Refund & merge badges
         for b in badges:
@@ -94,13 +92,18 @@ def run():
 
                 groups_merged.add(merges_into)
 
-        # Set 'player.badges' to 'badge_copy'
-
-
         # Display badge refund amount
-        yellow(f"[B-REF] Refunding {p.first_name} {p.last_name} {badge_refund} SP for badges")
+        yellow(f"[B-REF] Refunded {p.first_name} {p.last_name} {badge_refund} SP for badges!")
+        red(f"Updated {p.first_name} {p.last_name}'s badges!")
 
         # Remove old badges
-            # Iterate through default badges
-            # Remove the differences
-        pass
+        for b in p.badges:
+            if b not in d_badges:
+                del badges_copy[b]
+    
+        # Set 'player.badges' to 'badge_copy'
+        p.badges = badges_copy
+        p.save()
+        if p.user:
+            p.user.sp += badge_refund
+            p.user.save()

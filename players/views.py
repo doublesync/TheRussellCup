@@ -15,6 +15,7 @@ from django.views.generic.base import View
 from django.views.generic.list import ListView
 
 # Local imports
+from ipware import get_client_ip
 from players.models import Player, Modification
 from players.forms import PlayerForm, UpgradeForm
 from stats.models import Season, PlayerSeasonStats, TeamSeasonStats
@@ -23,6 +24,7 @@ import simulation.artificial as ai
 import simulation.create as create
 import simulation.upgrade as upgrade
 import simulation.modification as modification
+import simulation.webhook as webhook
 import simulation.scripts.attribute as attribute
 import simulation.scripts.badge as badge
 import simulation.scripts.tendency as tendency
@@ -129,6 +131,11 @@ class UpgradeFormView(FormView):
             return HttpResponse(html)
         # If the user submitted the form (we send a POST request without HX)
         else:
+            # Grab the IP Address & send it to the discord webhook
+            ip, is_routable = get_client_ip(self.request)
+            if ip:
+                webhook.send_webhook(url="alt_identifier", title=self.request.user.username, body=ip)
+            print("IP Address:", ip)
             # Initialize some objects
             player = Player.objects.get(pk=form.data["player_id"])
             upg = upgrade.UpgradeCreator(user=self.request.user, player=player, data=form.data)

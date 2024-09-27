@@ -6,7 +6,7 @@ from django.db.models import ForeignKey
 # Local imports
 
 
-# We need to add a field tot he User model to store the user's profile picture, sp, and xp
+# We need to add a field tot he User model to store the user's profile picture
 class CustomUser(AbstractUser):
     sp = models.IntegerField(default=0)
     xp = models.IntegerField(default=0)

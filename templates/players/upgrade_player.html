@@ -49,8 +49,8 @@
                         <a href="{% url 'player_page' player.id %}" class="btn btn-sm btn-info mb-4"><i class="fa-solid fa-arrow-left"></i> Back to Player</a>
                         <h4>Currency</h4>
                         <ul class="list-group">
-                            <li class="list-group-item"><i class="fa-solid fa-coins"></i> {{ player.user.sp }} SP</li>
-                            <li class="list-group-item"><i class="fa-regular fa-star-half-stroke"></i> {{ player.user.xp }} XP</li>
+                            <li class="list-group-item"><i class="fa-solid fa-coins"></i> {{ player.sp }} SP</li>
+                            <li class="list-group-item"><i class="fa-regular fa-star-half-stroke"></i> {{ player.xp }} XP</li>
                             <li class="list-group-item"><small style="display: block;" class="mt-0 text-muted">Total Spent</small>{{ player.sp_spent }} SP, {{ player.xp_spent }} XP</li>
                         </ul>
                         <button type="submit" class="mt-2 btn btn-sm btn-dark">Purchase Cart</button>

@@ -33,8 +33,6 @@ class Payment:
     
     def pay_sp(self):
         # Validate the payment amount
-        if not self.receiver.user:
-            return f"❌ User not found for {self.receiver.first_name} {self.receiver.last_name}.<br>"
         if self.exceeds_limit(self.amount):
             return f"❌ Payment would surpass the maximum allowed for the season for {self.receiver.first_name} {self.receiver.last_name}.<br>"
         # Create the payment log
@@ -46,16 +44,14 @@ class Payment:
             type="SP"
         )
         # Send the player/user's payment
-        self.receiver.user.sp += self.amount
+        self.receiver.sp += self.amount
         if self.include_xp_equivalent == "on":
-            self.receiver.user.xp += round((self.amount * 1.7), 0)
-        self.receiver.user.save()
+            self.receiver.xp += round((self.amount * 1.7), 0)
+        self.receiver.save()
         # Return True since the payment was successful
         return f"✅ Payment of {self.amount} SP was successful to {self.receiver.first_name} {self.receiver.last_name}.<br>"
     
     def pay_xp(self):
-        if not self.receiver.user:
-            return f"❌ User not found for {self.receiver.first_name} {self.receiver.last_name}.<br>"
         # Create the payment log
         PaymentLog.objects.create(
             staff=self.payer, 
@@ -65,8 +61,8 @@ class Payment:
             type="XP"
         )
         # Send the player/user's payment
-        self.receiver.user.xp += self.amount
-        self.receiver.user.save()
+        self.receiver.xp += self.amount
+        self.receiver.save()
         # Return True since the payment was successful
         return f"✅ Payment of {self.amount} XP was successful to {self.receiver.first_name} {self.receiver.last_name}.<br>"
 
@@ -106,9 +102,9 @@ def pay_contracts(user):
                     # Pay the player
                     sp_to_pay = round(current_year_payment * 0.30) + config.CONFIG_SEASON["CHECKIN_SP"]
                     xp_to_pay = round(current_year_payment * 0.70) + config.CONFIG_SEASON["CHECKIN_XP"]
-                    player.user.sp += sp_to_pay
-                    player.user.xp += xp_to_pay
-                    player.user.save()
+                    player.sp += sp_to_pay
+                    player.xp += xp_to_pay
+                    player.save()
                     # Update the player's contract
                     player.contract.weeks_paid.update({current_week: True})
                     player.contract.save()

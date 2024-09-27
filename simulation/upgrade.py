@@ -103,9 +103,9 @@ class UpgradeCreator:
         self.cart["total_sp"] += rounded_surcharge
         # Check if user can afford the upgrades
         if validate:
-            if self.user.sp < self.cart["total_sp"]:
+            if self.player.sp < self.cart["total_sp"]:
                 return [False, "You do not have enough SP to afford these upgrades."]
-            if self.user.xp < self.cart["total_xp"]:
+            if self.player.xp < self.cart["total_xp"]:
                 return [False, "You do not have enough XP to afford these upgrades."]
         # Return a success message
         return [True, self.cart]
@@ -157,11 +157,10 @@ class UpgradeCreator:
             for t, data in self.cart["tendencies"].items():
                 self.player.tendencies[t] = data["new"]
             # Apply the price to the user
-            self.user.sp -= self.cart["total_sp"]
-            self.user.xp -= self.cart["total_xp"]
+            self.player.sp -= self.cart["total_sp"]
+            self.player.xp -= self.cart["total_xp"]
             self.player.sp_spent += self.cart["total_sp"]
             self.player.xp_spent += self.cart["total_xp"]
-            self.user.save()
             self.player.save()
             # Log the upgrades
             # Check for existing upgrade log

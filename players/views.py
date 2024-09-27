@@ -266,7 +266,7 @@ def purchase_modification(request, id):
     # Validate some conditions
     if player.user != user: 
         return None
-    if user.xp < mod_xp_price:
+    if player.xp < mod_xp_price:
         return HttpResponse("❌ You do not have enough XP to purchase this modification")
     if existing_mods and mod.item in existing_mods and not mod.multi_buy:
         return HttpResponse("❌ You already own this modification")
@@ -277,7 +277,7 @@ def purchase_modification(request, id):
     else:
         player.modifications = {mod.item: 1}
     # Update the player and user XP & XP spent
-    user.xp -= mod_xp_price
+    player.xp -= mod_xp_price
     player.xp_spent += mod_xp_price
     # Check for a modification function (automatic modifications)
     function = modification.check_for_function(mod.item)
@@ -287,7 +287,6 @@ def purchase_modification(request, id):
         message = f"✅ {mod.item} purchased successfully"
     # Save the player and user
     player.save()
-    user.save()
     # Return a success message
     return HttpResponse(message)
 

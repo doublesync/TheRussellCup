@@ -63,6 +63,9 @@ class PlayerCreator:
         self.object = physical.set_starting_physicals(self.object)
         self.object = animation.generate_jumpshot(self.object)
         self.object = anomaly.anomaly_roll(self.object)
+        # Set anomaly bonus if applicable
+        if self.object.anomaly:
+            self.object.sp += config.CONFIG_PLAYER["SP_ANOMALY_BONUS"]
         # Return the player
         return self.object
 
@@ -81,9 +84,6 @@ class PlayerCreator:
             return validation
         # Generate the player's random fields
         player = self.generate()
-        # Set starting skill points and experience points
-        self.object.user.sp = config.CONFIG_PLAYER["SP_DEFAULT"]
-        self.object.user.xp = config.CONFIG_PLAYER["XP_DEFAULT"]
         # Save the player and user
         player.save()
         player.user.save()

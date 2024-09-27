@@ -30,8 +30,10 @@ class Player(models.Model):
     country = models.CharField(max_length=64, choices=[(x, x) for x in default.country_choices])
     college = models.CharField(max_length=64, choices=[(x, x) for x in default.college_choices])
     svg_image = models.TextField(default="", blank=True, null=True)
-    sp_spent = models.IntegerField(default=0)
-    xp_spent = models.IntegerField(default=0)
+    sp = models.IntegerField(default=0)
+    xp = models.IntegerField(default=0)
+    sp_spent = models.IntegerField(default=config.CONFIG_PLAYER["SP_DEFAULT"])
+    xp_spent = models.IntegerField(default=config.CONFIG_PLAYER["XP_DEFAULT"])
     # Randomly generated fields
     height = models.IntegerField(default=0)
     height_imperial = models.CharField(max_length=4, default="N/A")

@@ -11,7 +11,6 @@ def height_anomaly(player):
     # Initialize the anomaly effects
     player.anomaly = True
     player.height += random.randint(1, 3)
-    player.user.sp += config.CONFIG_PLAYER["SP_ANOMALY_BONUS"]
     # Set the random boost values
     speed_boost = random.randint(5, 10)
     agility_boost = random.randint(5, 10)
@@ -23,8 +22,6 @@ def height_anomaly(player):
     player.attributes["Agility"] = min(99, player.attributes["Agility"] + agility_boost)
     player.attributes["Strength"] = min(99, player.attributes["Strength"] + strength_boost)
     player.attributes["Vertical"] = min(99, player.attributes["Vertical"] + vertical_boost)
-    # Save the user
-    player.user.save()
     # Return the player (we'll need to save this later)
     return player
 

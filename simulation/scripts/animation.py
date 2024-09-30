@@ -816,7 +816,7 @@ free_throw_list = [
     "Scottie Barnes",
     "Harrison Barnes",
     "RJ Barrett",
-    "Rick Barry".
+    "Rick Barry",
     "Bradley Beal",
     "Malik Beasley",
     "Patrick Beverly",

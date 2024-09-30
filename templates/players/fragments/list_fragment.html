@@ -16,7 +16,7 @@
         </thead>
         <tbody class="table table-dark table-hover">
             {% for player in page_obj %}
-                <tr {% if player.anomaly %} class="table-info fw-bold" {% endif %}>
+                <tr {% if player.anomaly %} class="table-primary fw-bold" {% endif %}>
                     <td><i class="{% if player.on_roster %} fa-solid fa-check {% else %} fa-solid fa-x {% endif %}"></i> {{ player.on_roster }}</td>
                     <td><a href="{% url 'player_page' player.id %}">{{ player.first_name }} {{ player.last_name }}</a></td>
                     <td>{{ player.sim_rating }}</td>

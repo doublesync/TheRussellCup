@@ -2,7 +2,9 @@
 import json
 
 # Django imports
+from django.views.decorators.http import require_GET
 from django.http import HttpResponse
+from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.shortcuts import render
 from django.views.generic import ListView
@@ -10,7 +12,7 @@ from django.db.models import Q
 
 # Local imports
 import simulation.artificial as artificial
-from stats.models import Season, Game, PlayerGameStats, TeamGameStats, PlayerSeasonStats
+from stats.models import Season, Game, PlayerGameStats, TeamGameStats, PlayerSeasonStats, TeamSeasonStats
 import simulation.statfinder as statfinder
 
 # Create your views here.
@@ -113,3 +115,24 @@ def recent_season_games(request, id):
     season = Season.objects.filter(current_season=True).first()
     games = PlayerGameStats.objects.filter(Q(player_id=id) & Q(game__season=season)).order_by("-game__week")
     return render(request, "stats/recent_season_games.html", {"games": games})
+
+
+# API Function for 'PlayerSeasonStats'
+@require_GET
+def league_stats_api(request):
+    # Get the season parameter from the request
+    season_param = request.GET.get("season")
+    if season_param:
+        season = Season.objects.filter(season=season_param).first()
+    else:
+        season = Season.objects.filter(current_season=True).first()
+    if not season:
+        return JsonResponse({"error": "Season not found"}, status=404)
+
+    # Convert the queryset to a list of dictionaries
+    team_stats = TeamSeasonStats.objects.filter(season=season)
+    player_stats = PlayerSeasonStats.objects.filter(season=season)
+    team_data = list(team_stats.values())
+    player_data = list(player_stats.values("player__first_name", "player__last_name")) + list(player_stats.values())
+    # Return the data
+    return JsonResponse({"teams": team_data, "players": player_data}, safe=False)

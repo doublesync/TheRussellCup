@@ -18,7 +18,7 @@
                         <form>
                             {% csrf_token %}
                             <li id="claim-status" class="list-group-item mt-2"><a href="#" class="text-decoration-none" hx-trigger="click throttle:1s" hx-target="#claim-status" hx-swap="innerHTML" hx-post="{% url 'claim_contracts' %}"><i class="fa-solid fa-file-contract"></i> Claim Contracts</a></li>
-                            <li class="list-group-item mt-2"><a href="{% url 'draft_page' 34 %}" class="text-decoration-none"><i class="fa-solid fa-award"></i> S2 Draft Results</a></li>
+                            <li class="list-group-item mt-2"><a href="{% url 'draft_page' 34 %}" class="text-decoration-none"><i class="fa-solid fa-award"></i> S3 Draft Results</a></li>
                         </form>
                     </ul>
                     <p>Thank you to our Care Package Supporters!</p>
@@ -68,7 +68,7 @@
                     </ul>
                 </div>
                 <div class="card-footer p-3">
-                    <a href="https://buy.stripe.com/aEUaIieaZ4w31LG9AC" class="btn btn-sm btn-info"><i class="fa-brands fa-stripe"></i> S2 Care Package</a>
+                    <a href="https://buy.stripe.com/aEUaIieaZ4w31LG9AC" class="btn btn-sm btn-info"><i class="fa-brands fa-stripe"></i> S3 Care Package</a>
                 </div>
             </div>
         </div>

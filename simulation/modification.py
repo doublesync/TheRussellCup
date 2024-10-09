@@ -39,9 +39,8 @@ def modify_weight(player):
 # Parameters: player object
 # Returns: [player object, message]
 MODIFICATION_FUNCTIONS = {
-    'Free Jumpshot Roll': modify_jumpshot,
-    'Jumpshot Roll': modify_jumpshot,
-    'Weight Roll': modify_weight,
+    '🔒 Jumpshot Roll': modify_jumpshot,
+    '🔒 Weight Roll': modify_weight,
 }
 
 # Checker function

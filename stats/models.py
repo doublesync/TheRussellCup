@@ -278,7 +278,7 @@ class PlayerGameStats(models.Model):
         bypass = kwargs.pop("bypass", False)
         if bypass or not self.created or self.created > timezone.now() - datetime.timedelta(days=10):
             # Save the season stats model (or create it if it doesn't exist)
-            season_stats, created = PlayerSeasonStats.objects.get_or_create(season=self.game.season, player=self.player)
+            season_stats, _ = PlayerSeasonStats.objects.get_or_create(season=self.game.season, player=self.player)
             season_stats.save()
             # Save the model
             super(PlayerGameStats, self).save(*args, **kwargs)
@@ -387,11 +387,14 @@ class PlayerSeasonStats(models.Model):
             **{f"{field}__sum": models.Sum(field) for field in aggregate_fields}
         )
         for field in aggregate_fields:
-            setattr(self, field, aggregates[f"{field}__sum"]) # Setting each total 
+            if aggregates[f"{field}__sum"] is None:
+                setattr(self, field, 0)
+            else:
+                setattr(self, field, aggregates[f"{field}__sum"])
         self.games_played = self.player.playergamestats_set.filter(game__season=self.season).count() # Setting games played
         for field in aggregate_fields:
-            total = getattr(self, field)
-            setattr(self, f"average_{field}", round(total / self.games_played, 2)) # Setting each average
+            total = getattr(self, field) or 0
+            setattr(self, f"average_{field}", round(safe_division(total, self.games_played), 2))
         if self.average_field_goals_attempted > 0:
             self.average_field_goal_percentage = round(self.average_field_goals_made / self.average_field_goals_attempted, 2)
         if self.average_three_pointers_attempted > 0:
@@ -403,7 +406,7 @@ class PlayerSeasonStats(models.Model):
         game_high_fields = config.CONFIG_STATS["TRACKED_GAME_HIGH_FIELDS"]
         for field in game_high_fields:
             game_high = self.player.playergamestats_set.filter(game__season=self.season).order_by(f"-{field}").first()
-            game_high_value = getattr(game_high, field)
+            game_high_value = getattr(game_high, field) if game_high else 0 # Important to check if game_high is None
             setattr(self, f"game_high_{field}", game_high_value)
     
         # Save the model

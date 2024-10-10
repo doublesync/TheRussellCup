@@ -129,7 +129,9 @@ def get_salary_book(team):
     # Loop through the players
     for player in players:
         if player.contract:
-            if player.rookie:
+            if player.stashed:
+                continue # Skip stashed players
+            elif player.rookie:
                 salary_book["total_spent"] += config.CONFIG_PLAYER["ROOKIE_CAP_HIT"]
             else:
                 current_year_payment = get_contract_year(player)

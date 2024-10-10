@@ -39,6 +39,8 @@
                 <table class="table table-dark table-striped">
                     <thead>
                         <tr>
+                            <!-- Make icon for 'Status' -->
+                            <th>Status</th>
                             <th><i class="fas fa-coins"></i> Salary</th>
                             <th><i class="fa-solid fa-piggy-bank"></i> Claimed</th>
                             <th><i class="fas fa-user"></i> Player</th>
@@ -54,11 +56,14 @@
                     </thead>
                     <tbody class="table table-dark table-hover">
                         {% for player in team.player_set.all %}
-                        {% if player.anomaly %}
-                            <tr class="table-info fw-bold">
-                        {% else %}
-                            <tr>
-                        {% endif %}
+                        <tr>
+                            {% if player.stashed %}
+                                <td><i class="fa-solid fa-box text-danger fw-bold"></i> Stashed</td>
+                            {% elif player.rookie %}
+                                <td><i class="fa-solid fa-medal text-success fw-bold"></i> Rookie</td>
+                            {% else %}
+                                <td><i class="fa-solid fa-basketball-ball text-info fw-bold"></i> Active</td>
+                            {% endif %}
                             <td>{{ player.contract.year_1_payment }}</td>
                             {% if current_week|stringify not in player.contract.weeks_paid %}
                                 <td>No</td>

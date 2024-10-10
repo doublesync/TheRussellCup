@@ -12,6 +12,7 @@ urlpatterns = [
     path("logs/", include("logs.urls")),
     path("stafftools/", include("stafftools.urls")),
     path("stats/", include("stats.urls")),
+    path("events/", include("events.urls")),
     path("", include("pages.urls")),
     
 ]

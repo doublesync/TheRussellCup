@@ -74,6 +74,7 @@ INSTALLED_APPS = [
     "logs",
     "stafftools",
     "stats",
+    "events",
 ]
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#middleware

@@ -47,6 +47,8 @@ class Player(models.Model):
     jumpshot_timing = models.CharField(default="N/A", max_length=32, null=True, blank=True)
     jumpshot_free_throw = models.CharField(default="N/A", max_length=32, null=True, blank=True)
     anomaly = models.BooleanField(default=False)
+    rookie = models.BooleanField(default=False)
+    stashed = models.BooleanField(default=False)
     # Server defined fields
     attributes = models.JSONField(default=default.default_attributes)
     badges = models.JSONField(default=default.default_badges)

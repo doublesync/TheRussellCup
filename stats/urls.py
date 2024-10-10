@@ -13,5 +13,6 @@ urlpatterns = [
     path("averages/players/", views.player_averages, name="player_averages"),
     path("sort/<str:stat>/", views.sort_by_stat, name="sort_by_stat"),
     path("games/recent/player/<int:id>/", views.recent_season_games, name="recent_season_games"),
+    path("games/create/", views.create_game, name="create_game"),
     path('api/league/', views.league_stats_api, name='league_stats_api'),
 ]

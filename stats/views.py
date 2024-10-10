@@ -12,6 +12,8 @@ from django.db.models import Q
 
 # Local imports
 import simulation.artificial as artificial
+from players.models import Player
+from teams.models import Team
 from stats.models import Season, Game, PlayerGameStats, TeamGameStats, PlayerSeasonStats, TeamSeasonStats
 import simulation.statfinder as statfinder
 
@@ -116,6 +118,13 @@ def recent_season_games(request, id):
     games = PlayerGameStats.objects.filter(Q(player_id=id) & Q(game__season=season)).order_by("-game__week")
     return render(request, "stats/recent_season_games.html", {"games": games})
 
+# A function that allows a user to create a new game Entree
+def create_game(request):
+    context = {
+        "players": Player.objects.all(),
+        "teams": Team.objects.all(),
+    }
+    return render(request, "stats/create_game.html", context)
 
 # API Function for 'PlayerSeasonStats'
 @require_GET

@@ -1,21 +1,114 @@
 {% extends '_base.html' %}
 {% load static %}
 
-{% block title %}Player Averages{% endblock %}
+{% block title %}Create Game{% endblock %}
 
 {% block navbar %}
     {% include 'stats/fragments/stats_navbar.html' %}
 {% endblock %}
 
 {% block content %}
-<small class="text-muted">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</small>
-<h1>Averages</h1>
+<h1>Create Game</h1><hr>
 <form>
     {% csrf_token %}
-    <div class="form-group pull-right col-12">
-        <!-- Team statistics section -->
-        <h3 class="mt-2">Team Statistics</h3>
+
+    <!-- Game details -->
+    <div class="form-group">
+        <h2 class="mb-4 mt-4">Game Details</h2>
+        <label for="game_week">What week was this game?</label>
+        <select class="form-control js-multiple-select" id="game_week" name="game_week">
+            <option value="1">Week 1</option>
+            <option value="2">Week 2</option>
+            <option value="3">Week 3</option>
+            <option value="4">Week 4</option>
+            <option value="5">Week 5</option>
+            <option value="6">Week 6</option>
+            <option value="7">Week 7</option>
+            <option value="8">Week 8</option>
+            <option value="9">Week 9</option>
+            <option value="10">Week 10</option>
+            <option value="11">Week 11</option>
+            <option value="12">Week 12</option>
+            <option value="13">Week 13</option>
+            <option value="14">Week 14</option>
+            <option value="15">Week 15</option>
+            <option value="16">Week 16</option>
+            <option value="17">Week 17</option>
+            <option value="18">Week 18</option>
+        </select>
+        <label for="game_type">What type of game was this?</label>
+        <select class="form-control js-multiple-select" id="game_type" name="game_type">
+            <option value="regular">Regular</option>
+            <option value="playoff">Playoff</option>
+        </select>
+        <label for="surge_game">Was this a Surge game?</label>
+        <select class="form-control js-multiple-select" id="surge_game" name="surge_game">
+            <option value="1">Yes</option>
+            <option value="0">No</option>
+        </select>
     </div>
+
+    <!-- Team details -->
+    <div class="form-group">
+        <h2 class="mb-4 mt-4">Team Details</h2>
+        <label for="home_team">Home Team</label>
+        <select class="form-control js-multiple-select" id="home_team" name="home_team">
+            {% for team in teams %}
+                <option value="{{ team.id }}">{{ team.city }} {{ team.name }}</option>
+            {% endfor %}
+        </select>
+        <label for="away_team">Away Team</label>
+        <select class="form-control js-multiple-select" id="away_team" name="away_team">
+            {% for team in teams %}
+                <option value="{{ team.id }}">{{ team.city }} {{ team.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- Player Details -->
+    <div class="form-group">
+        <h2 class="mb-4 mt-4">Player Details</h2>
+        <!-- Player selectors -->
+        <div class="row">
+            <h3>Home Team</h3>
+            <div class="col-12" id="home-player-1">
+                <select class="form-control js-multiple-select" id="home_player_1" name="home_player_1">
+                    {% for player in players %}
+                        <option value="{{ player.id }}">{{ player.first_name }} {{ player.last_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-12" id="home-player-2">
+                <select class="form-control js-multiple-select" id="home_player_2" name="home_player_2">
+                    {% for player in players %}
+                        <option value="{{ player.id }}">{{ player.first_name }} {{ player.last_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-12" id="home-player-3">
+                <select class="form-control js-multiple-select" id="home_player_3" name="home_player_3">
+                    {% for player in players %}
+                        <option value="{{ player.id }}">{{ player.first_name }} {{ player.last_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-12" id="home-player-4">
+                <select class="form-control js-multiple-select" id="home_player_4" name="home_player_4">
+                    {% for player in players %}
+                        <option value="{{ player.id }}">{{ player.first_name }} {{ player.last_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-12" id="home-player-5">
+                <select class="form-control js-multiple-select" id="home_player_5" name="home_player_5">
+                    {% for player in players %}
+                        <option value="{{ player.id }}">{{ player.first_name }} {{ player.last_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    </div>
+
 </form>
 {% endblock %}
 

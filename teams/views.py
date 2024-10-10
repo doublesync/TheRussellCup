@@ -22,7 +22,13 @@ def team_page(request, id):
     stat_finder = statfinder.StatFinder()
     team_stats = stat_finder.team_player_stats(team)
     # Loop through the players
-    return render(request, "teams/team_page.html", {"team": team, "current_week": current_week, "salary_book": salary_book, "team_stats": team_stats})
+    return render(request, "teams/team_page.html", {
+        "team": team, 
+        "current_week": current_week, 
+        "salary_book": salary_book, 
+        "team_stats": team_stats, 
+        "rookie_cap_hit": config.CONFIG_PLAYER["ROOKIE_CAP_HIT"]
+    })
 
 def team_list(request):
     teams = Team.objects.all()

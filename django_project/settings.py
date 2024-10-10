@@ -37,10 +37,10 @@ DEV_MODE = os.getenv("DEV_MODE", "True") == "True"
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = ['*']
 CSRF_TRUSTED_ORIGINS = [
-    'https://localhost:8001', 
-    'https://localhost:8000', 
-    'https://ominous-zebra-qxxwgv6j9v43xj75-8001.app.github.dev', 
-    'https://ominous-zebra-qxxwgv6j9v43xj75-8000.app.github.dev',
+    'http://localhost:8000', 
+    'http://localhost:8001',
+    'https://ominous-zebra-qxxwgv6j9v43xj75-8000.app.github.dev/',
+    'https://ominous-zebra-qxxwgv6j9v43xj75-8001.app.github.dev/',
     'https://rcup.live', 
     'https://*.rcup.live',
 ]

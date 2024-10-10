@@ -14,6 +14,16 @@ from stats.managers import GameManager, TeamGameStatsManager, PlayerGameStatsMan
 from players.models import Player
 from teams.models import Team
 
+# A function to safely divide two numbers
+def safe_division(numerator, denominator):
+    try:
+        if denominator != 0:
+            return round((numerator / denominator), 2)
+        else:
+            return 0
+    except:
+        return 0
+
 # This is so messy...
 def default_game_highs():
     return {
@@ -185,7 +195,7 @@ class TeamGameStats(models.Model):
             self.point_differential = self.get_point_differential()["point_differential"]
             self.rebounds = (self.defensive_rebounds + self.offensive_rebounds)
             # Save the season stats model (or create it if it doesn't exist)
-            season_stats, created = TeamSeasonStats.objects.get_or_create(season=self.game.season, team=self.team)
+            season_stats, _ = TeamSeasonStats.objects.get_or_create(season=self.game.season, team=self.team)
             season_stats.save()
             # Save the model
             super(TeamGameStats, self).save(*args, **kwargs)
@@ -500,11 +510,14 @@ class TeamSeasonStats(models.Model):
         )
         # Set the sum of the fields in 'aggregate_fields' to the model
         for field in aggregate_fields:
-            setattr(self, field, aggregates[f"{field}__sum"])
+            if aggregates[f"{field}__sum"] is None:
+                setattr(self, field, 0)
+            else:
+                setattr(self, field, aggregates[f"{field}__sum"])
         # Calculate the average of the fields in 'aggregate_fields' based on the fields above
         for field in aggregate_fields:
-            total = getattr(self, field)
-            setattr(self, f"average_{field}", round(total / self.games_played, 2))
+            total = getattr(self, field) or 0
+            setattr(self, f"average_{field}", round(safe_division(total, self.games_played), 2))
         # Set field goal percentages
         if self.average_field_goals_attempted > 0:
             self.average_field_goal_percentage = round(self.average_field_goals_made / self.average_field_goals_attempted, 2)
@@ -521,7 +534,7 @@ class TeamSeasonStats(models.Model):
         ]
         for field in game_high_fields:
             game_high = self.team.teamgamestats_set.filter(game__season=self.season).order_by(f"-{field}").first()
-            game_high_value = getattr(game_high, field)
+            game_high_value = getattr(game_high, field) if game_high else 0 # Important to check if game_high is None
             setattr(self, f"game_high_{field}", game_high_value)
         # Calculate the number of wins and losses, points, total rebounds
         self.games_played = self.team.teamgamestats_set.filter(game__season=self.season).count()

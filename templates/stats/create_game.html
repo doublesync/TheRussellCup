@@ -1,0 +1,33 @@
+{% extends '_base.html' %}
+{% load static %}
+
+{% block title %}Player Averages{% endblock %}
+
+{% block navbar %}
+    {% include 'stats/fragments/stats_navbar.html' %}
+{% endblock %}
+
+{% block content %}
+<small class="text-muted">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</small>
+<h1>Averages</h1>
+<form>
+    {% csrf_token %}
+    <div class="form-group pull-right col-12">
+        <!-- Team statistics section -->
+        <h3 class="mt-2">Team Statistics</h3>
+    </div>
+</form>
+{% endblock %}
+
+{% block scripts %}
+{% include 'stafftools/fragments/select2_scripts.html' %}
+{% endblock %}
+
+{% block styles %}
+<style>
+    input::placeholder {
+        color: gray!important;
+    }
+</style>
+{% include 'stafftools/fragments/select2_styles.html' %}
+{% endblock %}

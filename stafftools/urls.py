@@ -12,5 +12,6 @@ urlpatterns = [
     path("payautocollections/", views.pay_auto_collections, name="pay_auto_collections"),
     path("bulkpay/", views.BulkPayView.as_view(), name="bulk_pay"),
     path("bulkassignteam/", views.BulkAssignTeamView.as_view(), name="bulk_assign_team"),
+    path("refreshstats/", views.RefreshStatsView.as_view(), name="refresh_stats"),
     # fmt:on
 ]

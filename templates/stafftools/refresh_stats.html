@@ -1,0 +1,27 @@
+{% extends '_base.html' %}
+{% load static %}
+
+{% block title %}Refresh Statistics{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <form id="refresh-stats-form" class="p-4 rounded shadow-sm">
+            {% csrf_token %}
+            <div class="card-body">
+                <h5 class="card-title mb-3">Refresh Statistics Form</h5>
+                <!-- refresh stats button (make it take up 25% on medium screens and above) -->
+                <div id="refresh-stats-status" class="mb-3">
+                    <button type="submit" class="btn btn-info btn-sm" hx-trigger="click throttle:1s" hx-target="#refresh-stats-status" hx-swap="innerHTML" hx-post="{% url 'refresh_stats' %}"><i class="fas fa-refresh"></i> Refresh Statistics</button>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+{% include 'stafftools/fragments/select2_scripts.html' %}
+{% endblock %}
+
+{% block styles %}
+{% include 'stafftools/fragments/select2_styles.html' %}
+{% endblock %}

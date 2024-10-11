@@ -375,8 +375,6 @@ class PlayerSeasonStats(models.Model):
         
     def save(self, *args, **kwargs):
 
-# Make a list of fields to get the sum of
-
         # Get the sum of the fields in 'aggregate_fields'
         # Manually set the games played field
         # Set the sum of the fields in 'aggregate_fields' to the model
@@ -546,9 +544,6 @@ class TeamSeasonStats(models.Model):
 
         # Save the model
         super(TeamSeasonStats, self).save(*args, **kwargs) 
-
-        # Send a webhook to the Discord server
-        webhook.send_webhook(url="stat_updates", title="Team Season Stats Updated", body=f"{self.team.city} {self.team.name}'s season stats have been updated for the {self.season} season.")
 
     class Meta:
         verbose_name_plural = "Team season stats"

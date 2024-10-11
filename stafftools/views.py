@@ -1,14 +1,16 @@
 # Django imports
+from django.core.management import call_command
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-from django.shortcuts import render
 from django.views import View
+from django.shortcuts import render
 
 # Local imports
 from accounts.models import CustomUser
 from logs.models import PaymentLog
 from players.models import Player
 from teams.models import Team
+from stats.models import PlayerSeasonStats, TeamSeasonStats
 from simulation.payment import Payment, pay_contracts
 
 # TODO:
@@ -113,3 +115,31 @@ class BulkAssignTeamView(View):
             
         # Return the response
         return HttpResponse("✅ Players have been assigned to the team.")
+
+# A class that handles the refreshing of statistics
+class RefreshStatsView(View):
+    template_name = "stafftools/refresh_stats.html"
+
+    def get(self, request):
+        # Check staff status
+        if not request.user.is_superuser:
+            return HttpResponse("You are not authorized to refresh statistics.")
+        # Render the template
+        return render(request, self.template_name)
+
+    def post(self, request):
+        # Check staff status
+        if not request.user.is_superuser:
+            return HttpResponse("You are not authorized to refresh statistics.")
+        # Update the team and player stats
+        refresh_result = "📊 Refresh Results 📊<br>"
+        team_season_stats = TeamSeasonStats.objects.all()
+        player_season_stats = PlayerSeasonStats.objects.all()
+        for season_stats in team_season_stats:
+            refresh_result += f"{season_stats.team.city} {season_stats.team.name}<br>"
+            season_stats.save()
+        for season_stats in player_season_stats:
+            refresh_result += f"{season_stats.player.first_name} {season_stats.player.last_name}<br>"
+            season_stats.save()
+        # Return the response
+        return HttpResponse(f"{refresh_result}")

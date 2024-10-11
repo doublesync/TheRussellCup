@@ -103,10 +103,13 @@ class StatFinder:
 
     # Returns 'TeamSeasonStats' object for a specific team in the season
     def team_stats(self, team):
+        # Get the team season stats for the team
         team_season = self.kwargs["season"]
         team_season_stats = TeamSeasonStats.objects.filter(team=team, season=team_season).first()
+        # If the team season stats are not found, get the latest team season stats
         if not team_season_stats:
             team_season_stats = TeamSeasonStats.objects.filter(team=team).first()
+        # Return the team season stats
         return team_season_stats
 
     # Returns specific teams a team has tiebreakers against

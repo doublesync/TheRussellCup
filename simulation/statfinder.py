@@ -104,7 +104,7 @@ class StatFinder:
     # Returns 'TeamSeasonStats' object for a specific team in the season
     def team_stats(self, team):
         team_season = self.kwargs["season"]
-        team_season_stats = TeamSeasonStats.objects.filter(team=team, season=team_season]
+        team_season_stats = TeamSeasonStats.objects.filter(team=team, season=team_season).first()
         if not team_season_stats:
             team_season_stats = TeamSeasonStats.objects.filter(team=team).first()
         return team_season_stats

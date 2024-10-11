@@ -46,7 +46,7 @@ class Payment:
         # Send the player/user's payment
         self.receiver.sp += self.amount
         if self.include_xp_equivalent == "on":
-            self.receiver.xp += round((self.amount * 1.7), 0)
+            self.receiver.xp += round((self.amount / 0.3 x 0.7), 0)
         self.receiver.save()
         # Return True since the payment was successful
         return f"✅ Payment of {self.amount} SP was successful to {self.receiver.first_name} {self.receiver.last_name}.<br>"

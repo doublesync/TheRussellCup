@@ -75,7 +75,7 @@ def player_averages(request):
     ]
     finder = statfinder.StatFinder()
     season_stats = finder.all_player_stats()
-    season_list = Season.objects.all().values_list("season", flat=True)
+    season_list = sorted(Season.objects.all().values_list("season", flat=True), reverse=True)
     return render(request, "stats/player_averages.html", {"page_obj": season_stats, "stat_fields": stat_fields, "season_list": season_list})
 
 # A function that returns the 'team_averages' page

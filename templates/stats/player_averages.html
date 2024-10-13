@@ -25,7 +25,7 @@
                 <label for="selected-season" class="form-label">Filter by season</label>
                 <select id="selected-season" class="js-multiple-select form-select" name="selected-season">
                     {% for season in season_list %}
-                    {% if forloop.last %}
+                    {% if forloop.first %}
                         <option value="{{ season }}" selected>{{ season }}</option>
                     {% else %}
                         <option value="{{ season }}">{{ season }}</option>

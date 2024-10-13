@@ -99,6 +99,13 @@ class StatFinder:
 
     # Returns 'PlayerSeasonStats' object for a specific player in the season
     def player_stats(self, player):
+        # Get the player season stats for the player
+        player_season = self.kwargs["season"]
+        player_season_stats = PlayerSeasonStats.objects.filter(player=player, season=player_season).first()
+        # If the player season stats are not found, get the latest player season stats
+        if not player_season_stats:
+            player_season_stats = PlayerSeasonStats.objects.filter(player=player).first()
+        # Return the player season stats
         return PlayerSeasonStats.objects.filter(player=player).first()
 
     # Returns 'TeamSeasonStats' object for a specific team in the season

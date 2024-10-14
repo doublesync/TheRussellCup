@@ -119,10 +119,7 @@ def pay_contracts(user):
                 player.save()
                 players_paid.append(f"💴 Try again! {player.first_name} {player.last_name}") 
     # Return success message since the payment was successful
-    if len(players_paid) > 1:
-        return f"Payment Status: {', '.join(players_paid)}"
-    else:
-        return f"Payment Status: {players_paid[0]}"
+    return f"Payment Status: {', '.join(players_paid)}"
 
 # A method that counts the total salary cap spent for a team
 def get_salary_book(team):

@@ -86,7 +86,7 @@ def pay_contracts(user):
 
     # Get the user's players
     players = user.player_set.all()
-    current_week = config.CONFIG_SEASON["CURRENT_WEEK"]
+    current_week = config.CONFIG_SEASON["GAME_WEEK"]
     players_paid = []
     # Loop through the players
     if players:

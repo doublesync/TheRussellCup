@@ -34,13 +34,30 @@ def modify_weight(player):
     # Return the player object and a message
     return [player, f"✅ Weight Roll applied - Weight: {player.weight} lbs, Strength: {player.attributes['Strength']}"]
 
-
+def modify_speed(player):
+    # Define jumpshot speed
+    timings_list = ["Very Slow", "Slow", "Normal", "Quick", "Very Quick"]
+    timing = player.jumpshot_timing
+    current = timings_list.index(timing) if timing in timings_list else None
+    # Validate the current jumpshot timing
+    if not current:
+        return [player, "❌ The player does not have a jumpshot timing, cannot apply the speed increase."]
+    if current >= 4:
+        return [player, "❌ The player already has the fastest jumpshot timing, cannot apply the speed increase."]
+    # Apply the speed increase
+    player.jumpshot_timing = timings_list[current + 1]
+    # Send a webhook
+    webhook.send_webhook("specialty_rolls", title=f"🚀 {player.first_name} {player.last_name} has a faster jumpshot!", body=f"Jumpshot Timing: {player.jumpshot_timing}")
+    # Return the player object and a message
+    return [player, "✅ Speed Increase applied, the player now has a faster jumpshot timing."]
+    
 # Modification functions 
 # Parameters: player object
 # Returns: [player object, message]
 MODIFICATION_FUNCTIONS = {
     '🔒 Jumpshot Roll': modify_jumpshot,
     '🔒 Weight Roll': modify_weight,
+    'Shot Speed Increase (Guaranteed)': modify_speed,
 }
 
 # Checker function

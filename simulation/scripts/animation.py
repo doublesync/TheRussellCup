@@ -995,7 +995,14 @@ free_throw_list = [
     "Free Throw WNBA 2",
 ]
 
-jumpshot_timing_list = ["Very Slow", "Slow", "Normal", "Quick", "Very Quick"]
+# Weighted list of jumpshot timings
+jumpshot_timing_list = (
+    ["Very Slow"] * 5 + 
+    ["Slow"] * 10 + 
+    ["Normal"] * 75 +
+    ["Quick"] * 5 +
+    ["Very Quick"] * 5
+)
 
 # Gets a random jumpshot based on the height then returns the jumpshot
 def jumpshot_roll(height):

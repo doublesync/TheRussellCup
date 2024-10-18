@@ -50,7 +50,7 @@ def modify_speed(player):
     webhook.send_webhook("specialty_rolls", title=f"🚀 {player.first_name} {player.last_name} has a faster jumpshot!", body=f"Jumpshot Timing: {player.jumpshot_timing}")
     # Return the player object and a message
     return [player, "✅ Speed Increase applied, the player now has a faster jumpshot timing."]
-    
+
 # Modification functions 
 # Parameters: player object
 # Returns: [player object, message]

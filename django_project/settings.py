@@ -60,6 +60,9 @@ INSTALLED_APPS = [
     # Third-party
     "allauth",
     "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
+    "allauth.socialaccount.providers.discord",
     "crispy_forms",
     "crispy_bootstrap5",
     "debug_toolbar",
@@ -242,6 +245,7 @@ ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = "username"
 ACCOUNT_EMAIL_REQUIRED = False
 ACCOUNT_UNIQUE_EMAIL = True
+SOCIALACCOUNT_PROVIDERS = {}
 
 # Fixture System
 FIXTURE_DIRS = [

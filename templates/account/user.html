@@ -11,6 +11,7 @@
         <div class="card-body p-4">
             <h1>{{ user.username }}</h1>
             <p class="bg-primary badge badge-primary">Joined on {{ user.date_joined }}</p><hr>
+            <a class="btn btn-sm btn-info" href="{% url 'socialaccount_connections' %}"><i class="fa-brands fa-discord"></i> <i class="fa-brands fa-google"></i> Add Connections</a>
             <h2 class="mt-4">Posts</h2>
             <p>Here are the last five posts by {{ user.username }}</p>
             <ul class="list-group-none">

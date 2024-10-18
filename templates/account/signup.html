@@ -1,13 +1,22 @@
 {% extends '_base.html' %}
 {% load crispy_forms_tags %}
+{% load allauth i18n %}
 
-{% block title %}Sign up{% endblock %}
+{% block title %}{% trans "Signup" %}{% endblock %}
 
 {% block content %}
 <h2>Sign up</h2>
 <form method="post">
   {% csrf_token %}
   {{ form|crispy }}
+  <p>
+    {% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}
+  </p>
+  {% if SOCIALACCOUNT_ENABLED %}
+    {% include "socialaccount/snippets/login.html" with page_layout="entrance" %}
+  {% endif %}
   <button class="btn btn-success" type="submit">Sign up</button>
 </form>
 {% endblock content %}
+
+

@@ -8,6 +8,9 @@
 <form method="post">
   {% csrf_token %}
   {{ form|crispy }}
-  <button class="btn btn-success" type="submit">Log in</button>
+  <button class="btn btn-sm btn-success" type="submit">Log in</button>
+  {% if SOCIALACCOUNT_ENABLED %}
+    {% include "socialaccount/snippets/login.html" with page_layout="entrance" %}
+  {% endif %}
 </form>
 {% endblock content %}

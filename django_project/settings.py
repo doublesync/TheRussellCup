@@ -245,7 +245,20 @@ ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = "username"
 ACCOUNT_EMAIL_REQUIRED = False
 ACCOUNT_UNIQUE_EMAIL = True
-SOCIALACCOUNT_PROVIDERS = {}
+SOCIALACCOUNT_PROVIDERS = {
+    "google": {
+        "APP": {
+            "client_id": os.getenv("GOOGLE_CLIENT_ID"),
+            "secret": os.getenv("GOOGLE_CLIENT_SECRET"),
+        }
+    },
+    "discord": {
+        "APP": {
+            "client_id": os.getenv("DISCORD_CLIENT_ID"),
+            "secret": os.getenv("DISCORD_CLIENT_SECRET"),
+        }
+    }
+}
 
 # Fixture System
 FIXTURE_DIRS = [

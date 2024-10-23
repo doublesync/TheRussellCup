@@ -1,0 +1,65 @@
+{% extends '_base.html' %}
+{% load static %}
+
+{% block title %}Payment Request{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <h1>Request Payment</h1>
+        <!-- View open requets -->
+        <div class="card-body p-4">
+            <h5 class="card-title mb-3">Open Requests</h5>
+            {% for request in open_requests %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ request.player.first_name }} {{ request.player.last_name }}</h5>
+                        <p class="card-text">SP: {{ request.sp_amount }} | XP: {{ request.xp_amount }}</p>
+                        <p class="card-text">{{ request.reason }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+            <!-- Request payment form -->
+            <form id="request-payment-form" class="mt-4 rounded shadow-sm">
+                {% csrf_token %}
+                <div class="card-body">
+                    <h5 class="card-title mb-3">Request Payment Form</h5>
+                    <!-- Player selector -->
+                    <span>
+                        <select class="bg-dark form-select mb-3" name="request-player" id="request-player" required>
+                            {% for player in players %}
+                                <option value="{{ player.id }}" {% if forloop.first %}selected{% endif %}>{{ player.first_name }} {{ player.last_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </span>
+            
+                    <div class="mb-3">
+                        <label for="request-sp-amount" class="form-label">How much <span class="fw-bold text-success">SP</span> are you requesting?</label>
+                        <input type="number" id="request-sp-amount" class="form-control" name="request-sp-amount" max=1000 placeholder="Enter amount..." required>
+                    </div>
+            
+                    <div class="mb-3">
+                        <label for="request-xp-amount" class="form-label">How much <span class="fw-bold text-success">XP</span> are you requesting?</label>
+                        <input type="number" id="request-xp-amount" class="form-control" name="request-xp-amount" max=1000 placeholder="Enter amount..." required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="request-reason" class="form-label">Reason for payment request</label>
+                        <textarea class="form-control" id="request-reason" name="request-reason" rows="3" placeholder="Enter reason..." required></textarea>
+                    </div>
+            
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-sm" hx-trigger="click throttle:1s" hx-target="#request-payment-form" hx-swap="innerHTML" hx-post="{% url 'payment_request' %}"><i class="fas fa-money-bill"></i> Request Payment</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+{% include 'stafftools/fragments/select2_scripts.html' %}
+{% endblock %}
+
+{% block styles %}
+{% include 'stafftools/fragments/select2_styles.html' %}
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends '_base.html' %}
+{% load static %}
+
+{% block title %}Payment Requests{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="p-4 rounded shadow-sm">
+            {% csrf_token %}
+            <div id="process-requests-form" class="card-body">
+                <h5 class="card-title mb-3">Process Payment Requests Form</h5>
+                <form>
+                    <button type="submit" class="btn btn-success btn-sm" hx-trigger="click throttle:1s" hx-target="#process-requests-form" hx-swap="innerHTML" hx-post="{% url 'payment_requests' %}"><i class="fas fa-money-bill"></i> Process Requests</button>
+                    {% csrf_token %}
+                    {% for request in open_requests %}
+                    <div id="request-{{ request.id }}" name="request-{{ request.id }}" class="card-footer p-3">
+                        <input type="hidden" name="request-id" value="{{ request.id }}">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">({{ request.player.user.username }}) {{ request.player.first_name }} {{ request.player.last_name }}</h5>
+                                <p class="card-text">SP: {{ request.sp_amount }}</p>
+                                <p class="card-text">XP: {{ request.xp_amount }}</p>
+                                <p class="card-text">Reason: {{ request.reason }}</p>
+                                <p class="card-text">Date: {{ request.date }}</p>
+                            </div>
+                            <div id="request-{{ request.id }}" name="request-{{ request.id }}" class="card-footer p-3">
+                                <div class="form-group">
+                                    <label class="mt-2" for="sp-{{ request.id }}">SP</label>
+                                    <input type="number" class="form-control" id="sp-{{ request.id }}" name="sp-{{ request.id }}" value="{{ request.sp_amount }}">
+                                    <label class="mt-2" for="xp-{{ request.id }}">XP</label>
+                                    <input type="number" class="form-control" id="xp-{{ request.id }}" name="xp-{{ request.id }}" value="{{ request.xp_amount }}">
+                                </div>
+                                <div class="accordion" id="process-accordion-{{ request.id }}">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="headingOne">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ request.id }}" aria-expanded="true" aria-controls="collapse-{{ request.id }}">Process Options</button>                                        </h2>
+                                        <div id="collapse-{{ request.id }}" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#process-accordion-{{ request.id }}">
+                                            <div class="accordion-body">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" value="on" id="delete-{{ request.id }}" name="delete-{{ request.id }}">
+                                                    <label class="form-check-label" for="delete-{{ request.id }}">
+                                                        Mark for deletion
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" value="on" id="process-{{ request.id }}" name="process-{{ request.id }}">
+                                                    <label class="form-check-label" for="process-{{ request.id }}">
+                                                        Mark for processing
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+{% include 'stafftools/fragments/select2_scripts.html' %}
+{% endblock %}
+
+{% block styles %}
+{% include 'stafftools/fragments/select2_styles.html' %}
+{% endblock %}

@@ -13,5 +13,7 @@ urlpatterns = [
     path("bulkpay/", views.BulkPayView.as_view(), name="bulk_pay"),
     path("bulkassignteam/", views.BulkAssignTeamView.as_view(), name="bulk_assign_team"),
     path("refreshstats/", views.RefreshStatsView.as_view(), name="refresh_stats"),
+    path("paymentrequest/", views.PaymentRequestView.as_view(), name="payment_request"),
+    path("paymentrequests/", views.PaymentRequestsView.as_view(), name="payment_requests"),
     # fmt:on
 ]

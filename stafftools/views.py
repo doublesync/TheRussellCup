@@ -10,6 +10,7 @@ from accounts.models import CustomUser
 from logs.models import PaymentLog
 from players.models import Player
 from teams.models import Team
+from stafftools.models import PaymentRequest
 from stats.models import PlayerSeasonStats, TeamSeasonStats
 from simulation.payment import Payment, pay_contracts
 
@@ -18,6 +19,8 @@ from simulation.payment import Payment, pay_contracts
 # call_command('myadmincmd')
 
 # Create your views here.
+
+# A function that handles the payment of a player
 @login_required
 def pay_user(request, id, payment_type):
     if request.method == "POST":
@@ -53,6 +56,7 @@ def pay_user(request, id, payment_type):
         # Return the response
         return HttpResponse(response)
 
+# A function that handles the bulk payment of players
 @login_required
 def pay_auto_collections(request):
     # Check staff status
@@ -69,6 +73,7 @@ def pay_auto_collections(request):
     # Return the response
     return HttpResponse(response)
 
+# A class that handles the bulk payment of players
 class BulkPayView(View):
     template_name = "stafftools/bulk_pay.html"
 
@@ -78,7 +83,8 @@ class BulkPayView(View):
             return HttpResponse("You are not authorized to bulk pay users.")
         # Render the template
         return render(request, self.template_name, {"players": Player.objects.values("id", "first_name", "last_name")})
-    
+
+# A class that handles the bulk assignment of players to teams
 class BulkAssignTeamView(View):
     template_name = "stafftools/bulk_assign_team.html"
 
@@ -143,3 +149,104 @@ class RefreshStatsView(View):
             season_stats.save()
         # Return the response
         return HttpResponse(f"{refresh_result}")
+    
+# A class that handles the request payment form
+class PaymentRequestView(View):
+    template_name = "stafftools/payment_request.html"
+
+    def get(self, request):
+        user = request.user
+        player_list = Player.objects.filter(user=user)
+        return render(request, self.template_name, {"players": player_list})
+
+    def post(self, request):
+        # Grab the form data
+        player = request.POST.get("request-player")
+        request_sp_amount = request.POST.get("request-sp-amount")
+        request_xp_amount = request.POST.get("request-xp-amount")
+        request_reason = request.POST.get("request-reason")
+        # Check how many requests the user has made
+        player = Player.objects.get(pk=player)
+        request_count = PaymentRequest.objects.filter(player=player).count()
+        # Validate the form data
+        if not player or not request_sp_amount or not request_xp_amount or not request_reason:
+            return HttpResponse("❌ Please fill out all fields.")
+        # Check if the user has made more than 3 requests
+        if request_count > 3:
+            return HttpResponse("😊 Please allow your other payment requests to settle first.")
+        # Create the payment request
+        PaymentRequest.objects.create(
+            player=player, 
+            sp_amount=request_sp_amount,
+            xp_amount=request_xp_amount,
+            reason=request_reason,
+        )
+        # Return the response
+        return HttpResponse("✅ Payment has been requested, we'll get back to you soon!")
+
+# A class that handles paying out the payment requests
+class PaymentRequestsView(View):
+    template_name = "stafftools/payment_requests.html"
+
+    def get(self, request):
+        # Check staff status
+        if not request.user.is_superuser:
+            return HttpResponse("You are not authorized to pay out requests.")
+        # Get all payment requests
+        open_requests = PaymentRequest.objects.all()
+        return render(request, self.template_name, {"open_requests": open_requests})
+
+    def post(self, request):
+
+        # Check staff status
+        if not request.user.is_superuser:
+            return HttpResponse("You are not authorized to pay out requests.")
+        # Grab the form data
+        open_requests = PaymentRequest.objects.all()
+        # Validate that there are any open requests
+        if not open_requests:
+            return HttpResponse("❌ There are no open requests.")
+        # Check checkbox from each card in template
+        for open_request in open_requests:
+            # Get some data from the form
+            sp_amount = request.POST.get(f"sp-{open_request.id}")
+            xp_amount = request.POST.get(f"xp-{open_request.id}")
+            process_request = request.POST.get(f"process-{open_request.id}")
+            delete_request = request.POST.get(f"delete-{open_request.id}")
+            result = "<h1>Payout Results</h1><hr>"
+            # Validate the form data
+            if not sp_amount or not xp_amount:
+                return HttpResponse("❌ Please fill out all fields.")
+            if not process_request and not delete_request:
+                continue # Skip to the next open request
+            # Process the payment or delete the request
+            if delete_request == "on":
+                result += f"❌ Deleted request #{open_request.id} worth {open_request.sp_amount} SP and {open_request.xp_amount} XP for {open_request.player.first_name} {open_request.player.last_name}.<br>"
+                open_request.delete() # Delete the request
+            elif process_request == "on":
+                # Update the player's balance
+                open_request.player.sp += int(sp_amount)
+                open_request.player.xp += int(xp_amount)
+                open_request.player.save()
+                # Log the payment
+                if sp_amount:
+                    PaymentLog.objects.create(
+                        staff=request.user,
+                        player=open_request.player,
+                        payment=sp_amount,
+                        reason=f"[REQUESTED] {open_request.reason}",
+                        type="SP",
+                    )
+                if xp_amount:
+                    PaymentLog.objects.create(
+                        staff=request.user,
+                        player=open_request.player,
+                        payment=xp_amount,
+                        reason=f"[REQUESTED] {open_request.reason}",
+                        type="XP",
+                    )
+                # Delete the request
+                result += f"✅ Processed request #{open_request.id} worth {sp_amount} SP and {xp_amount} XP for {open_request.player.first_name} {open_request.player.last_name}.<br>"
+                open_request.delete()
+        # Return the response
+        return HttpResponse(result)

@@ -84,7 +84,8 @@ def stats_home(request):
     standings = finder.league_standings()
     season = Season.objects.filter(current_season=True).first()
     storylines = season.current_storylines
-    return render(request, "stats/stats_home.html", {"standings": standings, "storylines": storylines})
+    recent_games = Game.objects.filter(season=season).order_by("-created")[:10]
+    return render(request, "stats/stats_home.html", {"standings": standings, "storylines": storylines, "recent_games": recent_games})
 
 # A function that sorts the players by a given stat
 def sort_by_stat(request, stat):
@@ -125,6 +126,13 @@ def create_game(request):
         "teams": Team.objects.all(),
     }
     return render(request, "stats/create_game.html", context)
+
+# A function that displays boxscore data from a specific game
+def boxscore(request, id): 
+    game = Game.objects.get(id=id)
+    player_stats = PlayerGameStats.objects.filter(game=game)
+    team_stats = TeamGameStats.objects.filter(game=game)
+    return render(request, "stats/boxscore.html", {"game": game, "player_stats": player_stats, "team_stats": team_stats})
 
 # API Function for 'PlayerSeasonStats'
 @require_GET

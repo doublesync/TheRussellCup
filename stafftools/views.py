@@ -13,6 +13,7 @@ from teams.models import Team
 from stafftools.models import PaymentRequest
 from stats.models import PlayerSeasonStats, TeamSeasonStats
 from simulation.payment import Payment, pay_contracts
+from simulation.webhook import send_webhook
 
 # TODO:
 # from django.core.management import call_command
@@ -245,6 +246,19 @@ class PaymentRequestsView(View):
                         reason=f"[REQUESTED] {open_request.reason}",
                         type="XP",
                     )
+                # Send a discord webhook
+                send_webhook(
+                    url="payment_requests",
+                    title="Payment Request Processed",
+                    body=f"Payment request for {open_request.player.first_name} {open_request.player.last_name} has been processed.",
+                    fields=[
+                        ("SP Requested", open_request.sp_amount),
+                        ("XP Requested", open_request.xp_amount),
+                        ("SP Paid", sp_amount),
+                        ("XP Paid", xp_amount),
+                        ("Reason", open_request.reason),
+                    ],
+                )
                 # Delete the request
                 result += f"✅ Processed request #{open_request.id} worth {sp_amount} SP and {xp_amount} XP for {open_request.player.first_name} {open_request.player.last_name}.<br>"
                 open_request.delete()

@@ -230,7 +230,7 @@ class PaymentRequestsView(View):
                 open_request.player.xp += int(xp_amount)
                 open_request.player.save()
                 # Log the payment
-                if sp_amount:
+                if int(sp_amount) > 0:
                     PaymentLog.objects.create(
                         staff=request.user,
                         player=open_request.player,
@@ -238,7 +238,7 @@ class PaymentRequestsView(View):
                         reason=f"[REQUESTED] {open_request.reason}",
                         type="SP",
                     )
-                if xp_amount:
+                if int(xp_amount) > 0:
                     PaymentLog.objects.create(
                         staff=request.user,
                         player=open_request.player,

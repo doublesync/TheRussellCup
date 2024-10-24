@@ -80,7 +80,7 @@ class BulkPayView(View):
 
     def get(self, request):
         # Check staff status
-        if not request.user.is_superuser:
+        if not request.user.can_pay_players:
             return HttpResponse("You are not authorized to bulk pay users.")
         # Render the template
         return render(request, self.template_name, {"players": Player.objects.values("id", "first_name", "last_name")})
@@ -191,7 +191,7 @@ class PaymentRequestsView(View):
 
     def get(self, request):
         # Check staff status
-        if not request.user.is_superuser:
+        if not request.user.can_pay_players:
             return HttpResponse("You are not authorized to pay out requests.")
         # Get all payment requests
         open_requests = PaymentRequest.objects.all()
@@ -200,7 +200,7 @@ class PaymentRequestsView(View):
     def post(self, request):
 
         # Check staff status
-        if not request.user.is_superuser:
+        if not request.user.can_pay_players:
             return HttpResponse("You are not authorized to pay out requests.")
         # Grab the form data
         open_requests = PaymentRequest.objects.all()

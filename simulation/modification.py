@@ -1,4 +1,5 @@
 # Python imports
+import random
 
 # Django imports
 
@@ -6,6 +7,24 @@
 import simulation.webhook as webhook
 from simulation.scripts import animation as animation
 from simulation.scripts import weight as weight
+
+# Configurations
+hotzone_list = {
+    14: "Inside Center",
+    13: "Inside Right",
+    12: "Inside Free Throw",
+    11: "Inside Left",
+    10: "Mid-Range Right Corner",
+    9: "Mid-Range Right Wing",
+    8: "Mid-Range Middle",
+    7: "Mid-Range Left Wing",
+    6: "Mid-Range Left Corner",
+    5: "Three Right Corner",
+    4: "Three Right Wing",
+    3: "Three Middle",
+    2: "Three Left Wing",
+    1: "Three Left Corner",
+}
 
 # Modification connector functions 
 def modify_jumpshot(player):
@@ -51,6 +70,18 @@ def modify_speed(player):
     # Return the player object and a message
     return [player, "✅ Speed Increase applied, the player now has a faster jumpshot timing."]
 
+def modify_hotzone(player):
+    # 10% chance to be cold, 90% chance to be hot
+    hot_roll = random.randint(1, 10)
+    hot = True if (hot_roll < 10) else False
+    # Roll for the type of hotzone
+    area_roll = random.randint(1, 14)
+    hotzone = hotzone_list[area_roll]
+    # Send the webhook for the hotzone
+    webhook.send_webhook("specialty_rolls", title=f"{'🔥' if hot else '🧊'} {player.first_name} {player.last_name} has a new hotzone!", body=f"{hotzone} - {'Hot' if hot else 'Cold'}")
+    # Return the player object and a message
+    return [player, f"✅ Hotzone Roll applied: {hotzone} - {'Hot' if hot else 'Cold'}"]
+
 # Modification functions 
 # Parameters: player object
 # Returns: [player object, message]
@@ -58,6 +89,7 @@ MODIFICATION_FUNCTIONS = {
     '🔒 Jumpshot Roll': modify_jumpshot,
     '🔒 Weight Roll': modify_weight,
     'Shot Speed Increase (Guaranteed)': modify_speed,
+    '🔒 Random Hot Zone': modify_hotzone,
 }
 
 # Checker function

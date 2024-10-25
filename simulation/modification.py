@@ -88,8 +88,8 @@ def modify_hotzone(player):
 MODIFICATION_FUNCTIONS = {
     '🔒 Jumpshot Roll': modify_jumpshot,
     '🔒 Weight Roll': modify_weight,
-    'Shot Speed Increase (Guaranteed)': modify_speed,
     '🔒 Random Hot Zone': modify_hotzone,
+    'Shot Speed Increase (Guaranteed)': modify_speed,
 }
 
 # Checker function

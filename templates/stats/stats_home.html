@@ -29,9 +29,39 @@
         </div>
     </div>
 
+    {% comment %} Game of the season {% endcomment %}
+    <h1>Game King</h1>
+    <div class="container-fluid mt-4">
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 style="font-size: 14px;" class="badge badge-pill bg-success">{{ game_of_season.game_score }} GMSC</h5> 
+                <h5 class="card-title">{{ game_of_season.game }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{ game_of_season.player }}</h6>
+                <h6 class="card-subtitle mb-2 text-muted">{{ game_of_season.points }} PTS, {{ game_of_season.rebounds }} REB, {{ game_of_season.assists }} AST, {{ game_of_season.steals }} STL, {{ game_of_season.blocks }} BLK ({{ game_of_season.field_goals_made }}/{{ game_of_season.field_goals_attempted }}) FG ({{ game_of_season.three_pointers_made }}/{{ game_of_season.three_pointers_attempted}}) 3P ({{ game_of_season.free_throws_made}}/{{ game_of_season.free_throws_attempted }}) FT</h6>
+            </div>
+        </div>
+    </div>
+
+    {% comment %} League leaders information {% endcomment %}
+    <h1>League Leaders</h1>
+    <div class="row mt-4">
+    {% for category, leader in leaders.items %}
+        {% comment %} take up 4th of screen on larger screens {% endcomment %}
+        <div class="col-md-3">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title" style="text-transform: capitalize;">{{ category }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ leader.name }}</h6>
+                    <h2 class="card-text">{{ leader.average }}</h2>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+
     <!-- League standings information -->
     <h1>League Standings<h1></h1>
-    <div class="table-responsive">
+    <div class="table-responsive mt-4">
         <table class="table table-striped table-bordered table-hover">
             <thead>
                 <tr>
@@ -66,7 +96,7 @@
 
     <!-- Recent games (boxscores) -->
     <h1>Recent Games</h1>
-    <div class="table-responsive">
+    <div class="table-responsive mt-4">
         <table class="table table-striped table-bordered table-hover">
             <thead>
                 <tr>

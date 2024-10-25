@@ -309,6 +309,36 @@ class StatFinder:
 
         season.save()
 
+    # Returns the league leaders for the season
+    def league_leaders(self):
+
+        # Initialize the league leaders dictionary
+        league_leaders = {}
+        stats = self.all_player_stats()
+
+        # Define the categories and their fields to dynamically retrieve values
+        categories = {
+            "points": "average_points",
+            "rebounds": "average_rebounds",
+            "assists": "average_assists",
+            "steals": "average_steals",
+            "blocks": "average_blocks",
+            "turnovers": "average_turnovers",
+            "game score": "average_game_score"
+        }
+
+        # Populate league_leaders with player name and their average in each category
+        for category, field in categories.items():
+            leader = stats.order_by(f"-{field}" if category != "turnovers" else field).first()
+            league_leaders.setdefault(category, []) # Initialize the category if it doesn't exist
+            if leader:
+                league_leaders[category] = {
+                    "name": f"{leader.player.first_name} {leader.player.last_name}", 
+                    "average": getattr(leader, field)
+                }
+        
+        return league_leaders
+
 
 # Returns the season performances for the current season
 def get_season_performances():

@@ -332,6 +332,10 @@ class StatFinder:
             leader = stats.order_by(f"-{field}" if category != "turnovers" else field).first()
             league_leaders.setdefault(category, []) # Initialize the category if it doesn't exist
             if leader:
+                # Make sure leader is not in Surge league
+                if leader.player.team.surge:
+                    continue
+                # Add the leader to the league leaders
                 league_leaders[category] = {
                     "name": f"{leader.player.first_name} {leader.player.last_name}", 
                     "average": getattr(leader, field)

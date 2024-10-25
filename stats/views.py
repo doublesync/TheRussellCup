@@ -84,7 +84,7 @@ def stats_home(request):
     standings = finder.league_standings()
     leaders = finder.league_leaders()
     season = Season.objects.filter(current_season=True).first()
-    game_of_season = PlayerGameStats.objects.filter(game__season=season).order_by("-game_score").first() # Not the best way to do this
+    game_of_season = PlayerGameStats.objects.filter(game__season=season, team__surge=False).order_by("-game_score").first() # Not the best way to do this
     storylines = season.current_storylines
     recent_games = Game.objects.filter(season=season).order_by("-created")[:10]
     return render(request, "stats/stats_home.html", {"standings": standings, "storylines": storylines, "recent_games": recent_games, "leaders": leaders, "game_of_season": game_of_season})

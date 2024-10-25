@@ -345,14 +345,12 @@ class StatFinder:
 
     # Returns the league averages for the season
     def league_averages(self):
-        # Get the averages for the league
-        player_stats = self.all_player_stats()
         # Get the shooting totals for the league
         totals = PlayerGameStats.objects.aggregate(
             total_field_goals_made=Sum('field_goals_made'),
             total_field_goals_attempted=Sum('field_goals_attempted'),
-            total_three_points_made=Sum('three_points_made'),
-            total_three_points_attempted=Sum('three_points_attempted'),
+            total_three_pointers_made=Sum('three_pointers_made'),
+            total_three_pointers_attempted=Sum('three_pointers_attempted'),
             total_free_throws_made=Sum('free_throws_made'),
             total_free_throws_attempted=Sum('free_throws_attempted')
         )
@@ -362,20 +360,22 @@ class StatFinder:
             if totals['total_field_goals_attempted'] else 0
         )
         average_three_point_percentage = round(
-            totals['total_three_points_made'] / totals['total_three_points_attempted'] * 100
-            if totals['total_three_points_attempted'] else 0
+            totals['total_three_pointers_made'] / totals['total_three_pointers_attempted'] * 100
+            if totals['total_three_pointers_attempted'] else 0
         )
         average_free_throw_percentage = round(
             totals['total_free_throws_made'] / totals['total_free_throws_attempted'] * 100
             if totals['total_free_throws_attempted'] else 0
         )
         # Round two decimal places on the shooting splits
-        league_averages = {
-            "average_field_goal_percentage": average_field_goal_percentage,
-            "average_three_point_percentage": average_three_point_percentage,
-            "average_free_throw_percentage": average_free_throw_percentage,
+        league_averages = { # Add averages to the league averages 
+            "field_goal_average": average_field_goal_percentage,
+            "three_point_average": average_three_point_percentage,
+            "free_throw_average": average_free_throw_percentage,
         }
-        league_averages = {key: round(value, 2) if value is not None else 0 for key, value in league_averages.items()}
+        league_averages = {key: (round(value, 2) / 100) if value is not None else 0 for key, value in league_averages.items()}
+        league_averages["totals"] = totals
+        # Access first value in tuple
         # Return the league averages
         return league_averages
 

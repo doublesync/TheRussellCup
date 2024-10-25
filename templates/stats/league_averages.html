@@ -26,8 +26,8 @@
             <div class="card mb-3">
                 <div class="card-body">
                     <h5 class="card-title" style="text-transform: capitalize;">Field Goal Percentage</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">League Average</h6>
-                    <h2 class="card-text text-primary">{{ league_averages.average_field_goal_percentage }}%</h2>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ league_averages.totals.total_field_goals_made }}-{{ league_averages.totals.total_field_goals_attempted }}</h6>
+                    <h2 class="card-text text-primary">{{ league_averages.field_goal_average }}%</h2>
                 </div>
             </div>
         </div>
@@ -36,8 +36,8 @@
             <div class="card mb-3">
                 <div class="card-body">
                     <h5 class="card-title" style="text-transform: capitalize;">Three Point Percentage</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">League Average</h6>
-                    <h2 class="card-text text-primary">{{ league_averages.average_three_point_percentage }}%</h2>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ league_averages.totals.total_three_pointers_made }}-{{ league_averages.totals.total_three_pointers_attempted }}</h6>
+                    <h2 class="card-text text-primary">{{ league_averages.three_point_average }}%</h2>
                 </div>
             </div>
         </div>
@@ -46,8 +46,8 @@
             <div class="card mb-3">
                 <div class="card-body">
                     <h5 class="card-title" style="text-transform: capitalize;">Free Throw Percentage</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">League Average</h6>
-                    <h2 class="card-text text-primary">{{ league_averages.average_free_throw_percentage }}%</h2>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ league_averages.totals.total_free_throws_made }}-{{ league_averages.totals.total_free_throws_attempted }}</h6>
+                    <h2 class="card-text text-primary">{{ league_averages.free_throw_average }}%</h2>
                 </div>
             </div>
         </div>

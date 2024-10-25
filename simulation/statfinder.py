@@ -5,6 +5,7 @@ from django.core.cache import cache
 from django.db import models
 from django.db.models import Q
 from django.db.models import Avg
+from django.db.models import Sum
 
 # Local imports
 import simulation.config as config
@@ -346,13 +347,36 @@ class StatFinder:
     def league_averages(self):
         # Get the averages for the league
         player_stats = self.all_player_stats()
-        league_averages = player_stats.aggregate(
-            average_field_goal_percentage=Avg('average_field_goal_percentage'),
-            average_three_point_percentage=Avg('average_three_point_percentage'),
-            average_free_throw_percentage=Avg('average_free_throw_percentage')
+        # Get the shooting totals for the league
+        totals = PlayerGameStats.objects.aggregate(
+            total_field_goals_made=Sum('field_goals_made'),
+            total_field_goals_attempted=Sum('field_goals_attempted'),
+            total_three_points_made=Sum('three_points_made'),
+            total_three_points_attempted=Sum('three_points_attempted'),
+            total_free_throws_made=Sum('free_throws_made'),
+            total_free_throws_attempted=Sum('free_throws_attempted')
         )
-        # Round (2) decimal places
+        # Calculate averages
+        average_field_goal_percentage = round(
+            totals['total_field_goals_made'] / totals['total_field_goals_attempted'] * 100
+            if totals['total_field_goals_attempted'] else 0
+        )
+        average_three_point_percentage = round(
+            totals['total_three_points_made'] / totals['total_three_points_attempted'] * 100
+            if totals['total_three_points_attempted'] else 0
+        )
+        average_free_throw_percentage = round(
+            totals['total_free_throws_made'] / totals['total_free_throws_attempted'] * 100
+            if totals['total_free_throws_attempted'] else 0
+        )
+        # Round two decimal places on the shooting splits
+        league_averages = {
+            "average_field_goal_percentage": average_field_goal_percentage,
+            "average_three_point_percentage": average_three_point_percentage,
+            "average_free_throw_percentage": average_free_throw_percentage,
+        }
         league_averages = {key: round(value, 2) if value is not None else 0 for key, value in league_averages.items()}
+        # Return the league averages
         return league_averages
 
 

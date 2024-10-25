@@ -329,7 +329,7 @@ class StatFinder:
 
         # Populate league_leaders with player name and their average in each category
         for category, field in categories.items():
-            leaders = stats.filter(team_surge=False)
+            leaders = stats.filter(player__team__surge=False)
             leader = leaders.order_by(f"-{field}" if category != "turnovers" else field).first()
             league_leaders.setdefault(category, []) # Initialize the category if it doesn't exist
             if leader:

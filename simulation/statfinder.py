@@ -4,6 +4,7 @@
 from django.core.cache import cache
 from django.db import models
 from django.db.models import Q
+from django.db.models import Avg
 
 # Local imports
 import simulation.config as config
@@ -340,6 +341,19 @@ class StatFinder:
                 }
         
         return league_leaders
+
+    # Returns the league averages for the season
+    def league_averages(self):
+        # Get the averages for the league
+        player_stats = self.all_player_stats()
+        league_averages = player_stats.aggregate(
+            average_field_goal_percentage=Avg('average_field_goal_percentage'),
+            average_three_point_percentage=Avg('average_three_point_percentage'),
+            average_free_throw_percentage=Avg('average_free_throw_percentage')
+        )
+        # Round (2) decimal places
+        league_averages = {key: round(value, 2) if value is not None else 0 for key, value in league_averages.items()}
+        return league_averages
 
 
 # Returns the season performances for the current season

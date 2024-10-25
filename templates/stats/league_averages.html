@@ -1,0 +1,60 @@
+{% extends '_base.html' %}
+{% load static %}
+
+{% block title %}League Averages{% endblock %}
+
+{% block styles %}
+<style>
+    input::placeholder {
+        color: gray!important;
+    }
+</style>
+{% endblock %}
+
+{% block navbar %}
+    {% include 'stats/fragments/stats_navbar.html' %}
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid p-md-5">
+
+    <h1 class="text-center"><i class="fa-solid fa-graph-line"></i> League Averages</h1>
+    <div class="row mt-4">
+        {% comment %} Field goal percentage {% endcomment %}
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title" style="text-transform: capitalize;">Field Goal Percentage</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">League Average</h6>
+                    <h2 class="card-text text-primary">{{ league_averages.average_field_goal_percentage }}%</h2>
+                </div>
+            </div>
+        </div>
+        {% comment %} Three point percentage {% endcomment %}
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title" style="text-transform: capitalize;">Three Point Percentage</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">League Average</h6>
+                    <h2 class="card-text text-primary">{{ league_averages.average_three_point_percentage }}%</h2>
+                </div>
+            </div>
+        </div>
+        {% comment %} Free throw percentage {% endcomment %}
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title" style="text-transform: capitalize;">Free Throw Percentage</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">League Average</h6>
+                    <h2 class="card-text text-primary">{{ league_averages.average_free_throw_percentage }}%</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

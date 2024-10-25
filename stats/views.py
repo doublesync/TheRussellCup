@@ -136,6 +136,12 @@ def boxscore(request, id):
     team_stats = TeamGameStats.objects.filter(game=game)
     return render(request, "stats/boxscore.html", {"game": game, "player_stats": player_stats, "team_stats": team_stats})
 
+# A function that displays league averages for the season
+def league_averages(request):
+    finder = statfinder.StatFinder()
+    league_averages = finder.league_averages() # Get league averages
+    return render(request, "stats/league_averages.html", {"league_averages": league_averages})
+
 # API Function for 'PlayerSeasonStats'
 @require_GET
 def league_stats_api(request):

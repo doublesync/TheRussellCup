@@ -346,7 +346,7 @@ class StatFinder:
     # Returns the league averages for the season
     def league_averages(self):
         # Get the shooting totals for the league
-        totals = PlayerGameStats.objects.aggregate(
+        totals = PlayerSeasonStats.objects.filter(season=self.kwargs["season"]).aggregate(
             total_field_goals_made=Sum('field_goals_made'),
             total_field_goals_attempted=Sum('field_goals_attempted'),
             total_three_pointers_made=Sum('three_pointers_made'),

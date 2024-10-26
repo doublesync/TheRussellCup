@@ -208,13 +208,13 @@ class PaymentRequestsView(View):
         if not open_requests:
             return HttpResponse("❌ There are no open requests.")
         # Check checkbox from each card in template
+        result = "<h1>Payout Results</h1><hr>"
         for open_request in open_requests:
             # Get some data from the form
             sp_amount = request.POST.get(f"sp-{open_request.id}")
             xp_amount = request.POST.get(f"xp-{open_request.id}")
             process_request = request.POST.get(f"process-{open_request.id}")
             delete_request = request.POST.get(f"delete-{open_request.id}")
-            result = "<h1>Payout Results</h1><hr>"
             # Validate the form data
             if not sp_amount or not xp_amount:
                 return HttpResponse("❌ Please fill out all fields.")
@@ -225,27 +225,21 @@ class PaymentRequestsView(View):
                 result += f"❌ Deleted request #{open_request.id} worth {open_request.sp_amount} SP and {open_request.xp_amount} XP for {open_request.player.first_name} {open_request.player.last_name}.<br>"
                 open_request.delete() # Delete the request
             elif process_request == "on":
-                # Update the player's balance
-                open_request.player.sp += int(sp_amount)
-                open_request.player.xp += int(xp_amount)
-                open_request.player.save()
+                # Initialize the payment instance (pays player, restricts to limit, & logs payment)
+                payment_obj = Payment(
+                    payer=request.user,
+                    receiver=open_request.player,
+                    amount=0,
+                    reason=f"[REQUESTED] {open_request.reason}",
+                    include_xp_equivalent=False,
+                )
                 # Log the payment
                 if int(sp_amount) > 0:
-                    PaymentLog.objects.create(
-                        staff=request.user,
-                        player=open_request.player,
-                        payment=sp_amount,
-                        reason=f"[REQUESTED] {open_request.reason}",
-                        type="SP",
-                    )
+                    payment_obj.amount = int(sp_amount)
+                    result += payment_obj.pay_sp() # Pay the SP (returns success/error string)
                 if int(xp_amount) > 0:
-                    PaymentLog.objects.create(
-                        staff=request.user,
-                        player=open_request.player,
-                        payment=xp_amount,
-                        reason=f"[REQUESTED] {open_request.reason}",
-                        type="XP",
-                    )
+                    payment_obj.amount = int(xp_amount)
+                    result += payment_obj.pay_xp() # Pay the XP (returns success/error string)
                 # Send a discord webhook
                 send_webhook(
                     url="payment_requests",
@@ -260,7 +254,6 @@ class PaymentRequestsView(View):
                     ],
                 )
                 # Delete the request
-                result += f"✅ Processed request #{open_request.id} worth {sp_amount} SP and {xp_amount} XP for {open_request.player.first_name} {open_request.player.last_name}.<br>"
                 open_request.delete()
         # Return the response
         return HttpResponse(result)

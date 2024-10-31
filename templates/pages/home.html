@@ -5,126 +5,64 @@
 
 {% block content %}
 <div class="container-fluid">
-    <div class="row">
-        <!-- Home card -->
-        <div class="col-md-6 gx-3 gy-3">
-            <div class="card h-100">
-                <div class="card-header">
-                    <h2><i class="fa-solid fa-home"></i> Home</h2>
-                </div>
-                <div class="card-body">
-                    <p>Hey, {{ user.username }}!</p>
-                    <ul>
-                        <form>
-                            {% csrf_token %}
-                            <li id="claim-status" class="list-group-item mt-2"><a href="#" class="text-decoration-none" hx-trigger="click throttle:1s" hx-target="#claim-status" hx-swap="innerHTML" hx-post="{% url 'claim_contracts' %}"><i class="fa-solid fa-file-contract"></i> Claim Contracts</a></li>
-                            <li class="list-group-item mt-2"><a href="{% url 'payment_request' %}" class="text-decoration-none"><i class="fa-solid fa-clipboard"></i> Request Payments</a></li>
-                            <li class="list-group-item mt-2"><a href="{% url 'draft_page' 34 %}" class="text-decoration-none"><i class="fa-solid fa-award"></i> S3 Draft Results</a></li>
-                        </form>
-                    </ul>
-                    <p>Thank you to our Care Package Supporters!</p>
-                    <p>
-                        {% for user in care_package_users %}
-                        <small>
-                            <i class="fa-solid fa-gem text-danger fw-bold"></i> {{ user }}
-                            {% if not forloop.last %} &middot; {% endif %}
-                        </small>
-                        {% endfor %}
-                    </p>
-                </div>
-                <div class="card-footer p-3">
-                    <a href="https://github.com/doublesync/TheRussellCup/wiki" class="btn btn-sm btn-dark"><i class="fa-brands fa-github"></i> Compendium</a>
-                    <a href="https://discord.com/invite/hCn3uSfDWX" class="btn btn-sm btn-primary"><i class="fa-brands fa-discord"></i> Discord</a>
-                </div>
-            </div>
-        </div>
-        <!-- Stripe card -->
-        <div class="col-md-6 gx-3 gy-3">
-            <div class="card h-100">
-                <div class="card-header">
-                    <h2><i class="fa-brands fa-stripe"></i> Benefits</h2>
-                </div>
-                <div class="card-body">
-                    <p>Purchase subscriptions to unlock more features.</p>
-                    <ul>
-                        <ul class="list-group mt-2">
-                            <ul class="list-group">
-                                <li class="list-group-item">
-                                    <i class="fas fa-file-contract"></i> Automatic Contract Collections
-                                </li>
-                                <li class="list-group-item">
-                                    <i class="fas fa-tools"></i> Support Only Modification List
-                                </li>
-                                <li class="list-group-item">
-                                    <i class="fas fa-percentage"></i> 25% Modification Discount
-                                </li>
-                                <li class="list-group-item">
-                                    <i class="fas fa-user-shield"></i> Discord Server Role
-                                </li>
-                                <li class="list-group-item">
-                                    <i class="fas fa-arrow-up"></i> Upgrading Services
-                                </li>
-                            </ul>
+
+    {% comment %} League hero {% endcomment %}
+    <div class="hero min-h-screen">
+        <div class="hero-content flex-col lg:flex-row">
+          <div class="max-w-full overflow-hidden">
+            <img src="https://i.imgur.com/ZQ8EHjE.png" class="w-full max-w-sm rounded-lg shadow-2xl object-scale-down">
+          </div>            
+          <div>
+            <h1 class="text-5xl font-bold">Hello there, {{ user.username }}!</h1>
+            <p class="py-6">What would you like to do today?</p>
+            <ul class="menu menu-xs bg-base-200 rounded-lg w-full max-w-xs">
+                {% comment %} Files {% endcomment %}
+                <li>
+                    {% comment %} List of career files {% endcomment %}
+                    <details open>
+                      <summary><i class="fa-solid fa-folder"></i>Files</summary>
+                      <ul>
+                        <li>
+                          {% for file in player_files %}
+                              <a href="{% url 'player_page' file.id %}"><i class="fa-solid fa-file"></i> {{ file.first_name }} {{ file.last_name }}</a></a>
+                          {% endfor %}
+                        </li>
+                      </ul>
+                    </details>
+                  </li>
+                {% comment %} Admin tools {% endcomment %}
+                <li>
+                    <details open>
+                        <summary><i class="fa-solid fa-briefcase"></i>Jobs</summary>
+                        {% if user.can_pay_players %}
+                        <ul>
+                            <li><a href="{% url 'payment_requests' %}"><i class="fa-solid fa-money-bill"></i> Process Requests</a></li>
+                            <li><a href="{% url 'bulk_pay' %}"><i class="fa-solid fa-coins"></i> Bulk Pay Players</a></li>
                         </ul>
-                    </ul>
-                </div>
-                <div class="card-footer p-3">
-                    <a href="https://buy.stripe.com/aEUaIieaZ4w31LG9AC" class="btn btn-sm btn-info"><i class="fa-brands fa-stripe"></i> S3 Care Package</a>
-                </div>
-            </div>
+                        {% endif %}
+                        {% if user.can_mark_upgrades %}
+                        <ul>
+                            <li><a href="{% url 'incomplete_logs' %}"><i class="fa-solid fa-marker"></i> Mark Upgrades</a></li>
+                        </ul>
+                        {% endif %}
+
+                    </details>
+                </li>
+                {% comment %} Player options {% endcomment %}
+                <li>
+                    {% comment %} Other player options {% endcomment %}
+                    <details open>
+                        <summary><i class="fa-solid fa-gear"></i>Options</summary>
+                        <ul>
+                            <li><a href="{% url 'create_player' %}"><i class="fa-solid fa-user-plus"></i> Create Player</a></li>
+                            <li><a href="{% url 'mods_list' %}"><i class="fa-solid fa-user-plus"></i> Buy Modifications</a></li>
+                        </ul>
+                    </details>
+                </li>
+              </ul>
+          </div>
         </div>
-        <!-- Files card -->
-        <div class="col-md-6 gx-3 gy-3">
-            <div class="card h-100">
-                <div class="card-header">
-                    <h2><i class="fa-solid fa-file"></i> Files</h2>
-                </div>
-                <div class="card-body">
-                    {% if player_files %}
-                        {% for player in player_files %}
-                            <div class="d-flex justify-content-between align-items-center">
-                                <a href="{% url 'player_page' player.id %}" class="text-decoration-none">{{ player.first_name }} {{ player.last_name }}</a>
-                            </div>
-                        {% endfor %}
-                    {% else %}
-                        <p>You don't have any files.</p>
-                    {% endif %}
-                </div>
-                <div class="card-footer p-3">
-                    <a href="{% url 'create_player' %}" class="btn btn-sm btn-info"><i class="fa-solid fa-user-plus"></i> Create Player</a>
-                    <a href="{% url 'mods_list' %}" class="btn btn-sm btn-dark"><i class="fa-solid fa-gear"></i> Buy Mods</a>
-                </div>
-            </div>
-        </div>
-        <!-- Jobs card -->
-        <div class="col-md-6 gx-3 gy-3">
-            <div class="card h-100">
-                <div class="card-header">
-                    <h2><i class="fa-solid fa-briefcase"></i> Jobs</h2>
-                </div>
-                <div class="card-body">
-                    <p>Here are your current jobs.</p>
-                    {% if user.can_pay_players %}
-                    <div class="d-flex justify-content-between align-items-center mt-2">
-                        <a href="{% url 'payment_requests' %}" class="text-decoration-none"><i class="fa-solid fa-money-bill"></i> Process Requests</a>
-                    </div>
-                    {% endif %}
-                    {% if user.can_pay_players %}
-                    <div class="d-flex justify-content-between align-items-center mt-2">
-                        <a href="{% url 'bulk_pay' %}" class="text-decoration-none"><i class="fa-solid fa-coins"></i> Bulk Pay Players</a>
-                    </div>
-                    {% endif %}
-                    {% if user.can_mark_upgrades %}
-                    <div class="d-flex justify-content-between align-items-center mt-2">
-                        <a href="{% url 'incomplete_logs' %}" class="text-decoration-none"><i class="fa-solid fa-marker"></i> Mark Upgrades</a>
-                    </div>
-                    {% endif %}
-                </div>
-                <div class="card-footer p-3">
-                    <a href="#" class="btn btn-sm btn-success"><i class="fa-solid fa-dollar"></i> Apply to jobs</a>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
 </div>
 {% endblock content %}

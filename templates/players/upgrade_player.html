@@ -38,6 +38,7 @@
             <div class="row gx-4 gy-4">
                 <form method="post" class="row gx-4 gy-4">
                     {% csrf_token %}
+                    {% comment %} Hidden fields {% endcomment %}
                     <input type="hidden" id="htmx-cart-url" data-url="{% url 'upgrade_page' player.id %}">
                     <input type="hidden" name="player_id" value="{{ player.id }}">
                     <input type="hidden" name="original_sp_spent" value="{{ player.sp_spent }}">

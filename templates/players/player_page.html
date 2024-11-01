@@ -31,243 +31,274 @@
 					{% comment %} Player actions {% endcomment %}
 					<div class="card-actions justify-center">
 						<a href="{% url 'upgrade_page' player.id %}" class="btn btn-md btn-circle btn-outline mr-2 ml-2"><i class="fas fa-shopping-cart"></i></a>
-						<a class="btn btn-md btn-circle btn-outline mr-2 ml-2"><i class="fas fa-chart-line"></i></a>
-						<a href="{% url 'edit_appearance' player.id %}" class="btn btn-md btn-circle btn-outline mr-2 ml-2"><i class="fas fa-user-edit"></i></button>
-						<a class="btn btn-md btn-circle btn-outline mr-2 ml-2"><i class="fas fa-robot"></i></a>
+						<a href="{% url 'recent_season_games' player.id %}" class="btn btn-md btn-circle btn-outline mr-2 ml-2"><i class="fas fa-chart-line"></i></a>
+						<a href="{% url 'edit_appearance' player.id %}" class="btn btn-md btn-circle btn-outline mr-2 ml-2"><i class="fas fa-user-edit"></i></a>
 					</div>
-					{% comment %} Player vitals list {% endcomment %}
-					<div class="card shadow-md p-4">
-						<div class="card-header">
-							<h3 class="card-title text-lg">Vitals</h3>
+					{% comment %} Player page tabs {% endcomment %}
+					<div role="tablist" class="tabs tabs-lifted">
+						<input type="radio" name="player_page_tabs" role="tab" class="tab" aria-label="Vitals" checked="checked"/>
+						<div role="tabpanel" class="tab-content bg-base-100 border-base-300 rounded-box">
+							{% comment %} Player vitals list {% endcomment %}
+							<div class="card p-4">
+								<div class="card-header">
+									<h3 class="card-title text-lg">Vitals</h3>
+								</div>
+								<div class="card-body p-0">
+									<ul class="list-group mt-2">
+										<div class="flex w-full flex-col border-opacity-50">
+											<div class="card">
+												<li class="list-group-item"> <span class="font-bold" style="color: {{ player.team.color }};"><span class="justify-start badge bg-base-100 w-1/2 md:w-5/12 lg:w-4/12 font-normal">Team</span> {{ player.team }}</span></li>
+												<li class="list-group-item"> <span class="justify-start badge bg-base-100 w-1/2 md:w-5/12 lg:w-4/12">Height</span> {{ player.height_imperial }} ({{ player.height }})</li>
+												<li class="list-group-item"> <span class="justify-start badge bg-base-100 w-1/2 md:w-5/12 lg:w-4/12">Weight</span> {{ player.weight }} lbs</li>
+												<li class="list-group-item"> <span class="justify-start badge bg-base-100 w-1/2 md:w-5/12 lg:w-4/12">Wingspan</span> {{ player.wingspan }}/100</li>
+												<li class="list-group-item"> <span class="justify-start badge bg-base-100 w-1/2 md:w-5/12 lg:w-4/12">Position</span> {{ player.position|convert_position }}</li>
+												<li class="list-group-item"> <span class="justify-start badge bg-base-100 w-1/2 md:w-5/12 lg:w-4/12">College</span> {{ player.college }}</li>
+												<li class="list-group-item"> <span class="justify-start badge bg-base-100 w-1/2 md:w-5/12 lg:w-4/12">Country</span> {{ player.country }}</li>
+												<li class="list-group-item"> <span class="justify-start badge bg-base-100 w-1/2 md:w-5/12 lg:w-4/12">Owner</span> <a class="underline" href="{% url 'user' player.user.id %}">{{ player.user }}</a></li>
+											</div>
+											<div class="divider mb-2">BANK</div>
+											<div class="card mt-0">
+												<li class="list-group-item"> <span class="justify-start badge bg-base-100 w-1/2 md:w-5/12 lg:w-4/12">Current SP </span> <i class="fa-solid fa-gem"></i> {{ player.sp }}</li>
+												<li class="list-group-item"> <span class="justify-start badge bg-base-100 w-1/2 md:w-5/12 lg:w-4/12">Current XP</span> <i class="fa-solid fa-coins"></i> {{ player.xp }}</li>
+												<li class="list-group-item"> <span class="justify-start badge bg-base-100 w-1/2 md:w-5/12 lg:w-4/12">SP Spent</span> <i class="fa-solid fa-gem"></i> {{ player.sp_spent }}</li>
+												<li class="list-group-item"> <span class="justify-start badge bg-base-100 w-1/2 md:w-5/12 lg:w-4/12">XP Spent</span> <i class="fa-solid fa-coins"></i> {{ player.xp_spent }}</li>
+												<a href="{% url 'view_logs' player.id %}" class="btn w-full btn-md btn-info text-gray-100 mt-2">View Logs</a>
+											</div>
+										</div>
+									</ul>
+								</div>
+							</div>
+							{% comment %} Player animations list {% endcomment %}
+							<div class="card p-4">
+								<div class="card-header">
+									<h3 class="card-title text-lg">Animations</h3>
+								</div>
+								<div class="card-body p-0">
+									<ul class="list-group mt-2">
+										<li class="list-group-item text-sm mb-1"><span class="justify-start badge bg-base-100 w-1/2 md:w-5/12 lg:w-4/12">Base</span> {{ player.jumpshot }}</li>
+										<li class="list-group-item text-sm mb-1"><span class="justify-start badge bg-base-100 w-1/2 md:w-5/12 lg:w-4/12">Timing</span> {{ player.jumpshot_timing }}</li>
+										<li class="list-group-item text-sm mb-1"><span class="justify-start badge bg-base-100 w-1/2 md:w-5/12 lg:w-4/12">Release 1</span> {{ player.jumpshot_release_1 }}</li>
+										<li class="list-group-item text-sm mb-1"><span class="justify-start badge bg-base-100 w-1/2 md:w-5/12 lg:w-4/12">Release 2</span> {{ player.jumpshot_release_2 }}</li>
+										<li class="list-group-item text-sm mb-1"><span class="justify-start badge bg-base-100 w-1/2 md:w-5/12 lg:w-4/12">Blending</span> {{ player.jumpshot_blending }}/100</li>
+										<li class="list-group-item text-sm mb-1"><span class="justify-start badge bg-base-100 w-1/2 md:w-5/12 lg:w-4/12">Free Throw</span> {{ player.jumpshot_free_throw }}</li>
+										<a href="{% url 'mods_list' %}" class="btn w-full btn-md btn-info text-gray-100 mt-2">Buy Modifications</a>
+									</ul>
+								</div>
+							</div>
+							{% comment %} Upgrade notes {% endcomment %}
+							<div class="card p-4">
+								<div class="card-header mb-2">
+									<h3 class="card-title text-lg">Upgrade Plan</h3>
+								</div>
+								<div class="card-body p-0">
+									<small id="upgrade_notes_status" class="badge bg-base-100 w-full p-4">No plan exists.</small>
+									<input type="hidden" id="player_id" value="{{ player.id }}">
+									<textarea style="font-size: 12px;" class="input input-bordered w-full" id="upgrade_notes" name="upgrade_notes" row="1"></textarea>
+									<button type="submit" id="submit_upgrade_notes" class="btn btn-md btn-info text-gray-100 mt-2">Save Upgrade Plan</button>
+								</div>
+							</div>
 						</div>
-						<div class="card-body p-0">
-							<ul class="list-group mt-2">
-								<div class="flex w-full flex-col border-opacity-50">
-									<div class="card">
-										<li class="list-group-item"> <span class="font-bold" style="color: {{ player.team.color }};"><span class="justify-start badge bg-base-100 w-1/2 md:w-5/12 lg:w-4/12 font-normal">Team</span> {{ player.team }}</span></li>
-										<li class="list-group-item"> <span class="justify-start badge bg-base-100 w-1/2 md:w-5/12 lg:w-4/12">Height</span> {{ player.height_imperial }} ({{ player.height }})</li>
-										<li class="list-group-item"> <span class="justify-start badge bg-base-100 w-1/2 md:w-5/12 lg:w-4/12">Weight</span> {{ player.weight }} lbs</li>
-										<li class="list-group-item"> <span class="justify-start badge bg-base-100 w-1/2 md:w-5/12 lg:w-4/12">Wingspan</span> {{ player.wingspan }}/100</li>
-										<li class="list-group-item"> <span class="justify-start badge bg-base-100 w-1/2 md:w-5/12 lg:w-4/12">Position</span> {{ player.position|convert_position }}</li>
-										<li class="list-group-item"> <span class="justify-start badge bg-base-100 w-1/2 md:w-5/12 lg:w-4/12">College</span> {{ player.college }}</li>
-										<li class="list-group-item"> <span class="justify-start badge bg-base-100 w-1/2 md:w-5/12 lg:w-4/12">Country</span> {{ player.country }}</li>
-										<li class="list-group-item"> <span class="justify-start badge bg-base-100 w-1/2 md:w-5/12 lg:w-4/12">Owner</span> <a class="underline" href="{% url 'user' player.user.id %}">{{ player.user }}</a></li>
+
+						{% comment %} Attributes tab {% endcomment %}
+						<input type="radio" name="player_page_tabs" role="tab" class="tab" aria-label="Attributes" />
+						<div role="tabpanel" class="tab-content bg-base-100 border-base-300 rounded-box p-6">
+							<div class="flex w-full flex-col lg:flex-row">
+								<div class="card">
+									<div class="card-header">
+										<h2 class="card-title mb-2">Attribute Categories</h2>
 									</div>
-									<div class="divider mb-2">BANK</div>
-									<div class="card mt-0">
-										<li class="list-group-item"> <span class="justify-start badge bg-base-100 w-1/2 md:w-5/12 lg:w-4/12">Current SP </span> <i class="fa-solid fa-gem"></i> {{ player.sp }}</li>
-										<li class="list-group-item"> <span class="justify-start badge bg-base-100 w-1/2 md:w-5/12 lg:w-4/12">Current XP</span> <i class="fa-solid fa-coins"></i> {{ player.xp }}</li>
-										<li class="list-group-item"> <span class="justify-start badge bg-base-100 w-1/2 md:w-5/12 lg:w-4/12">SP Spent</span> <i class="fa-solid fa-gem"></i> {{ player.sp_spent }}</li>
-										<li class="list-group-item"> <span class="justify-start badge bg-base-100 w-1/2 md:w-5/12 lg:w-4/12">XP Spent</span> <i class="fa-solid fa-coins"></i> {{ player.xp_spent }}</li>
-										<a href="{% url 'view_logs' player.id %}" class="btn w-full btn-md btn-info text-gray-100 mt-2">View Logs</a>
+									<div class="card-body p-0">
+										{% comment %} Attribute category selectors {% endcomment %}
+										<div id="attribute-categories">
+											<div class="form-control">
+												<label class="label cursor-pointer">
+													<span class="label-text">All attributes</span>
+													<input type="radio" id="show_all_attributes" name="shown_attributes" class="radio-xs checked:bg-green-500" checked="checked" />
+												</label>
+											</div>
+											<div class="form-control">
+												<label class="label cursor-pinter">
+													<span class="label-text">Offensive attributes</span>
+													<input type="radio" id="show_offense_attributes" name="shown_attributes" class="radio-xs checked:bg-blue-500">
+												</label>
+											</div>
+											<div class="form-control">
+												<label class="label cursor-pinter">
+													<span class="label-text">Defensive attributes</span>
+													<input type="radio" id="show_defense_attributes" name="shown_attributes" class="radio-xs checked:bg-red-500">
+												</label>
+											</div>
+											<div class="form-control">
+												<label class="label cursor-pinter">
+													<span class="label-text">Mental attributes</span>
+													<input type="radio" id="show_mental_attributes" name="shown_attributes" class="radio-xs checked:bg-purple-500">
+												</label>
+											</div>
+											<div class="form-control">
+												<label class="label cursor-pinter">
+													<span class="label-text">Physical attributes</span>
+													<input type="radio" id="show_physical_attributes" name="shown_attributes" class="radio-xs checked:bg-red-500">
+												</label>
+											</div>
+										</div>
 									</div>
-								  </div>
-							</ul>
+								</div>
+								<div class="divider lg:divider-horizontal"></div>
+								<div class="card p-0">
+									<div class="card-body">
+										{% comment %} Attribute list {% endcomment %}
+										<div id="attribute_list" class="row">
+											{% for category, data in attributes.items %}
+											{% for k, v in data.items %}
+											<div class="lg:col-6" data-category="{{ k|add_attribute_category }}">
+												<p class="mt-0 mb-0">
+													<span style="{{ v|add_attribute_color }}" class="badge text-base-100">{{ v }}</span> {{ k|truncatechars:20 }}
+												</p>
+											</div>
+											{% endfor %}
+											{% endfor %}
+										</div>
+									</div>
+								</div>
+							  </div>
 						</div>
-					</div>
-					{% comment %} Player animations list {% endcomment %}
-					<div class="card shadow-md p-4">
-						<div class="card-header">
-							<h3 class="card-title text-lg">Animations</h3>
+
+						{% comment %} Badges tab {% endcomment %}
+						<input type="radio" name="player_page_tabs" role="tab" class="tab" aria-label="Badges" />
+						<div role="tabpanel" class="tab-content bg-base-100 border-base-300 rounded-box p-6">
+							<div class="flex w-full flex-col lg:flex-row">
+								<div class="card">
+									<div class="card-header">
+										<h2 class="card-title mb-2">Badge Categories</h2>
+									</div>
+									<div class="card-body p-0">
+										<div id="badge-categories">
+											<div class="form-control">
+												<label class="label cursor-pointer">
+													<span class="label-text mr-2">All badges</span>
+													<input type="radio" id="show_all_badges" name="shown_badges" class="radio-xs checked:bg-green-500" checked="checked" />
+												</label>
+												<label class="label cursor-pointer">
+													<span class="label-text mr-2">Inside badges</span>
+													<input type="radio" id="show_inside_scoring_badges" name="shown_badges" class="radio-xs checked:bg-blue-500" />
+												</label>
+												<label class="label cursor-pointer">
+													<span class="label-text mr-2">Outside badges</span>
+													<input type="radio" id="show_outside_scoring_badges" name="shown_badges" class="radio-xs checked:bg-blue-500" />
+												</label>
+												<label class="label cursor-pointer">
+													<span class="label-text mr-2">Passing badges</span>
+													<input type="radio" id="show_playmaking_badges" name="shown_badges" class="radio-xs checked:bg-blue-500" />
+												</label>
+												<label class="label cursor-pointer">
+													<span class="label-text mr-2">Defense badges</span>
+													<input type="radio" id="show_defense_badges" name="shown_badges" class="radio-xs checked:bg-blue-500" />
+												</label>
+												<label class="label cursor-pointer">
+													<span class="label-text mr-2">Athletic badges</span>
+													<input type="radio" id="show_athleticism_badges" name="shown_badges" class="radio-xs checked:bg-blue-500" />
+												</label>
+												<label class="label cursor-pointer">
+													<span class="label-text mr-2">Rebounding badges</span>
+													<input type="radio" id="show_rebounding_badges" name="shown_badges" class="radio-xs checked:bg-blue-500" />
+												</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="divider lg:divider-horizontal"></div>
+								<div class="card p-0">
+									<div class="card-body">
+										<div id="badge_list" class="row">
+											{% for category, data in badges.items %}
+											{% for k, v in data.items %}
+											<div class="col-lg-6" data-category="{{ k|add_badge_category }}">
+												<p class="mt-0 mb-0">
+													<span style="{{ v|add_badge_color }}" class="badge text-base-100">{{ v }}</span> {{ k }}
+												</p>
+											</div>
+											{% endfor %}
+											{% endfor %}
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
-						<div class="card-body p-0">
-							<ul class="list-group mt-2">
-								<li class="list-group-item text-sm mb-1"><span class="justify-start badge bg-base-100 w-1/2 md:w-5/12 lg:w-4/12">Base</span> {{ player.jumpshot }}</li>
-								<li class="list-group-item text-sm mb-1"><span class="justify-start badge bg-base-100 w-1/2 md:w-5/12 lg:w-4/12">Timing</span> {{ player.jumpshot_timing }}</li>
-								<li class="list-group-item text-sm mb-1"><span class="justify-start badge bg-base-100 w-1/2 md:w-5/12 lg:w-4/12">Release 1</span> {{ player.jumpshot_release_1 }}</li>
-								<li class="list-group-item text-sm mb-1"><span class="justify-start badge bg-base-100 w-1/2 md:w-5/12 lg:w-4/12">Release 2</span> {{ player.jumpshot_release_2 }}</li>
-								<li class="list-group-item text-sm mb-1"><span class="justify-start badge bg-base-100 w-1/2 md:w-5/12 lg:w-4/12">Blending</span> {{ player.jumpshot_blending }}/100</li>
-								<li class="list-group-item text-sm mb-1"><span class="justify-start badge bg-base-100 w-1/2 md:w-5/12 lg:w-4/12">Free Throw</span> {{ player.jumpshot_free_throw }}</li>
-								<a href="{% url 'mods_list' %}" class="btn w-full btn-md btn-info text-gray-100 mt-2">Buy Modifications</a>
-							</ul>
-						</div>
-					</div>
-					{% comment %} Upgrade notes {% endcomment %}
-					<div class="card shadow-md p-4">
-						<div class="card-header mb-2">
-							<h3 class="card-title text-lg">Upgrade Plan</h3>
-						</div>
-						<div class="card-body p-0">
-							<small id="upgrade_notes_status" class="badge bg-base-100 w-full p-4">No plan exists.</small>
-							<input type="hidden" id="player_id" value="{{ player.id }}">
-							<textarea style="font-size: 12px;" class="input input-bordered w-full" id="upgrade_notes" name="upgrade_notes" row="1"></textarea>
-							<button type="submit" id="submit_upgrade_notes" class="btn btn-md btn-info text-gray-100 mt-2">Save Upgrade Plan</button>
-						</div>
+
+						{% comment %} Tendencies tab {% endcomment %}
+						<input type="radio" name="player_page_tabs" role="tab" class="tab" aria-label="Tendencies" />
+						<div role="tabpanel" class="tab-content bg-base-100 border-base-300 rounded-box p-6">
+							<div class="flex w-full flex-col lg:flex-row">
+								<div class="card">
+									<div class="card-header">
+										<h2 class="card-title mb-2">Tendency Categories</h2>
+									</div>
+									<div class="card-body p-0">
+										<div id="tendency-categories">
+											<div class="form-control">
+												<label class="label cursor-pointer">
+													<span class="label-text mr-2">Show All</span>
+													<input type="radio" id="show_all_tendencies" name="shown_tendencies" class="radio-xs checked:bg-green-500" checked="checked" />
+												</label>
+												<label class="label cursor-pointer">
+													<span class="label-text mr-2">Jump Shooting</span>
+													<input type="radio" id="show_jumpshooting_tendencies" name="shown_tendencies" class="radio-xs checked:bg-blue-500" />
+												</label>
+												<label class="label cursor-pointer">
+													<span class="label-text mr-2">Layups & Dunks</span>
+													<input type="radio" id="show_layupdunk_tendencies" name="shown_tendencies" class="radio-xs checked:bg-blue-500" />
+												</label>
+												<label class="label cursor-pointer">
+													<span class="label-text mr-2">Drive Setup</span>
+													<input type="radio" id="show_drivesetup_tendencies" name="shown_tendencies" class="radio-xs checked:bg-blue-500" />
+												</label>
+												<label class="label cursor-pointer">
+													<span class="label-text mr-2">Driving</span>
+													<input type="radio" id="show_driving_tendencies" name="shown_tendencies" class="radio-xs checked:bg-blue-500" />
+												</label>
+												<label class="label cursor-pointer">
+													<span class="label-text mr-2">Passing</span>
+													<input type="radio" id="show_passing_tendencies" name="shown_tendencies" class="radio-xs checked:bg-blue-500" />
+												</label>
+												<label class="label cursor-pointer">
+													<span class="label-text mr-2">Post Game</span>
+													<input type="radio" id="show_postgame_tendencies" name="shown_tendencies" class="radio-xs checked:bg-blue-500" />
+												</label>
+												<label class="label cursor-pointer">
+													<span class="label-text mr-2">Freelance</span>
+													<input type="radio" id="show_freelance_tendencies" name="shown_tendencies" class="radio-xs checked:bg-blue-500" />
+												</label>
+												<label class="label cursor-pointer">
+													<span class="label-text mr-2">Defense</span>
+													<input type="radio" id="show_defense_tendencies" name="shown_tendencies" class="radio-xs checked:bg-blue-500" />
+												</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="divider lg:divider-horizontal"></div>
+								<div class="card p-0">
+									<div class="card-body">
+										<div id="tendency_list" class="row">
+											{% for category, data in tendencies.items %}
+											{% for k, v in data.items %}
+											<div class="col-lg-6" data-category="{{ k|add_tendency_category }}">
+												<p class="mt-0 mb-0">
+													<span style="{{ v|add_attribute_color }}" class="badge text-base-100">{{ v }}</span> {{ k }}
+												</p>
+											</div>
+											{% endfor %}
+											{% endfor %}
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-
-
-	</div>	
-
-
-				</div>
-				<!-- Attributes column -->
-				<div class="col-md-6">
-					<h4>Attributes</h4>
-					<ul class="list-group">
-						<div class="input-group m-1">
-							<div class="form-check m-1">
-								<input type="radio" id="show_all_attributes" name="shown_attributes" class="form-check-input" checked>
-								<label for="show_all_attributes">Show All</label>
-							</div>
-							<div class="form-check m-1">
-								<input type="radio" id="show_offense_attributes" name="shown_attributes" class="form-check-input">
-								<label for="show_offense_attributes">Offense</label>
-							</div>
-							<div class="form-check m-1">
-								<input type="radio" id="show_defense_attributes" name="shown_attributes" class="form-check-input">
-								<label for="show_defense_attributes">Defense</label>
-							</div>
-							<div class="form-check m-1">
-								<input type="radio" id="show_mental_attributes" name="shown_attributes" class="form-check-input">
-								<label for="show_mental_attributes">Mental</label>
-							</div>
-							<div class="form-check m-1">
-								<input type="radio" id="show_physical_attributes" name="shown_attributes" class="form-check-input">
-								<label for="show_physical_attributes">Physical</label>
-							</div>
-						</div>
-						<hr>
-						<div id="attribute_list" class="row">
-							{% for category, data in attributes.items %}
-							{% for k, v in data.items %}
-							<div class="col-lg-6" data-category="{{ k|add_attribute_category }}">
-								<p class="mt-0 mb-0">
-									{% for key, value in player.coach_suggestion_attributes.items %}
-										{% if key == k %}
-											<span class="badge bg-light text-white"><i class="fas fa-tasks"></i> {{ value }}</span>
-										{% endif %}
-									{% endfor %}
-									<span style="{{ v|add_attribute_color }}" class="badge">{{ v }}</span> {{ k|truncatechars:20 }}
-								</p>
-							</div>
-							{% endfor %}
-							{% endfor %}
-						</div>
-					</ul>
-				</div>
-				<!-- Badges column -->
-				<div class="col-md-6">
-					<h4>Badges</h4>
-					<ul class="list-group">
-						<div class="input-group m-1">
-							<div class="form-check m-1">
-								<input type="radio" id="show_all_badges" name="shown_badges" class="form-check-input" checked>
-								<label for="show_all_badges">Show All</label>
-							</div>
-							<div class="form-check m-1">
-								<input type="radio" id="show_inside_scoring_badges" name="shown_badges" class="form-check-input">
-								<label for="show_inside_scoring_badges">Inside Scoring</label>
-							</div>
-							<div class="form-check m-1">
-								<input type="radio" id="show_outside_scoring_badges" name="shown_badges" class="form-check-input">
-								<label for="show_outside_scoring_badges">Outside Scoring</label>
-							</div>
-							<div class="form-check m-1">
-								<input type="radio" id="show_playmaking_badges" name="shown_badges" class="form-check-input">
-								<label for="show_playmaking_badges">Playmaking</label>
-							</div>
-							<div class="form-check m-1">
-								<input type="radio" id="show_defense_badges" name="shown_badges" class="form-check-input">
-								<label for="show_defense_badges">Defensive</label>
-							</div>
-							<div class="form-check m-1">
-								<input type="radio" id="show_athleticism_badges" name="shown_badges" class="form-check-input">
-								<label for="show_athleticism_badges">Athleticism</label>
-							</div>
-							<div class="form-check m-1">
-								<input type="radio" id="show_rebounding_badges" name="shown_badges" class="form-check-input">
-								<label for="show_rebounding_badges">Rebouding</label>
-							</div>
-						</div>
-						<hr>
-						<div id="badge_list" class="row">
-							{% for category, data in badges.items %}
-							{% for k, v in data.items %}
-							<div class="col-lg-6" data-category="{{ k|add_badge_category }}">
-								<p class="mt-0 mb-0">
-									{% for key, value in player.coach_suggestion_badges.items %}
-										{% if key == k %}
-											<span class="badge bg-light text-base-100"><i class="fas fa-tasks"></i> {{ value }}</span>
-										{% endif %}
-									{% endfor %}
-									<span style="{{ v|add_badge_color }}" class="badge">{{ v }}</span> {{ k }}
-								</p>
-							</div>
-							{% endfor %}
-							{% endfor %}
-						</div>
-					</ul>
-				</div>
-				<!-- Tendencies column -->
-				<div class="col-12">
-					<h4>Tendencies</h4>
-					<ul class="list-group">
-						<div class="input-group m-1">
-							<div class="form-check m-1">
-								<input type="radio" id="show_all_tendencies" name="shown_tendencies" class="form-check-input" checked>
-								<label for="show_all_tendencies">Show All</label>
-							</div>
-							<div class="form-check m-1">
-								<input type="radio" id="show_jumpshooting_tendencies" name="shown_tendencies" class="form-check-input">
-								<label for="show_jumpshooting_tendencies">Jump Shooting</label>
-							</div>
-							<div class="form-check m-1">
-								<input type="radio" id="show_layupdunk_tendencies" name="shown_tendencies" class="form-check-input">
-								<label for="show_layupdunk_tendencies">Layups & Dunks</label>
-							</div>
-							<div class="form-check m-1">
-								<input type="radio" id="show_drivesetup_tendencies" name="shown_tendencies" class="form-check-input">
-								<label for="show_drivesetup_tendencies">Drive Setup</label>
-							</div>
-							<div class="form-check m-1">
-								<input type="radio" id="show_driving_tendencies" name="shown_tendencies" class="form-check-input">
-								<label for="show_driving_tendencies">Driving</label>
-							</div>
-							<div class="form-check m-1">
-								<input type="radio" id="show_passing_tendencies" name="shown_tendencies" class="form-check-input">
-								<label for="show_passing_tendencies">Passing</label>
-							</div>
-							<div class="form-check m-1">
-								<input type="radio" id="show_postgame_tendencies" name="shown_tendencies" class="form-check-input">
-								<label for="show_postgame_tendencies">Post Game</label>
-							</div>
-							<div class="form-check m-1">
-								<input type="radio" id="show_freelance_tendencies" name="shown_tendencies" class="form-check-input">
-								<label for="show_freelance_tendencies">Freelance</label>
-							</div>
-							<div class="form-check m-1">
-								<input type="radio" id="show_defense_tendencies" name="shown_tendencies" class="form-check-input">
-								<label for="show_defense_tendencies">Defense</label>
-							</div>
-						</div>
-						<hr>
-					</ul>
-					<div id="tendency_list" class="row">
-						{% for category, data in tendencies.items %}
-						{% for k, v in data.items %}
-						<div class="col-lg-6" data-category="{{ k|add_tendency_category }}">
-							<p class="mt-0 mb-0">
-								{% for key, value in player.coach_suggestion_tendencies.items %}
-									{% if key == k %}
-										<span class="badge bg-light text-base-100"><i class="fas fa-tasks"></i> {{ value }}</span>
-									{% endif %}
-								{% endfor %}
-								<span style="{{ v|add_attribute_color }}" class="badge">{{ v }}</span> {{ k }}
-							</p>
-						</div>
-						{% endfor %}
-						{% endfor %}
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
 {% endblock %}
 
 {% block scripts %}

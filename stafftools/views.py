@@ -15,10 +15,6 @@ from stats.models import PlayerSeasonStats, TeamSeasonStats
 from simulation.payment import Payment, pay_contracts
 from simulation.webhook import send_webhook
 
-# TODO:
-# from django.core.management import call_command
-# call_command('myadmincmd')
-
 # Create your views here.
 
 # A function that handles the payment of a player

@@ -33,29 +33,29 @@ def add_style(field, style):
 @register.filter
 def add_attribute_color(attribute):
     if attribute < 70 and attribute > 55:
-        return "background-color: #1d2e68"
+        return "background-color: #1d2e68; color: white;"
     elif attribute >= 70 and attribute < 80:
-        return "background-color: #886300"
+        return "background-color: #886300; color: white;"
     elif attribute >= 80 and attribute < 90:
-        return "background-color: darkgreen"
+        return "background-color: darkgreen; color: white;"
     elif attribute >= 90:
-        return "background-color: #800080"
+        return "background-color: #800080; color: white;"
     else:
-        return "background-color: #212121"
+        return "background-color: #212121; color: white;"
 
 
 @register.filter
 def add_badge_color(badge):
     if badge == 1:
-        return "background-color: #2b1700"
+        return "background-color: #2b1700; color: white;"
     elif badge == 2:
-        return "background-color: #000000"
+        return "background-color: #000000; color: white;"
     elif badge == 3:
         return "background-color: #886300"
     elif badge == 4:
-        return "background-color: #800080"
+        return "background-color: #800080; color: white;"
     else:
-        return "background-color: #212121"
+        return "background-color: #212121; color: white;"
 
 
 @register.filter

@@ -134,6 +134,13 @@
     </div>
   {% endblock %}
 
+  {% comment %} Let's create an alert that the site is under construction {% endcomment %}
+  <div class="container-fluid pr-2 pl-2">
+    <div role="alert" class="alert alert-warning">
+      <span>This site is under construction. Please be patient as we work to improve the site.</span>
+    </div>
+  </div>
+
   {% if messages %}
     <div class="container-fluid pr-2 pl-2">
       {% for message in messages %}

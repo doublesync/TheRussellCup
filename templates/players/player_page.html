@@ -36,6 +36,8 @@
 					</div>
 					{% comment %} Player page tabs {% endcomment %}
 					<div role="tablist" class="tabs tabs-lifted">
+
+						{% comment %} Vitals tab {% endcomment %}
 						<input type="radio" name="player_page_tabs" role="tab" class="tab" aria-label="Vitals" checked="checked"/>
 						<div role="tabpanel" class="tab-content bg-base-100 border-base-300 rounded-box">
 							{% comment %} Player vitals list {% endcomment %}
@@ -85,18 +87,72 @@
 									</ul>
 								</div>
 							</div>
-							{% comment %} Upgrade notes {% endcomment %}
-							<div class="card p-4">
-								<div class="card-header mb-2">
-									<h3 class="card-title text-lg">Upgrade Plan</h3>
+							{% comment %} Contract details {% endcomment %}
+							{% if player.contract %}
+								<div class="card p-4">
+									<div class="card-header">
+										<h3 class="card-title text-lg">Contract</h3>
+									</div>
+									<div class="card-body p-0">
+										<ul class="timeline timeline-vertical">
+											{% comment %} Year 1 {% endcomment %}
+											<li>
+												<div class="timeline-start mr-2">Season {{ player.contract.season }}</div>
+												<div class="timeline-end timeline-box ml-2"><i class="fas fa-coins"></i> {{ player.contract.year_1_payment }}</div>
+												<hr />
+											</li>
+											{% comment %} Year 2 {% endcomment %}
+											{% if player.contract.length > 1 %}
+												<li>
+													<div class="timeline-start mr-2">Season {{ player.contract.season|add:"1" }}</div>
+													<div class="timeline-end timeline-box ml-2"><i class="fas fa-coins"></i> {{ player.contract.year_2_payment }}</div>
+													<hr />
+												</li>
+											{% elif player.contract.length == 1 %}
+												<li>
+													<div class="timeline-start mr-2">Season {{ player.contract.season|add:"1" }}</div>
+													{% if player.contract.option == "None" %}
+														<div class="timeline-end timeline-box ml-2"><i class="fas fa-user"></i> Free Agent </div>
+													{% else %}
+														<div class="timeline-end timeline-box ml-2"><i class="fa-solid fa-comment"></i> {{ player.contract.option }}</div>
+													{% endif %}
+													<hr />
+												</li>
+											{% endif %}
+											{% comment %} Year 3 (max years a contract can be signed to) {% endcomment %}
+											{% if player.contract.length > 2 %}
+												<li>
+													<div class="timeline-start mr-2">Season {{ player.contract.season|add:"2" }}</div>
+													<div class="timeline-end timeline-box ml-2"><i class="fas fa-coins"></i> {{ player.contract.year_3_payment }}</div>
+													<hr />
+												</li>
+											{% elif player.contract.length == 2 %}
+												<li>
+													<div class="timeline-start mr-2">Season {{ player.contract.season|add:"2" }}</div>
+													{% if player.contract.option == "None" %}
+														<div class="timeline-end timeline-box ml-2"><i class="fas fa-user"></i> Free Agent </div>
+													{% else %}
+														<div class="timeline-end timeline-box ml-2"><i class="fa-solid fa-comment"></i> {{ player.contract.option }}</div>
+													{% endif %}
+													<hr />
+												</li>
+											{% endif %}
+										</ul>
+									</div>
 								</div>
-								<div class="card-body p-0">
-									<small id="upgrade_notes_status" class="badge bg-base-100 w-full p-4">No plan exists.</small>
-									<input type="hidden" id="player_id" value="{{ player.id }}">
-									<textarea style="font-size: 12px;" class="input input-bordered w-full" id="upgrade_notes" name="upgrade_notes" row="1"></textarea>
-									<button type="submit" id="submit_upgrade_notes" class="btn btn-md btn-info text-gray-100 mt-2">Save Upgrade Plan</button>
+								{% comment %} Upgrade notes {% endcomment %}
+								<div class="card p-4">
+									<div class="card-header mb-2">
+										<h3 class="card-title text-lg">Upgrade Plan</h3>
+									</div>
+									<div class="card-body p-0">
+										<small id="upgrade_notes_status" class="badge bg-base-100 w-full p-4">No plan exists.</small>
+										<input type="hidden" id="player_id" value="{{ player.id }}">
+										<textarea style="font-size: 12px;" class="input input-bordered w-full" id="upgrade_notes" name="upgrade_notes" row="1"></textarea>
+										<button type="submit" id="submit_upgrade_notes" class="btn btn-md btn-info text-gray-100 mt-2">Save Upgrade Plan</button>
+									</div>
 								</div>
-							</div>
+							{% endif %}
 						</div>
 
 						{% comment %} Attributes tab {% endcomment %}

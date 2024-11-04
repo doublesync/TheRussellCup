@@ -91,53 +91,75 @@
 							{% if player.contract %}
 								<div class="card p-4">
 									<div class="card-header">
-										<h3 class="card-title text-lg">Contract</h3>
+										<h3 class="card-title text-lg">Contract Timeline</h3>
 									</div>
 									<div class="card-body p-0">
-										<ul class="timeline timeline-vertical">
-											{% comment %} Year 1 {% endcomment %}
-											<li>
-												<div class="timeline-start mr-2">Season {{ player.contract.season }}</div>
-												<div class="timeline-end timeline-box ml-2"><i class="fas fa-coins"></i> {{ player.contract.year_1_payment }}</div>
-												<hr />
-											</li>
-											{% comment %} Year 2 {% endcomment %}
-											{% if player.contract.length > 1 %}
-												<li>
-													<div class="timeline-start mr-2">Season {{ player.contract.season|add:"1" }}</div>
-													<div class="timeline-end timeline-box ml-2"><i class="fas fa-coins"></i> {{ player.contract.year_2_payment }}</div>
-													<hr />
-												</li>
-											{% elif player.contract.length == 1 %}
-												<li>
-													<div class="timeline-start mr-2">Season {{ player.contract.season|add:"1" }}</div>
-													{% if player.contract.option == "None" %}
-														<div class="timeline-end timeline-box ml-2"><i class="fas fa-user"></i> Free Agent </div>
-													{% else %}
-														<div class="timeline-end timeline-box ml-2"><i class="fa-solid fa-comment"></i> {{ player.contract.option }}</div>
-													{% endif %}
-													<hr />
-												</li>
-											{% endif %}
-											{% comment %} Year 3 (max years a contract can be signed to) {% endcomment %}
-											{% if player.contract.length > 2 %}
-												<li>
-													<div class="timeline-start mr-2">Season {{ player.contract.season|add:"2" }}</div>
-													<div class="timeline-end timeline-box ml-2"><i class="fas fa-coins"></i> {{ player.contract.year_3_payment }}</div>
-													<hr />
-												</li>
-											{% elif player.contract.length == 2 %}
-												<li>
-													<div class="timeline-start mr-2">Season {{ player.contract.season|add:"2" }}</div>
-													{% if player.contract.option == "None" %}
-														<div class="timeline-end timeline-box ml-2"><i class="fas fa-user"></i> Free Agent </div>
-													{% else %}
-														<div class="timeline-end timeline-box ml-2"><i class="fa-solid fa-comment"></i> {{ player.contract.option }}</div>
-													{% endif %}
-													<hr />
-												</li>
-											{% endif %}
-										</ul>
+										<div class="text-gray-100 p-6 rounded-lg shadow-lg">
+											<div class="space-y-6">
+												<!-- Year 1 -->
+												<div class="flex items-center space-x-4">
+													<div class="flex-shrink-0">
+														<span class="badge badge-success font-bold">Season {{ player.contract.season }}</span>
+													</div>
+													<div class="flex-grow p-4 rounded-lg shadow-inner">
+														<i class="fas fa-coins text-yellow-400 mr-2"></i> 
+														<span>{{ player.contract.year_1_payment }}</span>
+													</div>
+												</div>
+												
+												<!-- Year 2 -->
+												{% if player.contract.length > 1 %}
+													<div class="flex items-center space-x-4">
+														<div class="flex-shrink-0">
+															<span class="badge badge-success font-bold">Season {{ player.contract.season|add:"1" }}</span>
+														</div>
+														<div class="flex-grow bg-gray-800 p-4 rounded-lg shadow-inner">
+															<i class="fas fa-coins text-yellow-400 mr-2"></i> 
+															<span>{{ player.contract.year_2_payment }}</span>
+														</div>
+													</div>
+												{% elif player.contract.length == 1 %}
+													<div class="flex items-center space-x-4">
+														<div class="flex-shrink-0">
+															<span class="badge badge-success font-bold">Season {{ player.contract.season|add:"1" }}</span>
+														</div>
+														<div class="flex-grow p-4 rounded-lg shadow-inner">
+															{% if player.contract.option == "None" %}
+																<i class="fas fa-user text-red-400 mr-2"></i> Free Agent
+															{% else %}
+																<i class="fa-solid fa-comment text-green-400 mr-2"></i> {{ player.contract.option }}
+															{% endif %}
+														</div>
+													</div>
+												{% endif %}
+												
+												<!-- Year 3 -->
+												{% if player.contract.length > 2 %}
+													<div class="flex items-center space-x-4">
+														<div class="flex-shrink-0">
+															<span class="badge badge-success font-bold">Season {{ player.contract.season|add:"2" }}</span>
+														</div>
+														<div class="flex-grow p-4 rounded-lg shadow-inner">
+															<i class="fas fa-coins text-yellow-400 mr-2"></i> 
+															<span>{{ player.contract.year_3_payment }}</span>
+														</div>
+													</div>
+												{% elif player.contract.length == 2 %}
+													<div class="flex items-center space-x-4">
+														<div class="flex-shrink-0">
+															<span class="badge badge-success font-bold">Season {{ player.contract.season|add:"2" }}</span>
+														</div>
+														<div class="flex-grow bg-gray-800 p-4 rounded-lg shadow-inner">
+															{% if player.contract.option == "None" %}
+																<i class="fas fa-user text-red-400 mr-2"></i> Free Agent
+															{% else %}
+																<i class="fa-solid fa-comment text-green-400 mr-2"></i> {{ player.contract.option }}
+															{% endif %}
+														</div>
+													</div>
+												{% endif %}
+											</div>
+										</div>
 									</div>
 								</div>
 							{% endif %}

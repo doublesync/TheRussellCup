@@ -12,7 +12,7 @@
     <form>
         {% csrf_token %}
         <!-- Filter Button to Open Modal -->
-        <button class="btn btn-primary" onclick="document.getElementById('filterModal').classList.add('modal-open')">
+        <button type="button" class="btn btn-primary" onclick="document.getElementById('filterModal').classList.add('modal-open')">
             <i class="fas fa-filter"></i> Filter Players
         </button>
 
@@ -23,7 +23,7 @@
                 <!-- Modal Header -->
                 <div class="modal-header flex justify-between items-center pb-4 border-b border-gray-200">
                     <h3 class="font-bold text-lg">Filter Players</h3>
-                    <button onclick="document.getElementById('filterModal').classList.remove('modal-open')" class="btn btn-sm btn-circle btn-ghost">
+                    <button type="button" onclick="document.getElementById('filterModal').classList.remove('modal-open')" class="btn btn-sm btn-circle btn-ghost">
                         ✕
                     </button>
                 </div>
@@ -103,7 +103,7 @@
 
                 <!-- Submit Button -->
                 <div class="modal-action">
-                    <button type="button" class="btn btn-primary" hx-post="{% url 'htmx_filter_players' 'players' %}" hx-trigger="click delay:1s" hx-target="#search-table" hx-swap="innerHTML">
+                    <button type="button" class="btn btn-primary" onclick="document.getElementById('filterModal').classList.remove('modal-open')" hx-post="{% url 'htmx_filter_players' 'players' %}" hx-trigger="click delay:1s" hx-target="#search-table" hx-swap="innerHTML">
                         Apply Filters
                     </button>
                     <button type="button" class="btn btn-secondary" onclick="document.getElementById('filterModal').classList.remove('modal-open')">Close</button>

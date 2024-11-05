@@ -75,7 +75,7 @@
       </div>
       <div class="navbar-end">
         {% comment %} Payment requests & claim rewards modal (only if logged in) {% endcomment %}
-        <button class="btn btn-ghost btn-circle" onclick="payment_modal.showModal()"><i class="fa-solid fa-wallet"></i></button>
+        <button class="btn btn-ghost btn-circle"  onclick="document.getElementById('payment_modal').showModal()"><i class="fa-solid fa-wallet"></i></button>
         {% comment %} Payment (wallet) modal {% endcomment %}
         <dialog id="payment_modal" class="modal">
           <div class="modal-box">
@@ -84,21 +84,29 @@
               <li>
                 <h2 class="menu-title">Options</h2>
                 <ul>
-                  {% comment %} Claiming payments form {% endcomment %}
+                  <!-- Claiming payments form -->
                   <form>
                     {% csrf_token %}
                     <span id="claim-status"></span>
-                    <li><a id="claim-status" class="mt-2 btn justify-start" href="#" hx-trigger="click throttle:1s" hx-target="#claim-status" hx-swap="innerHTML" hx-post="{% url 'claim_contracts' %}"><i class="fa-solid fa-receipt"></i> Claim Contracts</a></li>
-                  <form>
-                  <li><a class="mt-2 btn justify-start" href="{% url 'payment_request' %}"><i class="fa-solid fa-dollar-sign"></i> Request Payment</a></li>
+                    <li>
+                      <a id="claim-status" class="mt-2 btn justify-start" href="#" hx-trigger="click throttle:1s" hx-target="#claim-status" hx-swap="innerHTML" hx-post="{% url 'claim_contracts' %}">
+                        <i class="fa-solid fa-receipt"></i> Claim Contracts
+                      </a>
+                    </li>
+                  </form>
+                  <li>
+                    <a class="mt-2 btn justify-start" href="{% url 'payment_request' %}">
+                      <i class="fa-solid fa-dollar-sign"></i> Request Payment
+                    </a>
+                  </li>
                 </ul>
               </li>
             </ul>
             <div class="modal-action">
-              <form method="dialog">
-                <button class="btn"><i class="fa-solid fa-x"></i> Close</button>
-              </form>
-            </div>
+              <button type="button" class="btn" onclick="document.getElementById('payment_modal').close()">
+                <i class="fa-solid fa-x"></i> Close
+              </button>
+            </div>                    
           </div>
         </dialog>
         {% comment %} Settings button {% endcomment %}

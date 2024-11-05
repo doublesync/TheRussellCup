@@ -5,78 +5,118 @@
 
 {% block content %}
 <div class="container-fluid p-md-5">
-    <small class="text-muted">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</small>
-    <h1>Player List</h1>
+
+    {% comment %} Player list {% endcomment %}
+    <h1 class="text-2xl font-bold mb-2">Player List</h1>
+
     <form>
         {% csrf_token %}
-        <div class="form-group pull-right col-12">
-            <!-- Search query -->
-            <div class="mb-3 row">
-                <!-- Search for players -->
-                <div class="col-12 mb-2">
-                    <label for="name-filter" class="form-label mb-0">Search for players</label>
-                    <input name="name-filter" id="name-filter" class="search form-control form-control-sm" type="text" placeholder="Enter a name"/>
+        <!-- Filter Button to Open Modal -->
+        <button class="btn btn-primary" onclick="document.getElementById('filterModal').classList.add('modal-open')">
+            <i class="fas fa-filter"></i> Filter Players
+        </button>
+
+        <!-- Filter Modal -->
+        <div id="filterModal" class="modal">
+            <div class="modal-box w-full max-w-lg">
+
+                <!-- Modal Header -->
+                <div class="modal-header flex justify-between items-center pb-4 border-b border-gray-200">
+                    <h3 class="font-bold text-lg">Filter Players</h3>
+                    <button onclick="document.getElementById('filterModal').classList.remove('modal-open')" class="btn btn-sm btn-circle btn-ghost">
+                        ✕
+                    </button>
                 </div>
-                <!-- Position filtering -->
-                <div class="col-12 mb-2">
-                    <label for="position-filter" class="form-label">Filter by position</label>
-                    <select id="position-filter" class="js-multiple-select form-select" name="position-filter" multiple="multiple">
-                        <option value="PG" selected>PG</option>
-                        <option value="SG" selected>SG</option>
-                        <option value="SF" selected>SF</option>
-                        <option value="PF" selected>PF</option>
-                        <option value="C" selected>C</option>
-                    </select>
+
+                <!-- Filter Form -->
+                <div class="space-y-4">
+                    <!-- Player Name Filter -->
+                    <div>
+                        <label for="name-filter" class="label">
+                            <span class="label-text">Search for players</span>
+                        </label>
+                        <input id="name-filter" name="name-filter" type="text" placeholder="Enter a name" class="input input-bordered w-full" />
+                    </div>
+
+                    <!-- Position Filter -->
+                    <div>
+                        <label for="position-filter" class="label">
+                            <span class="label-text">Filter by position</span>
+                        </label>
+                        <select id="position-filter" name="position-filter" multiple class="select select-bordered js-multiple-select w-full">
+                            <option value="PG" selected>PG</option>
+                            <option value="SG" selected>SG</option>
+                            <option value="SF" selected>SF</option>
+                            <option value="PF" selected>PF</option>
+                            <option value="C" selected>C</option>
+                        </select>
+                    </div>
+
+                    <!-- League Filter -->
+                    <div>
+                        <label for="league-filter" class="label">
+                            <span class="label-text">Filter by league</span>
+                        </label>
+                        <select id="league-filter" name="league-filter" class="select select-bordered w-full">
+                            <option value="all_players" selected>All Players</option>
+                            <option value="main_league_only">Main League Only</option>
+                            <option value="surge_league_only">Surge League Only</option>
+                            <option value="both_leagues">Both Leagues</option>
+                        </select>
+                    </div>
+
+                    <!-- Anomaly Filter -->
+                    <div>
+                        <label for="anomaly-filter" class="label">
+                            <span class="label-text">Filter by anomalies</span>
+                        </label>
+                        <select id="anomaly-filter" name="anomaly-filter" class="select select-bordered w-full">
+                            <option value="include_anomalies" selected>Include Anomalies</option>
+                            <option value="exclude_anomalies">Exclude Anomalies</option>
+                            <option value="only_anomalies">Only Anomalies</option>
+                        </select>
+                    </div>
+
+                    <!-- Custom Filter -->
+                    <div>
+                        <label class="label">
+                            <span class="label-text">Filter by other</span>
+                        </label>
+                        <div class="flex gap-2">
+                            <select id="custom-filter" name="custom-filter" class="select select-bordered w-full">
+                                <option value="height">Height</option>
+                                <option value="weight">Weight</option>
+                                <option value="wingspan">Wingspan</option>
+                                <option value="sp_spent">SP Spent</option>
+                                <option value="xp_spent">XP Spent</option>
+                                <option value="sim_rating">Sim Rating</option>
+                            </select>
+                            <select id="custom-filter-type" name="custom-filter-type" class="select select-bordered w-full">
+                                <option value="gt">Greater Than Or Equal To</option>
+                                <option value="lt">Less Than Or Equal To</option>
+                                <option value="eq">Equal To</option>
+                            </select>
+                            <input type="number" id="custom-filter-value" name="custom-filter-value" placeholder="Enter a value" class="input input-bordered w-full" />
+                        </div>
+                    </div>
                 </div>
-                <!-- League filtering -->
-                <div class="col-12 mb-2">
-                    <label for="league-filter" class="form-label">Filter by league</label>
-                    <select id="league-filter" class="js-multiple-select form-select" name="league-filter">
-                        <option value="all_players" selected>All Players</option>
-                        <option value="main_league_only">Main League Only</option>
-                        <option value="surge_league_only">Surge League Only</option>
-                        <option value="both_leagues">Both Leagues</option>
-                    </select>
-                </div>
-                <!-- Anomaly filtering -->
-                <div class="col-12 mb-2">
-                    <label for="anomaly-filter" class="form-label">Filter by anomalies</label>
-                    <select id="anomaly-filter" class="js-multiple-select form-select" name="anomaly-filter">
-                        <option value="include_anomalies" selected>Include Anomalies</option>
-                        <option value="exclude_anomalies">Exclude Anomalies</option>
-                        <option value="only_anomalies">Only Anomalies</option>
-                    </select>
-                </div>
-                <!-- Custom filtering -->
-                <div class="col-12 mb-2">
-                    <label for="custom-filter" class="mb-0 form-label">Filter by other</label>
-                    <!-- What we're filtering -->
-                    <select id="custom-filter" name="custom-filter" class="form-select form-select-sm" name="custom-filter">
-                        <option value="height">Height</option>
-                        <option value="weight">Weight</option>
-                        <option value="wingspan">Wingspan</option>
-                        <option value="sp_spent">SP Spent</option>
-                        <option value="xp_spent">XP Spent</option>
-                        <option value="sim_rating">Sim Rating</option>
-                    </select>
-                    <!-- Greater than or less than -->
-                    <select id="custom-filter-type" name="custom-filter-type" class="form-select form-select-sm" name="custom-filter-type">
-                        <option value="gt">Greater Than Or Equal To</option>
-                        <option value="lt">Less Than Or Equal To</option>
-                        <option value="eq">Equal To</option>
-                    </select>
-                    <!-- Value -->
-                    <input type="number" id="custom-filter-value" class="form-control form-control-sm" name="custom-filter-value" placeholder="Enter a value">
+
+                <!-- Submit Button -->
+                <div class="modal-action">
+                    <button type="button" class="btn btn-primary" hx-post="{% url 'htmx_filter_players' 'players' %}" hx-trigger="click delay:1s" hx-target="#search-table" hx-swap="innerHTML">
+                        Apply Filters
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('filterModal').classList.remove('modal-open')">Close</button>
                 </div>
             </div>
         </div>
-        <!-- Filter button -->
-        <button type="button" class="btn btn-primary" hx-post="{% url 'htmx_filter_players' 'players' %}" hx-trigger="click delay:1s" hx-target="#search-table" hx-swap="innerHTML"><i class="fas fa-filter"></i> Filter Players</button>
-        <!-- Results table  -->
+
+        <!-- Results Table -->
         <div id="search-table">
             {% include 'players/fragments/list_fragment.html' %}
         </div>
     </form>
+
 </div>
 
 {% endblock %}

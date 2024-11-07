@@ -154,7 +154,8 @@ class PaymentRequestView(View):
     def get(self, request):
         user = request.user
         player_list = Player.objects.filter(user=user)
-        return render(request, self.template_name, {"players": player_list})
+        staff_members = CustomUser.objects.filter(can_pay_players=True)
+        return render(request, self.template_name, {"players": player_list, "staff_members": staff_members})
 
     def post(self, request):
         # Grab the form data
@@ -162,21 +163,25 @@ class PaymentRequestView(View):
         request_sp_amount = request.POST.get("request-sp-amount")
         request_xp_amount = request.POST.get("request-xp-amount")
         request_reason = request.POST.get("request-reason")
+        request_staff = request.POST.get("request-staff")
         # Check how many requests the user has made
+        print("Staff:", request_staff) # Debugging
+        staff = CustomUser.objects.get(pk=request_staff)
         player = Player.objects.get(pk=player)
         request_count = PaymentRequest.objects.filter(player=player).count()
         # Validate the form data
-        if not player or not request_sp_amount or not request_xp_amount or not request_reason:
-            return HttpResponse("❌ Please fill out all fields.")
+        if not staff or not player or not request_sp_amount or not request_xp_amount or not request_reason:
+            return HttpResponse("❌ All fields are required.")
         # Check if the user has made more than 3 requests
         if request_count > 3:
-            return HttpResponse("😊 Please allow your other payment requests to settle first.")
+            return HttpResponse("😊 Please allow us to settle your other payment requests first.")
         # Create the payment request
         PaymentRequest.objects.create(
             player=player, 
             sp_amount=request_sp_amount,
             xp_amount=request_xp_amount,
             reason=request_reason,
+            staff=staff,
         )
         # Return the response
         return HttpResponse("✅ Payment has been requested, we'll get back to you soon!")
@@ -190,7 +195,7 @@ class PaymentRequestsView(View):
         if not request.user.can_pay_players:
             return HttpResponse("You are not authorized to pay out requests.")
         # Get all payment requests
-        open_requests = PaymentRequest.objects.all()
+        open_requests = PaymentRequest.objects.filter(staff=request.user)
         return render(request, self.template_name, {"open_requests": open_requests})
 
     def post(self, request):
@@ -209,10 +214,11 @@ class PaymentRequestsView(View):
             # Get some data from the form
             sp_amount = request.POST.get(f"sp-{open_request.id}")
             xp_amount = request.POST.get(f"xp-{open_request.id}")
+            reason = request.POST.get(f"reason-{open_request.id}")
             process_request = request.POST.get(f"process-{open_request.id}")
             delete_request = request.POST.get(f"delete-{open_request.id}")
             # Validate the form data
-            if not sp_amount or not xp_amount:
+            if not sp_amount or not xp_amount or not reason:
                 return HttpResponse("❌ Please fill out all fields.")
             if not process_request and not delete_request:
                 continue # Skip to the next open request
@@ -226,7 +232,7 @@ class PaymentRequestsView(View):
                     payer=request.user,
                     receiver=open_request.player,
                     amount=0,
-                    reason=f"[REQUESTED] {open_request.reason}",
+                    reason=f"[REQUESTED] {reason}",
                     include_xp_equivalent=False,
                 )
                 # Log the payment
@@ -242,11 +248,10 @@ class PaymentRequestsView(View):
                     title="Payment Request Processed",
                     body=f"Payment request for {open_request.player.first_name} {open_request.player.last_name} has been processed.",
                     fields=[
-                        ("SP Requested", open_request.sp_amount),
-                        ("XP Requested", open_request.xp_amount),
                         ("SP Paid", sp_amount),
                         ("XP Paid", xp_amount),
-                        ("Reason", open_request.reason),
+                        ("Staff Reason", open_request.reason),
+                        ("Staff Member", open_request.staff.username),
                     ],
                 )
                 # Delete the request

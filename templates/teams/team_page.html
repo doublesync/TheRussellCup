@@ -3,78 +3,80 @@
 
 {% block title %}{{ team.name }}{% endblock %}
 
-
 {% block content %}
-<div class="container-fluid p-4">
-    <a href="{% url 'team_list' %}" class="btn btn-sm btn-info"><i class="fa-solid fa-arrow-left"></i> Back to Teams</a>
-    <a href="{% url 'roster_move' team.id %}" class="btn btn-sm btn-info"><i class="fa-solid fa-user-plus"></i> Make Roster Move</a>
+<div class="container mx-auto p-4">
 
+    {% comment %} Back to teams page {% endcomment %}
+    <a href="{% url 'team_list' %}" class="btn btn-info btn-sm mb-2"><i class="fa-solid fa-arrow-left"></i> Back to Teams</a>
+
+    {% comment %} Team Page {% endcomment %}
     <div class="mt-4">
+        <h1 class="text-3xl font-bold" style="color: {{ team.color }};">{{ team.name|upper }}</h1>
+        <p class="text-lg font-semibold">{{ team.city|upper }}</p>
 
-        <h1 style="color: {{ team.color }};">{{ team.name|upper }}</h1>
-        <p class="fw-bold">{{ team.city|upper }}</p>
-
-        <div class="card bg-dark text-white">
+        <!-- Salary Book -->
+        <div class="card bg-base-100 shadow-lg my-4 rounded-lg">
             <div class="card-body">
-                <h5 class="card-title">Salary Book</h5>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group list-group-item">
-                        <div>
-                            <div class="border-rounded border border-light p-1" style="height: 35px; width: 30%;">
-                                <div class="progress bg-dark" style="height: 100%; width: 100%;">
-                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar" style="width: {{ salary_book.total_spent|percentage:1200 }}%;" aria-valuenow="{{ salary_book.total_spent }}" aria-valuemin="0" aria-valuemax="1200"><span class="fw-bold">{{ salary_book.total_spent }}/1200</span></div>
-                                </div>
-                            </div>
-                        <div>
-                    </li>
-                </ul>                    
+                <h5 class="card-title text-2xl font-semibold mb-4">Salary Book</h5>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <span class="text-lg font-semibold">Total Spent: </span>
+                        <span class="ml-2 text-xl font-bold" style="color: {{ salary_book.total_spent|percentage:1200 }}%;">{{ salary_book.total_spent }} / 1200</span>
+                    </div>
+                    <div class="text-sm">
+                        <span class="font-semibold">Remaining Budget: </span>
+                        <span class="font-semibold text-green-500">{{ salary_book.total_spent }}</span> SP
+                    </div>
+                </div>
             </div>
         </div>
 
-        <hr>
+
+        <!-- Roster Table -->
         <div id="roster">
-            <h2>Roster</h2>
-            <!-- player table -->
-            <div class="table-responsive">
-                <table class="table table-dark table-striped">
+            <h2 class="text-2xl font-bold">Roster</h2>
+            <div class="overflow-x-auto">
+                <table class="table table-compact w-full mt-4">
                     <thead>
                         <tr>
-                            <!-- Make icon for 'Status' -->
                             <th>Status</th>
-                            <th><i class="fas fa-coins"></i> Salary</th>
-                            <th><i class="fa-solid fa-piggy-bank"></i> Claimed</th>
-                            <th><i class="fas fa-user"></i> Player</th>
-                            <th><i class="fas fa-star"></i> Rating</th>
-                            <th><i class="fas fa-basketball-ball"></i> Team</th>
-                            <th><i class="fas fa-user-tag"></i> Position</th>
-                            <th><i class="fas fa-ruler-vertical"></i> Height</th>
-                            <th><i class="fas fa-weight"></i> Weight</th>
-                            <th><i class="fas fa-person-military-pointing"></i> Wingspan</th>
-                            <th><i class="fas fa-coins"></i> SP Spent</th>
-                            <th><i class="fas fa-star-half-stroke"></i> XP Spent</th>
+                            <th>Salary</th>
+                            <th>Claimed</th>
+                            <th>Player</th>
+                            <th>Rating</th>
+                            <th>Team</th>
+                            <th>Position</th>
+                            <th>Height</th>
+                            <th>Weight</th>
+                            <th>Wingspan</th>
+                            <th>SP Spent</th>
+                            <th>XP Spent</th>
                         </tr>
                     </thead>
-                    <tbody class="table table-dark table-hover">
+                    <tbody>
                         {% for player in team.player_set.all %}
                         <tr>
-                            {% if player.stashed %}
-                                <td><i class="fa-solid fa-box text-danger fw-bold"></i> Stashed</td>
-                            {% elif player.rookie %}
-                                <td><i class="fa-solid fa-medal text-success fw-bold"></i> Rookie</td>
-                            {% else %}
-                                <td><i class="fa-solid fa-basketball-ball text-info fw-bold"></i> Active</td>
-                            {% endif %}
-                            <td>{{ player.contract.year_1_payment }}</td>
+                            <td>
+                                {% if player.stashed %}
+                                    <span class="badge badge-error">Stashed</span>
+                                {% elif player.rookie %}
+                                    <span class="badge badge-success">Rookie</span>
+                                {% else %}
+                                    <span class="badge badge-info">Active</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% comment %} Open contract modal button {% endcomment %}
+                                <label for="#contractModal_{{ player.id }}" class="btn btn-circle btn-outline">
+                                    {{ player.contract.year_1_payment }}
+                                </label>
+                            </td>
                             {% if current_week|stringify not in player.contract.weeks_paid %}
                                 <td>No</td>
                             {% else %}
                                 <td>Yes</td>
                             {% endif %}
-                            {% if player.user.is_staff %}
-                                <td><i class="fa-solid fa-lock"></i> <a style="height: 100%; width: 100%;" href="{% url 'player_page' player.id %}">{{ player.first_name }} {{ player.last_name }}</a></td>
-                            {% else %}
-                                <td><a style="height: 100%; width: 100%;" href="{% url 'player_page' player.id %}">{{ player.first_name }} {{ player.last_name }}</a></td>
-                            {% endif %}
+                            <td><a href="{% url 'player_page' player.id %}" class="text-underline">{{ player.first_name }} {{ player.last_name }}</a></td>
                             <td>{{ player.sim_rating }}</td>
                             <td>{{ player.team }}</td>
                             <td>{{ player.position }}</td>
@@ -83,7 +85,6 @@
                             <td>{{ player.wingspan }}/100</td>
                             <td>{{ player.sp_spent }} SP</td>
                             <td>{{ player.xp_spent }} XP</td>
-                            <!-- Needs: Year 2 & Year 3 support. -->
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -91,14 +92,13 @@
             </div>
         </div>
 
-        <hr>
-
-        <h6>Player Averages</h6>
-        <div class="table-responsive">
-            <table class="table table-dark table-striped">
+        <!-- Player Averages Table -->
+        <h6 class="text-xl font-bold mt-6">Player Averages</h6>
+        <div class="overflow-x-auto">
+            <table class="table table-compact w-full mt-4">
                 <thead>
                     <tr>
-                        <th><i class="fas fa-user"></i> Player</th>
+                        <th>Player</th>
                         <th>GP</th>
                         <th>PPG</th>
                         <th>RPG</th>
@@ -117,42 +117,41 @@
                         <th>DPG</th>
                     </tr>
                 </thead>
-                <tbody class="table table-dark table-hover">
+                <tbody>
                     {% for player, season_stats in team_stats.player_season_stats.items %}
                     {% if season_stats.games_played > 0 %}
-                        <tr>
-                            <td>{{ player.first_name }} {{ player.last_name }}</td>
-                            <td>{{ season_stats.games_played }}</td>
-                            <td>{{ season_stats.average_points}}</td>
-                            <td>{{ season_stats.average_rebounds }}</td>
-                            <td>{{ season_stats.average_assists }}</td>
-                            <td>{{ season_stats.average_steals }}</td>
-                            <td>{{ season_stats.average_blocks }}</td>
-                            <td>{{ season_stats.average_turnovers }}</td>
-                            <td>{{ season_stats.average_field_goal_percentage }}</td>
-                            <td>{{ season_stats.average_three_point_percentage }}</td>
-                            <td>{{ season_stats.average_free_throw_percentage }}</td>
-                            <td>{{ season_stats.average_offensive_rebounds }}</td>
-                            <td>{{ season_stats.average_defensive_rebounds }}</td>
-                            <td>{{ season_stats.average_personal_fouls }}</td>
-                            <td>{{ season_stats.average_plus_minus }}</td>
-                            <td>{{ season_stats.average_points_responsible_for }}</td>
-                            <td>{{ season_stats.average_dunks }}</td>
-                        </tr>
+                    <tr>
+                        <td>{{ player.first_name }} {{ player.last_name }}</td>
+                        <td>{{ season_stats.games_played }}</td>
+                        <td>{{ season_stats.average_points }}</td>
+                        <td>{{ season_stats.average_rebounds }}</td>
+                        <td>{{ season_stats.average_assists }}</td>
+                        <td>{{ season_stats.average_steals }}</td>
+                        <td>{{ season_stats.average_blocks }}</td>
+                        <td>{{ season_stats.average_turnovers }}</td>
+                        <td>{{ season_stats.average_field_goal_percentage }}</td>
+                        <td>{{ season_stats.average_three_point_percentage }}</td>
+                        <td>{{ season_stats.average_free_throw_percentage }}</td>
+                        <td>{{ season_stats.average_offensive_rebounds }}</td>
+                        <td>{{ season_stats.average_defensive_rebounds }}</td>
+                        <td>{{ season_stats.average_personal_fouls }}</td>
+                        <td>{{ season_stats.average_plus_minus }}</td>
+                        <td>{{ season_stats.average_points_responsible_for }}</td>
+                        <td>{{ season_stats.average_dunks }}</td>
+                    </tr>
                     {% endif %}
                     {% endfor %}
                 </tbody>
             </table>
         </div>
 
-        <hr>
-
-        <h6>Player Totals</h6>
-        <div class="table-responsive">
-            <table class="table table-dark table-striped">
+        <!-- Player Totals Table -->
+        <h6 class="text-xl font-bold mt-6">Player Totals</h6>
+        <div class="overflow-x-auto">
+            <table class="table table-compact w-full mt-4">
                 <thead>
                     <tr>
-                        <th><i class="fas fa-user"></i> Player</th>
+                        <th>Player</th>
                         <th>Points</th>
                         <th>Rebounds</th>
                         <th>Assists</th>
@@ -173,11 +172,11 @@
                         <th>DNK</th>
                     </tr>
                 </thead>
-                <tbody class="table table-dark table-hover">
-                {% for player, season_stats in team_stats.player_season_stats.items %}
+                <tbody>
+                    {% for player, season_stats in team_stats.player_season_stats.items %}
                     <tr>
                         <td>{{ player.first_name }} {{ player.last_name }}</td>
-                        <td>{{ season_stats.points}}</td>
+                        <td>{{ season_stats.points }}</td>
                         <td>{{ season_stats.rebounds }}</td>
                         <td>{{ season_stats.assists }}</td>
                         <td>{{ season_stats.steals }}</td>
@@ -196,11 +195,100 @@
                         <td>{{ season_stats.points_responsible_for }}</td>
                         <td>{{ season_stats.dunks }}</td>
                     </tr>
-                {% endfor %}
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
-
     </div>
 </div>
 {% endblock %}
+
+{% block modals %}
+    {% for player in team.player_set.all %}
+        <input type="checkbox" id="#contractModal_{{ player.id }}" class="modal-toggle">
+        <div class="modal">
+            <div class="modal-box p-6 max-w-lg mx-auto rounded-lg shadow-xl">
+                <div class="text-left mb-6">
+                    <h3 class="text-xl font-bold text-white">{{ player.first_name }} {{ player.last_name }}'s Contract</h3>
+                </div>
+                
+                {% if player.contract %}
+                    <div class="space-y-6">
+                        <!-- Year 1 -->
+                        <div class="flex items-center justify-between p-4 rounded-lg shadow-inner">
+                            <div class="flex-shrink-0">
+                                <span class="badge badge-success font-bold">Season {{ player.contract.season }}</span>
+                            </div>
+                            <div class="flex-grow text-left text-yellow-400 ml-2">
+                                <i class="fas fa-coins"></i> 
+                                <span class="font-semibold">{{ player.contract.year_1_payment }}</span>
+                            </div>
+                        </div>
+            
+                        <!-- Year 2 -->
+                        {% if player.contract.length > 1 %}
+                            <div class="flex items-center justify-between p-4 rounded-lg shadow-inner">
+                                <div class="flex-shrink-0">
+                                    <span class="badge badge-success font-bold">Season {{ player.contract.season|add:"1" }}</span>
+                                </div>
+                                <div class="flex-grow text-left text-yellow-400 ml-2">
+                                    <i class="fas fa-coins mr-2"></i> 
+                                    <span class="font-semibold">{{ player.contract.year_2_payment }}</span>
+                                </div>
+                            </div>
+                        {% elif player.contract.length == 1 %}
+                            <div class="flex items-center justify-between p-4 rounded-lg shadow-inner">
+                                <div class="flex-shrink-0">
+                                    <span class="badge badge-success font-bold">Season {{ player.contract.season|add:"1" }}</span>
+                                </div>
+                                <div class="flex-grow text-left">
+                                    {% if player.contract.option == "None" %}
+                                        <i class="fas fa-user text-red-400 ml-2"></i> Free Agent
+                                    {% else %}
+                                        <i class="fa-solid fa-comment text-green-400 ml-2"></i> {{ player.contract.option }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endif %}
+            
+                        <!-- Year 3 -->
+                        {% if player.contract.length > 2 %}
+                            <div class="flex items-center justify-between p-4 rounded-lg shadow-inner">
+                                <div class="flex-shrink-0">
+                                    <span class="badge badge-success font-bold">Season {{ player.contract.season|add:"2" }}</span>
+                                </div>
+                                <div class="flex-grow text-left text-yellow-400">
+                                    <i class="fas fa-coins ml-2"></i> 
+                                    <span class="font-semibold">{{ player.contract.year_3_payment }}</span>
+                                </div>
+                            </div>
+                        {% elif player.contract.length == 2 %}
+                            <div class="flex items-center justify-between p-4 rounded-lg shadow-inner">
+                                <div class="flex-shrink-0">
+                                    <span class="badge badge-success font-bold">Season {{ player.contract.season|add:"2" }}</span>
+                                </div>
+                                <div class="flex-grow text-left">
+                                    {% if player.contract.option == "None" %}
+                                        <i class="fas fa-user text-red-400 ml-2"></i> Free Agent
+                                    {% else %}
+                                        <i class="fa-solid fa-comment text-green-400 ml-2"></i> {{ player.contract.option }}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <p class="text-left text-gray-400">No contract information available.</p>
+                {% endif %}
+            
+                <!-- Modal Action -->
+                <div class="flex justify-center mt-6">
+                    <label for="#contractModal_{{ player.id }}" class="btn btn-danger w-full md:w-auto flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-x"></i> Close
+                    </label>
+                </div>
+            </div>
+            
+        </div>
+    {% endfor %}
+{% endblock modals %}

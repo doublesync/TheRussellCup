@@ -204,7 +204,7 @@ class PaymentRequestsView(View):
         if not request.user.can_pay_players:
             return HttpResponse("You are not authorized to pay out requests.")
         # Grab the form data
-        open_requests = PaymentRequest.objects.all()
+        open_requests = PaymentRequest.objects.filter(staff=request.user)
         # Validate that there are any open requests
         if not open_requests:
             return HttpResponse("❌ There are no open requests.")

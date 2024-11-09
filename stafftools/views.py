@@ -219,7 +219,7 @@ class PaymentRequestsView(View):
             delete_request = request.POST.get(f"delete-{open_request.id}")
             # Validate the form data
             if not sp_amount or not xp_amount or not reason:
-                return HttpResponse("❌ Please fill out all fields.")
+                result += f"❌ Please fill out all fields for request #{open_request.id}.<br>"
             if not process_request and not delete_request:
                 continue # Skip to the next open request
             # Process the payment or delete the request

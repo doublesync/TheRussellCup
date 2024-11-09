@@ -250,7 +250,7 @@ class PaymentRequestsView(View):
                     fields=[
                         ("SP Paid", sp_amount),
                         ("XP Paid", xp_amount),
-                        ("Staff Reason", open_request.reason),
+                        ("Staff Reason", reason),
                         ("Staff Member", open_request.staff.username),
                     ],
                 )

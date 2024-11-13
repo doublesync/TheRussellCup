@@ -1,57 +1,60 @@
-<h4>Cart</h4>
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Price (SP)</th>
-            <th>Price (XP)</th>
-            <th>Start</th>
-            <th>New</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% if cart.attributes or cart.badges or cart.tendencies %}
-            {% for attribute, data in cart.attributes.items %}
+<h4 class="text-2xl font-semibold mb-4">Cart</h4>
+<div class="overflow-x-auto">
+    <table class="table w-full table-zebra">
+        <!-- Table header -->
+        <thead class="text-left">
             <tr>
-                <td>{{ attribute }}</td>
-                <td>{{ data.price }}</td>
-                <td>0</td>
-                <td>{{ data.start }}</td>
-                <td>{{ data.new }}</td>
+                <th>Name</th>
+                <th>Price (SP)</th>
+                <th>Price (XP)</th>
+                <th>Start</th>
+                <th>New</th>
             </tr>
-            {% endfor %}
-            {% for badge, data in cart.badges.items %}
+        </thead>
+        <tbody class="text-left">
+            {% if cart.attributes or cart.badges or cart.tendencies %}
+                {% for attribute, data in cart.attributes.items %}
+                <tr>
+                    <td>{{ attribute }}</td>
+                    <td>{{ data.price }}</td>
+                    <td>0</td>
+                    <td>{{ data.start }}</td>
+                    <td>{{ data.new }}</td>
+                </tr>
+                {% endfor %}
+                {% for badge, data in cart.badges.items %}
+                <tr>
+                    <td>{{ badge }}</td>
+                    <td>{{ data.price }}</td>
+                    <td>0</td>
+                    <td>{{ data.start }}</td>
+                    <td>{{ data.new }}</td>
+                </tr>
+                {% endfor %}
+                {% for tendency, data in cart.tendencies.items %}
+                <tr>
+                    <td>{{ tendency }}</td>
+                    <td>0</td>
+                    <td>{{ data.price }}</td>
+                    <td>{{ data.start }}</td>
+                    <td>{{ data.new }}</td>
+                </tr>
+                {% endfor %}
+            {% endif %}
+        </tbody>
+        <tfoot class="font-semibold text-left">
             <tr>
-                <td>{{ badge }}</td>
-                <td>{{ data.price }}</td>
-                <td>0</td>
-                <td>{{ data.start }}</td>
-                <td>{{ data.new }}</td>
+                <td>Total SP</td>
+                <td><i class="fa-solid fa-coins"> {{ cart.total_sp }}</i></td>
             </tr>
-            {% endfor %}
-            {% for tendency, data in cart.tendencies.items %}
             <tr>
-                <td>{{ tendency }}</td>
-                <td>0</td>
-                <td>{{ data.price }}</td>
-                <td>{{ data.start }}</td>
-                <td>{{ data.new }}</td>
+                <td>Total Surcharge</td>
+                <td><i class="fa-solid fa-coins"> {{ cart.total_sp_surcharge }}</i></td>
             </tr>
-            {% endfor %}
-        {% endif %}
-    </tbody>
-    <tfoot>
-        <tr>
-            <td>Total SP</td>
-            <td><i class="fa-solid fa-coins"> {{ cart.total_sp }}</td>
-        </tr>
-        <tr>
-            <td>Total Surcharge</td>
-            <td><i class="fa-solid fa-coins"> {{ cart.total_sp_surcharge }}</td>
-        </tr>
-        <tr>
-            <td>Total XP</td>
-            <td><i class="fa-solid fa-coins"> {{ cart.total_xp }}</td>
-        </tr>
-    </tfoot>
-</table>
+            <tr>
+                <td>Total XP</td>
+                <td><i class="fa-solid fa-coins"> {{ cart.total_xp }}</i></td>
+            </tr>
+        </tfoot>
+    </table>
+</div>

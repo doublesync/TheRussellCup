@@ -6,16 +6,8 @@
 
 {% block styles %}
 <style>
-    /* Adds margin to radios */
-    input[type="radio"] {
-        margin: 0 10px 0 1px;
-    }
-    /* Stops input elements from being focused on or clicked into */
-    input.attribute-value, input.badge-value, input.tendency-value{
-        pointer-events: none;
-        outline: none;
-        box-shadow: none;
-        text-align: right!important;
+    input[type="number"] {
+        text-align: center;
     }
     .badge {
         --bs-badge-padding-x: 0;
@@ -25,19 +17,20 @@
 {% endblock %}
 
 
+
 {% block content %}
-<div class="container-fluid">
-    <div class="card">
-        <div class="card-header">
-            <div class="d-flex justify-content-between align-items-center">
-                <h3 class="card-title">{{ player.first_name }} {{ player.last_name }}</h3>
-                <h3 class="card-title">{{ player.sim_rating }}</h3>
+{% if user.is_superuser %}
+
+    <div class="container mx-auto p-4">
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-header flex justify-between items-center p-4">
+                <h3 class="text-xl font-semibold">{{ player.first_name }} {{ player.last_name }}</h3>
+                <h3 class="text-xl font-semibold">{{ player.sim_rating }}</h3>
             </div>
-        </div>
-        <div class="card-body">
-            <div class="row gx-4 gy-4">
-                <form method="post" class="row gx-4 gy-4">
+            <div class="card-body">
+                <form method="post">
                     {% csrf_token %}
+
                     {% comment %} Hidden fields {% endcomment %}
                     <input type="hidden" id="htmx-cart-url" data-url="{% url 'upgrade_page' player.id %}">
                     <input type="hidden" name="player_id" value="{{ player.id }}">
@@ -45,140 +38,191 @@
                     <input type="hidden" name="original_attributes" value="{{ player.attributes }}">
                     <input type="hidden" name="original_badges" value="{{ player.badges }}">
                     <input type="hidden" name="original_tendencies" value="{{ player.tendencies }}">
-                    <!-- Currency column -->
+
+                    {% comment %} Currency column {% endcomment %}
                     <div class="col-12">
-                        <a href="{% url 'player_page' player.id %}" class="btn btn-sm btn-info mb-4"><i class="fa-solid fa-arrow-left"></i> Back to Player</a>
-                        <h4>Currency</h4>
-                        <ul class="list-group">
-                            <li class="list-group-item"><i class="fa-solid fa-coins"></i> {{ player.sp }} SP</li>
-                            <li class="list-group-item"><i class="fa-regular fa-star-half-stroke"></i> {{ player.xp }} XP</li>
-                            <li class="list-group-item"><small style="display: block;" class="mt-0 text-muted">Total Spent</small>{{ player.sp_spent }} SP, {{ player.xp_spent }} XP</li>
+                        <a href="{% url 'player_page' player.id %}" class="btn btn-sm btn-info mb-4">
+                            <i class="fa-solid fa-arrow-left"></i> Back to Player
+                        </a>
+                        <h4 class="text-lg font-semibold mb-2">Currency</h4>
+                        <ul class="space-y-2">
+                            <li class="flex items-center p-2 rounded-lg bg-base-100 shadow-md">
+                                <i class="fa-solid fa-coins mr-2"></i> {{ player.sp }} SP
+                            </li>
+                            <li class="flex items-center p-2 rounded-lg bg-base-100 shadow-md">
+                                <i class="fa-regular fa-star-half-stroke mr-2"></i> {{ player.xp }} XP
+                            </li>
+                            <li class="flex items-center p-2 rounded-lg bg-base-100 shadow-md">
+                                <small class="text-sm text-muted mr-2">Total Spent:</small> 
+                                {{ player.sp_spent }} SP, {{ player.xp_spent }} XP
+                            </li>
                         </ul>
-                        <button type="submit" class="mt-2 btn btn-sm btn-dark">Purchase Cart</button>
+                        <button type="submit" class="mt-4 mb-4 btn btn-sm btn-success">Purchase Cart</button>
                     </div>
-                    <!-- Cart column -->
+
+                    {% comment %} Cart column {% endcomment %}
                     <div style="min-height: 300px;" class="col-12" id="cart-table">
                         {{ cart }}
                         {% include 'players/fragments/cart_fragment.html' %}
                     </div>
+
+                    {% comment %} Upgrade Step column {% endcomment %}
                     <div class="col-12">
-                        <h4>Upgrade Step</h4>
-                        <small class="text-muted">Upgrade Step is how much the plus and minus buttons add or subtract.</small>
-                        <div id="upgrade_step_list" class="input-group m-1">
+                        <h4 class="text-lg font-semibold mb-2">Upgrade Step</h4>
+                        <small class="text-sm text-muted">Upgrade Step is how much the plus and minus buttons add or subtract.</small>
+                        <div id="upgrade_step_list" class="input-group m-1 flex gap-2">
                             <div class="form-check m-1">
-                                <input type="radio" name="upgrade-step" class="form-check-input" data-step=1 checked>
-                                <label for="upgrade_step_1">1</label>
+                                <input type="radio" name="upgrade-step" class="form-check-input hidden" id="upgrade_step_1" data-step="1" checked>
+                                <label for="upgrade_step_1" class="btn btn-outline btn-sm w-full py-2">1</label>
                             </div>
                             <div class="form-check m-1">
-                                <input type="radio" name="upgrade-step" class="form-check-input" data-step=2>
-                                <label for="upgrade_step_2">2</label>
+                                <input type="radio" name="upgrade-step" class="form-check-input hidden" id="upgrade_step_2" data-step="2">
+                                <label for="upgrade_step_2" class="btn btn-outline btn-sm w-full py-2">2</label>
                             </div>
                             <div class="form-check m-1">
-                                <input type="radio" name="upgrade-step" class="form-check-input" data-step=3>
-                                <label for="upgrade_step_3">3</label>
+                                <input type="radio" name="upgrade-step" class="form-check-input hidden" id="upgrade_step_3" data-step="3">
+                                <label for="upgrade_step_3" class="btn btn-outline btn-sm w-full py-2">3</label>
                             </div>
                             <div class="form-check m-1">
-                                <input type="radio" name="upgrade-step" class="form-check-input" data-step=4>
-                                <label for="upgrade_step_4">4</label>
+                                <input type="radio" name="upgrade-step" class="form-check-input hidden" id="upgrade_step_4" data-step="4">
+                                <label for="upgrade_step_4" class="btn btn-outline btn-sm w-full py-2">4</label>
                             </div>
                             <div class="form-check m-1">
-                                <input type="radio" name="upgrade-step" class="form-check-input" data-step=5>
-                                <label for="upgrade_step_5">5</label>
+                                <input type="radio" name="upgrade-step" class="form-check-input hidden" id="upgrade_step_5" data-step="5">
+                                <label for="upgrade_step_5" class="btn btn-outline btn-sm w-full py-2">5</label>
                             </div>
                         </div>
-                    </div>
-                    <!-- Attributes column -->
+                    </div>                                     
+                    
+                    {% comment %} Attributes column {% endcomment %}
                     <div class="col-md-6">
-                        <h4>Attributes</h4>
+                        <h4 class="text-lg font-semibold mt-4 mb-4">Attributes</h4>
                         <ul class="list-group">
-                            <!-- Category selectors -->
-                            <div class="input-group m-1">
+
+                            {% comment %} Category selectors {% endcomment %}
+                            <div class="input-group m-1 flex flex-wrap gap-3">
+                                <!-- Show All -->
                                 <div class="form-check m-1">
-                                    <input type="radio" id="show_all_attributes" name="shown_attributes" class="form-check-input" checked>
-                                    <label for="show_all_attributes">Show All</label>
+                                    <input type="radio" id="show_all_attributes" name="shown_attributes" class="form-check-input hidden" checked>
+                                    <label for="show_all_attributes" class="btn btn-outline btn-sm w-full py-2 text-center cursor-pointer">Show All</label>
                                 </div>
+                                <!-- Offense -->
                                 <div class="form-check m-1">
-                                    <input type="radio" id="show_offense_attributes" name="shown_attributes" class="form-check-input">
-                                    <label for="show_offense_attributes">Offense</label>
+                                    <input type="radio" id="show_offense_attributes" name="shown_attributes" class="form-check-input hidden">
+                                    <label for="show_offense_attributes" class="btn btn-outline btn-sm w-full py-2 text-center cursor-pointer">Offense</label>
                                 </div>
+                                <!-- Defense -->
                                 <div class="form-check m-1">
-                                    <input type="radio" id="show_defense_attributes" name="shown_attributes" class="form-check-input">
-                                    <label for="show_defense_attributes">Defense</label>
+                                    <input type="radio" id="show_defense_attributes" name="shown_attributes" class="form-check-input hidden">
+                                    <label for="show_defense_attributes" class="btn btn-outline btn-sm w-full py-2 text-center cursor-pointer">Defense</label>
                                 </div>
+                                <!-- Mental -->
                                 <div class="form-check m-1">
-                                    <input type="radio" id="show_mental_attributes" name="shown_attributes" class="form-check-input">
-                                    <label for="show_mental_attributes">Mental</label>
+                                    <input type="radio" id="show_mental_attributes" name="shown_attributes" class="form-check-input hidden">
+                                    <label for="show_mental_attributes" class="btn btn-outline btn-sm w-full py-2 text-center cursor-pointer">Mental</label>
                                 </div>
                             </div>
-                            <hr>
-                            <!-- Attributes -->
-                            <div id="attribute_list" class="row">
+                            <hr class="mt-5">
+
+                            {% comment %} Attribute fields {% endcomment %}
+                            <div id="attribute_list" class="row mt-5">
                                 {% for field in form %}
                                 {% if field.field.widget.attrs.data_type == 'attribute' %}
                                 <div class="col-lg-6" data-category="{{ field.label|add_attribute_category }}">
                                     <p class="m-1">
-                                        <div style="{{ field.value|add_attribute_color }}" class="badge">
-                                            <div class="value-control d-flex justify-content-center align-items-center">
-                                                <button type="button" class="btn btn-sm attribute-plus" hx-post="{% url 'upgrade_page' player.id %}" hx-trigger="click" hx-target="#cart-table" hx-swap="innerHTML"><i class="fa-solid fa-plus"></i></button>
-                                                {{ field }}
-                                                <button type="button" class="btn btn-sm attribute-minus" hx-post="{% url 'upgrade_page' player.id %}" hx-trigger="click" hx-target="#cart-table" hx-swap="innerHTML"><i class="fa-solid fa-minus"></i></button>
+                                        <div class="badge p-3">
+                                            <div class="value-control flex items-center justify-center space-x-2">
+                                                <!-- Plus Button (left) -->
+                                                <button type="button" style="{{ field.value|add_attribute_color }}" class="btn-sm btn-ghost btn-circle attribute-plus" hx-post="{% url 'upgrade_page' player.id %}" hx-trigger="click" hx-target="#cart-table" hx-swap="innerHTML">
+                                                    <i class="fa-solid fa-plus"></i>
+                                                </button>
+                                        
+                                                <!-- Displaying the number in the center -->
+                                                <div class="flex items-center justify-center">
+                                                    <!-- Ensure the field input is centered -->
+                                                    <div class="flex items-center justify-center">
+                                                        {{ field }}
+                                                    </div>
+                                                </div>
+                                        
+                                                <!-- Minus Button (right) -->
+                                                <button type="button" style="{{ field.value|add_attribute_color }}" class="btn-sm btn-ghost btn-circle attribute-minus" hx-post="{% url 'upgrade_page' player.id %}" hx-trigger="click" hx-target="#cart-table" hx-swap="innerHTML">
+                                                    <i class="fa-solid fa-minus"></i>
+                                                </button>
                                             </div>
                                         </div>
+                                        
                                         {{ field.label }}
                                     </p>
                                 </div>
                                 {% endif %}
                                 {% endfor %}
                             </div>
+
                         </ul>
                     </div>
+
                     <!-- Badges column -->
                     <div class="col-md-6">
-                        <h4>Badges</h4>
+                        <h4 class="text-lg font-semibold mt-4 mb-4">Badges</h4>
                         <ul class="list-group">
                             <!-- Category selectors -->
-                            <div class="input-group m-1">
+                            <div class="input-group m-1 flex flex-wrap gap-3">
                                 <div class="form-check m-1">
-                                    <input type="radio" id="show_all_badges" name="shown_badges" class="form-check-input" checked>
-                                    <label for="show_all_badges">Show All</label>
+                                    <input type="radio" id="show_all_badges" name="shown_badges" class="form-check-input hidden" checked>
+                                    <label for="show_all_badges" class="btn btn-outline btn-sm w-full py-2 text-center cursor-pointer">Show All</label>
                                 </div>
                                 <div class="form-check m-1">
-                                    <input type="radio" id="show_inside_scoring_badges" name="shown_badges" class="form-check-input">
-                                    <label for="show_inside_scoring_badges">Inside Scoring</label>
+                                    <input type="radio" id="show_inside_scoring_badges" name="shown_badges" class="form-check-input hidden">
+                                    <label for="show_inside_scoring_badges" class="btn btn-outline btn-sm w-full py-2 text-center cursor-pointer">Inside Scoring</label>
                                 </div>
                                 <div class="form-check m-1">
-                                    <input type="radio" id="show_outside_scoring_badges" name="shown_badges" class="form-check-input">
-                                    <label for="show_outside_scoring_badges">Outside Scoring</label>
+                                    <input type="radio" id="show_outside_scoring_badges" name="shown_badges" class="form-check-input hidden">
+                                    <label for="show_outside_scoring_badges" class="btn btn-outline btn-sm w-full py-2 text-center cursor-pointer">Outside Scoring</label>
                                 </div>
                                 <div class="form-check m-1">
-                                    <input type="radio" id="show_playmaking_badges" name="shown_badges" class="form-check-input">
-                                    <label for="show_playmaking_badges">Playmaking</label>
+                                    <input type="radio" id="show_playmaking_badges" name="shown_badges" class="form-check-input hidden">
+                                    <label for="show_playmaking_badges" class="btn btn-outline btn-sm w-full py-2 text-center cursor-pointer">Playmaking</label>
                                 </div>
                                 <div class="form-check m-1">
-                                    <input type="radio" id="show_defense_badges" name="shown_badges" class="form-check-input">
-                                    <label for="show_defense_badges">Defensive</label>
+                                    <input type="radio" id="show_defense_badges" name="shown_badges" class="form-check-input hidden">
+                                    <label for="show_defense_badges" class="btn btn-outline btn-sm w-full py-2 text-center cursor-pointer">Defensive</label>
                                 </div>
                                 <div class="form-check m-1">
-                                    <input type="radio" id="show_athleticism_badges" name="shown_badges" class="form-check-input">
-                                    <label for="show_athleticism_badges">Athleticism</label>
+                                    <input type="radio" id="show_athleticism_badges" name="shown_badges" class="form-check-input hidden">
+                                    <label for="show_athleticism_badges" class="btn btn-outline btn-sm w-full py-2 text-center cursor-pointer">Athleticism</label>
                                 </div>
                                 <div class="form-check m-1">
-                                    <input type="radio" id="show_rebounding_badges" name="shown_badges" class="form-check-input">
-                                    <label for="show_rebounding_badges">Rebouding</label>
+                                    <input type="radio" id="show_rebounding_badges" name="shown_badges" class="form-check-input hidden">
+                                    <label for="show_rebounding_badges" class="btn btn-outline btn-sm w-full py-2 text-center cursor-pointer">Rebounding</label>
                                 </div>
                             </div>
-                            <hr>
+                            <hr class="mt-5">
+
                             <!-- Badges -->
-                            <div id="badge_list" class="row" >
+                            <div id="badge_list" class="row mt-5">
                                 {% for field in form %}
                                 {% if field.field.widget.attrs.data_type == 'badge' %}
                                 <div class="col-lg-6" data-category="{{ field.label|add_badge_category }}">
                                     <p class="m-1">
-                                        <div style="{{ field.value|add_badge_color }}" class="badge">
-                                            <div class="value-control d-flex justify-content-center align-items-center">
-                                                <button type="button" class="btn btn-sm badge-plus" hx-post="{% url 'upgrade_page' player.id %}" hx-trigger="click" hx-target="#cart-table" hx-swap="innerHTML"><i class="fa-solid fa-plus"></i></button>
-                                                {{ field }}
-                                                <button type="button" class="btn btn-sm badge-minus" hx-post="{% url 'upgrade_page' player.id %}" hx-trigger="click" hx-target="#cart-table" hx-swap="innerHTML"><i class="fa-solid fa-minus"></i></button>
+                                        <div class="badge p-3">
+                                            <div class="value-control flex items-center justify-center space-x-2">
+                                                <!-- Plus Button (left) -->
+                                                <button type="button" style="{{ field.value|add_badge_color }}" class="btn btn-sm btn-solid badge-plus" hx-post="{% url 'upgrade_page' player.id %}" hx-trigger="click" hx-target="#cart-table" hx-swap="innerHTML">
+                                                    <i class="fa-solid fa-plus"></i>
+                                                </button>
+                                            
+                                                <!-- Displaying the number in the center -->
+                                                <div class="flex items-center justify-center">
+                                                    <div class="flex items-center justify-center">
+                                                        {{ field }}
+                                                    </div>
+                                                </div>
+                                            
+                                                <!-- Minus Button (right) -->
+                                                <button type="button" style="{{ field.value|add_badge_color }}" class="btn btn-sm btn-solid badge-minus" hx-post="{% url 'upgrade_page' player.id %}" hx-trigger="click" hx-target="#cart-table" hx-swap="innerHTML">
+                                                    <i class="fa-solid fa-minus"></i>
+                                                </button>
                                             </div>
                                         </div>
                                         {{ field.label }}
@@ -189,75 +233,111 @@
                             </div>
                         </ul>
                     </div>
+
                     <!-- Tendencies column -->
-                     <div class="col-12">
-                        <h4>Tendencies</h4>
+                    <div class="col-md-6">
+                        <h4 class="text-lg font-semibold mt-4 mb-4">Tendencies</h4>
                         <ul class="list-group">
-                            <div class="input-group m-1">
+
+                            <!-- Category selectors -->
+                            <div class="input-group m-1 flex flex-wrap gap-3">
+                                <!-- Show All -->
                                 <div class="form-check m-1">
-                                    <input type="radio" id="show_all_tendencies" name="shown_tendencies" class="form-check-input" checked>
-                                    <label for="show_all_tendencies">Show All</label>
+                                    <input type="radio" id="show_all_tendencies" name="shown_tendencies" class="form-check-input hidden" checked>
+                                    <label for="show_all_tendencies" class="btn btn-outline btn-sm w-full py-2 text-center cursor-pointer">Show All</label>
                                 </div>
+                                <!-- Jump Shooting -->
                                 <div class="form-check m-1">
-                                    <input type="radio" id="show_jumpshooting_tendencies" name="shown_tendencies" class="form-check-input">
-                                    <label for="show_jumpshooting_tendencies">Jump Shooting</label>
+                                    <input type="radio" id="show_jumpshooting_tendencies" name="shown_tendencies" class="form-check-input hidden">
+                                    <label for="show_jumpshooting_tendencies" class="btn btn-outline btn-sm w-full py-2 text-center cursor-pointer">Jump Shooting</label>
                                 </div>
+                                <!-- Layups & Dunks -->
                                 <div class="form-check m-1">
-                                    <input type="radio" id="show_layupdunk_tendencies" name="shown_tendencies" class="form-check-input">
-                                    <label for="show_layupdunk_tendencies">Layups & Dunks</label>
+                                    <input type="radio" id="show_layupdunk_tendencies" name="shown_tendencies" class="form-check-input hidden">
+                                    <label for="show_layupdunk_tendencies" class="btn btn-outline btn-sm w-full py-2 text-center cursor-pointer">Layups & Dunks</label>
                                 </div>
+                                <!-- Drive Setup -->
                                 <div class="form-check m-1">
-                                    <input type="radio" id="show_drivesetup_tendencies" name="shown_tendencies" class="form-check-input">
-                                    <label for="show_drivesetup_tendencies">Drive Setup</label>
+                                    <input type="radio" id="show_drivesetup_tendencies" name="shown_tendencies" class="form-check-input hidden">
+                                    <label for="show_drivesetup_tendencies" class="btn btn-outline btn-sm w-full py-2 text-center cursor-pointer">Drive Setup</label>
                                 </div>
+                                <!-- Driving -->
                                 <div class="form-check m-1">
-                                    <input type="radio" id="show_driving_tendencies" name="shown_tendencies" class="form-check-input">
-                                    <label for="show_driving_tendencies">Driving</label>
+                                    <input type="radio" id="show_driving_tendencies" name="shown_tendencies" class="form-check-input hidden">
+                                    <label for="show_driving_tendencies" class="btn btn-outline btn-sm w-full py-2 text-center cursor-pointer">Driving</label>
                                 </div>
+                                <!-- Passing -->
                                 <div class="form-check m-1">
-                                    <input type="radio" id="show_passing_tendencies" name="shown_tendencies" class="form-check-input">
-                                    <label for="show_passing_tendencies">Passing</label>
+                                    <input type="radio" id="show_passing_tendencies" name="shown_tendencies" class="form-check-input hidden">
+                                    <label for="show_passing_tendencies" class="btn btn-outline btn-sm w-full py-2 text-center cursor-pointer">Passing</label>
                                 </div>
+                                <!-- Post Game -->
                                 <div class="form-check m-1">
-                                    <input type="radio" id="show_postgame_tendencies" name="shown_tendencies" class="form-check-input">
-                                    <label for="show_postgame_tendencies">Post Game</label>
+                                    <input type="radio" id="show_postgame_tendencies" name="shown_tendencies" class="form-check-input hidden">
+                                    <label for="show_postgame_tendencies" class="btn btn-outline btn-sm w-full py-2 text-center cursor-pointer">Post Game</label>
                                 </div>
+                                <!-- Freelance -->
                                 <div class="form-check m-1">
-                                    <input type="radio" id="show_freelance_tendencies" name="shown_tendencies" class="form-check-input">
-                                    <label for="show_freelance_tendencies">Freelance</label>
+                                    <input type="radio" id="show_freelance_tendencies" name="shown_tendencies" class="form-check-input hidden">
+                                    <label for="show_freelance_tendencies" class="btn btn-outline btn-sm w-full py-2 text-center cursor-pointer">Freelance</label>
                                 </div>
+                                <!-- Defense -->
                                 <div class="form-check m-1">
-                                    <input type="radio" id="show_defense_tendencies" name="shown_tendencies" class="form-check-input">
-                                    <label for="show_defense_tendencies">Defense</label>
+                                    <input type="radio" id="show_defense_tendencies" name="shown_tendencies" class="form-check-input hidden">
+                                    <label for="show_defense_tendencies" class="btn btn-outline btn-sm w-full py-2 text-center cursor-pointer">Defense</label>
                                 </div>
                             </div>
-                            <hr>
-                        </ul>
-                        <!-- Tendencies -->
-                        <div id="tendency_list" class="row" >
-                            {% for field in form %}
-                            {% if field.field.widget.attrs.data_type == 'tendency' %}
-                            <div class="col-lg-6" data-category="{{ field.label|add_tendency_category }}">
-                                <p class="m-1">
-                                    <div style="{{ field.value|add_attribute_color }}" class="badge">
-                                        <div class="value-control d-flex justify-content-center align-items-center">
-                                            <button type="button" class="btn btn-sm tendency-plus" hx-post="{% url 'upgrade_page' player.id %}" hx-trigger="click" hx-target="#cart-table" hx-swap="innerHTML"><i class="fa-solid fa-plus"></i></button>
-                                            {{ field }}
-                                            <button type="button" class="btn btn-sm tendency-minus" hx-post="{% url 'upgrade_page' player.id %}" hx-trigger="click" hx-target="#cart-table" hx-swap="innerHTML"><i class="fa-solid fa-minus"></i></button>
+                            <hr class="mt-5">
+
+                            <!-- Tendencies fields -->
+                            <div id="tendency_list" class="row mt-5">
+                                {% for field in form %}
+                                {% if field.field.widget.attrs.data_type == 'tendency' %}
+                                <div class="col-lg-6" data-category="{{ field.label|add_tendency_category }}">
+                                    <p class="m-1">
+                                        <div class="badge p-3">
+                                            <div class="value-control flex items-center justify-center space-x-2">
+                                                <!-- Plus Button (left) -->
+                                                <button type="button" style="{{ field.value|add_attribute_color }}" class="btn-sm btn-ghost btn-circle tendency-plus" hx-post="{% url 'upgrade_page' player.id %}" hx-trigger="click" hx-target="#cart-table" hx-swap="innerHTML">
+                                                    <i class="fa-solid fa-plus"></i>
+                                                </button>
+                                            
+                                                <!-- Displaying the number in the center -->
+                                                <div class="flex items-center justify-center">
+                                                    <div class="flex items-center justify-center">
+                                                        {{ field }}
+                                                    </div>
+                                                </div>
+                                            
+                                                <!-- Minus Button (right) -->
+                                                <button type="button" style="{{ field.value|add_attribute_color }}" class="btn-sm btn-ghost btn-circle tendency-minus" hx-post="{% url 'upgrade_page' player.id %}" hx-trigger="click" hx-target="#cart-table" hx-swap="innerHTML">
+                                                    <i class="fa-solid fa-minus"></i>
+                                                </button>
+                                            </div>
                                         </div>
-                                    </div>
-                                    {{ field.label }}
-                                </p>
+                                        {{ field.label }}
+                                    </p>
+                                </div>
+                                {% endif %}
+                                {% endfor %}
                             </div>
-                            {% endif %}
-                            {% endfor %}
-                        </div>
-                     </div>
-                <form>
+                        </ul>
+                    </div>
+
+                </form>
             </div>
         </div>
     </div>
-</div>
+
+
+
+
+{% else %}
+    <div class="text-center">
+        <h1 class="text-4xl font-bold animate-pulse bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 bg-clip-text text-transparent">Under Construction</h1>
+        <p class="text-lg">We're working on some database issues. Please be patient as we work to resolve them.</p>
+    </div>
+{% endif %}
 {% endblock %}
 
 {% block scripts %}
@@ -270,6 +350,28 @@
         badges: player_badges,
         tendencies: player_tendencies,
     }
+
+    // Select all radio buttons by their name
+    document.querySelectorAll('[name="upgrade-step"]').forEach(input => {
+        const label = document.querySelector(`label[for=${input.id}]`);
+        
+        // When the label is clicked, trigger the radio button change
+        label.addEventListener('click', function() {
+            input.checked = true;  // Select the radio button
+            // Trigger the change event manually
+            input.dispatchEvent(new Event('change'));
+
+            // Highlight the selected label by adding active classes
+            document.querySelectorAll('[name="upgrade-step"]').forEach(radio => {
+                const radioLabel = document.querySelector(`label[for=${radio.id}]`);
+                radioLabel.classList.remove('btn-primary', 'text-white', 'bg-primary');
+            });
+
+            // Add active state to the clicked label
+            label.classList.add('text-white', 'bg-primary');
+        });
+    });
+
 </script>
 <script src="{% static 'js/players/filter_data.js' %}" type="text/javascript"></script>
 <script src="{% static 'js/players/upg_utils.js' %}" type="text/javascript"></script>

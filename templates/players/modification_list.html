@@ -6,31 +6,35 @@
 {% block styles %}
 <style>
     input::placeholder {
-        color: gray!important;
+        color: gray !important;
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid p-md-5">
-    <h1>Modification List</h1>
-    <!-- <div class="alert alert-info" role="alert">
-        <i class="fa-solid fa-circle-info"></i> You have <strong>{{ player.xp }}</strong> XP.
-    </div> -->
+<div class="p-6 md:p-12">
+    <h1 class="text-3xl font-bold text-neutral-content mb-4">Modification List</h1>
+    
     <form>
         {% csrf_token %}
+        
         <span id="status"></span>
+        
+        <!-- Player Selection Dropdown -->
         <span>
-            <select class="bg-dark form-select" name="mod-player" id="mod-player" required>
+            <select class="select w-full max-w-xs text-neutral-content" name="mod-player" id="mod-player" required>
                 {% for player in players %}
-                    <option value="{{ player.id }}" {% if forloop.first %}selected{% endif %}>{{ player.first_name }} {{ player.last_name }}</option>
+                    <option value="{{ player.id }}" {% if forloop.first %}selected{% endif %}>
+                        [{{ player.xp }} XP] {{ player.first_name }} {{ player.last_name }}
+                    </option>
                 {% endfor %}
             </select>
         </span>
-        <div id="search-table" class="mt-4">
+        
+        <!-- Modification List -->
+        <div id="search-table" class="mt-6">
             {% include 'players/fragments/modlist_fragment.html' %}
         </div>
     </form>
 </div>
-
 {% endblock %}

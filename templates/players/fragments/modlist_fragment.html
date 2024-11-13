@@ -1,9 +1,8 @@
 {% if players %}
-    <div class="table-responsive">
-        <table class="table table-dark table-striped">
+    <div class="overflow-x-auto">
+        <table class="table w-full text-neutral-content">
             <thead>
                 <tr>
-                    <!-- Modification, XP Price, Expires -->
                     <th><i class="fa-solid fa-star"></i> Purchase</th>
                     <th><i class="fa-solid fa-gear"></i> Modification</th>
                     <th><i class="fa-solid fa-clock"></i> Multi Buy</th>
@@ -11,26 +10,43 @@
                     <th><i class="fa-solid fa-star"></i> w/ Discount</th>
                 </tr>
             </thead>
-            <tbody class="table table-dark table-hover">
+            <tbody>
                 <form>
                     {% csrf_token %}
                     {% for mod in modifications %}
                         <tr>
-                            <td><button type="button" class="btn btn-sm btn-success" data-bs-toggle="collapse" data-bs-target="#purchase-{{ mod.id }}" aria-expanded="false" aria-controls="purchase-{{ mod.id }}">Purchase</button></td>
+                            <td>
+                                <label for="modal-{{ mod.id }}" class="btn btn-sm bg-success text-white cursor-pointer">
+                                    Purchase
+                                </label>
+                            </td>
                             <td>{{ mod.item }}</td>
                             <td>{{ mod.multi_buy }}</td>
                             <td>{{ mod.xp_price }}</td>
                             <td>{{ mod.xp_price_with_discount }}</td>
                         </tr>
-                        <!-- Let's make a hidden row that contains the submit button -->
-                        <tr class="collapse" id="purchase-{{ mod.id }}">
-                            <td colspan="4">
-                                <button type="button" class="btn btn-sm btn-info" data-bs-dismiss="modal" hx-post="{% url 'purchase_modification' mod.id %}" hx-trigger="click throttle:5s" hx-target="#status" hx-swap="innerHTML">Confirm</button>
-                            </td>
-                        </tr>
+
+                        <!-- Modal -->
+                        <input type="checkbox" id="modal-{{ mod.id }}" class="modal-toggle">
+                        <div class="modal">
+                            <div class="modal-box">
+                                <h3 class="font-bold text-lg">Confirm Purchase</h3>
+                                <p class="py-4">Are you sure you want to purchase "{{ mod.item }}"?</p>
+                                <div class="modal-action">
+                                    <label for="modal-{{ mod.id }}" class="btn btn-error text-white">Cancel</label>
+                                    <button type="button" class="btn btn-info text-white"
+                                            hx-post="{% url 'purchase_modification' mod.id %}" 
+                                            hx-trigger="click throttle:5s" 
+                                            hx-target="#status" 
+                                            hx-swap="innerHTML">
+                                        Confirm
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     {% endfor %}
                 </form>
             </tbody>
-        </div>
+        </table>
     </div>
 {% endif %}

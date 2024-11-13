@@ -8,6 +8,7 @@ from django.shortcuts import redirect
 import simulation.config as config
 import simulation.scripts.attribute as attribute
 import simulation.scripts.badge as badge
+import simulation.scripts.tendency as tendency
 from players.models import Player
 
 
@@ -48,7 +49,7 @@ class PlayerForm(forms.ModelForm):
             "college": forms.Select(attrs={"class": "form-control"}),
         }
 
-
+# Form for upgrading a player
 class UpgradeForm(forms.Form):
     def __init__(self, *args, **kwargs):
 
@@ -63,8 +64,12 @@ class UpgradeForm(forms.Form):
 
         # fmt: off
         if player:
+            # Sort the player's attributes, badges, and tendencies
+            ordered_attributes = attribute.order_attributes(player.attributes, combine=True)
+            ordered_badges = badge.order_badges(player.badges, combine=True)
+            ordered_tendencies = tendency.order_tendencies(player.tendencies, combine=True)
             # Add attribute fields to the form
-            for key, value in player.attributes.items():
+            for key, value in ordered_attributes.items():
                 if not key in banned["attributes"]:
                     self.fields[key] = forms.IntegerField(
                         label=key,
@@ -81,7 +86,7 @@ class UpgradeForm(forms.Form):
                         ),
                     )
             # Add badge fields to the form
-            for key, value in player.badges.items():
+            for key, value in ordered_badges.items():
                 # Filter out lower badge levels
                 badge_labels = config.CONFIG_PLAYER["BADGE_LABELS"]
                 filtered_choices = [(value, badge_labels[value])]
@@ -104,7 +109,7 @@ class UpgradeForm(forms.Form):
                     ),
                 )
             # Add tendency choices to the field
-            for key, value in player.tendencies.items():
+            for key, value in ordered_tendencies.items():
                 if not key in banned["tendencies"]:
                     self.fields[key] = forms.IntegerField(
                         label=key,

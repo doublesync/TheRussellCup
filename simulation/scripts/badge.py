@@ -135,7 +135,7 @@ def check_badge_price(start_level, end_level):
 def eligible_for_badge(player, badge, badge_level):
     return True
 
-def order_badges(badges):
+def order_badges(badges, combine=False):
     # Order the badges by their categories
     ordered_badges = {}
     for category in badge_categories:
@@ -143,4 +143,12 @@ def order_badges(badges):
         for badge in badge_categories[category]:
             if badge in badges:
                 ordered_badges[category][badge] = badges[badge]
+    # Combine the categories if necessary
+    if combine:
+        combined_badges = {}
+        for category in ordered_badges:
+            for badge in ordered_badges[category]:
+                combined_badges[badge] = ordered_badges[category][badge]
+        ordered_badges = combined_badges
+    # Return the ordered badges
     return ordered_badges

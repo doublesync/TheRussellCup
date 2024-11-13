@@ -125,7 +125,7 @@ def check_tendency_price(start_level, end_level):
 
 import json
 
-def order_tendencies(tendencies):
+def order_tendencies(tendencies, combine=False):
     # Order the tendencies by their categories
     ordered_tendencies = {}
     for category in tendency_categories:
@@ -133,4 +133,12 @@ def order_tendencies(tendencies):
         for tendency in tendency_categories[category]:
             if tendency in tendencies:
                 ordered_tendencies[category][tendency] = tendencies[tendency]
+    # Combine the categories if necessary
+    if combine:
+        combined_tendencies = {}
+        for category in ordered_tendencies:
+            for tendency in ordered_tendencies[category]:
+                combined_tendencies[tendency] = ordered_tendencies[category][tendency]
+        ordered_tendencies = combined_tendencies
+    # Return the ordered tendencies
     return ordered_tendencies

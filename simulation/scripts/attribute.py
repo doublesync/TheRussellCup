@@ -97,7 +97,7 @@ def check_attribute_price(attribute, start_level, end_level):
     # Return the total upgrade cost
     return cost
 
-def order_attributes(attributes):
+def order_attributes(attributes, combine=False):
     # Order the attributes by their categories
     ordered_attributes = {}
     for category in attribute_categories:
@@ -105,4 +105,12 @@ def order_attributes(attributes):
         for attribute in attribute_categories[category]:
             if attribute in attributes:
                 ordered_attributes[category][attribute] = attributes[attribute]
+    # Combine the categories if necessary
+    if combine:
+        combined_attributes = {}
+        for category in ordered_attributes:
+            for attribute in ordered_attributes[category]:
+                combined_attributes[attribute] = ordered_attributes[category][attribute]
+        ordered_attributes = combined_attributes
+    # Return the ordered attributes
     return ordered_attributes

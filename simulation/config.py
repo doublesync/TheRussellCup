@@ -1,6 +1,6 @@
 # User configuration
 CONFIG_USER = {
-    "MAX_PLAYERS": 100,
+    "MAX_PLAYERS": 1,
     "CARE_PACKAGE_MOD_DISCOUNT": 0.25,
 }
 

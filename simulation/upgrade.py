@@ -104,11 +104,9 @@ class UpgradeCreator:
         # Check if user can afford the upgrades
         if validate:
             if self.player.sp < self.cart["total_sp"]:
-                return [True, "Pushed through for database population."]
-                # return [False, "You do not have enough SP to afford these upgrades."]
+                return [False, "You do not have enough SP to afford these upgrades."]
             if self.player.xp < self.cart["total_xp"]:
-                return [True, "Pushed through for database population."]
-                # return [False, "You do not have enough XP to afford these upgrades."]
+                return [False, "You do not have enough XP to afford these upgrades."]
         # Return a success message
         return [True, self.cart]
 
@@ -159,8 +157,8 @@ class UpgradeCreator:
             for t, data in self.cart["tendencies"].items():
                 self.player.tendencies[t] = data["new"]
             # Apply the price to the user
-            # self.player.sp -= self.cart["total_sp"]
-            # self.player.xp -= self.cart["total_xp"]
+            self.player.sp -= self.cart["total_sp"]
+            self.player.xp -= self.cart["total_xp"]
             self.player.sp_spent += self.cart["total_sp"]
             self.player.xp_spent += self.cart["total_xp"]
             self.player.save()

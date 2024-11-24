@@ -99,8 +99,8 @@ class UpgradeCreator:
         new_sp_spent = (self.player_sp_spent + self.cart["total_sp"])
         upgrade_surcharge = frivolity.get_sp_surcharge(new_sp_spent)
         rounded_surcharge = round(self.cart["total_sp"] * upgrade_surcharge)
-        self.cart["total_sp_surcharge"] = 0 # rounded_surcharge
-        self.cart["total_sp"] += 0 # rounded_surcharge
+        self.cart["total_sp_surcharge"] = rounded_surcharge
+        self.cart["total_sp"] += rounded_surcharge
         # Check if user can afford the upgrades
         if validate:
             if self.player.sp < self.cart["total_sp"]:

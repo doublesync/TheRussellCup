@@ -20,6 +20,10 @@ class ChoiceFieldNoValidation(models.CharField):
 # Create your models here.
 class Player(models.Model):
 
+    # Foreign key fields
+    user = models.ForeignKey("accounts.CustomUser", on_delete=models.CASCADE, related_name="players", null=True, blank=True)
+    team = models.ForeignKey("teams.Team", on_delete=models.CASCADE, null=True, blank=True)
+    contract = models.ForeignKey("logs.ContractLog", on_delete=models.CASCADE, null=True, blank=True, related_name="contract")
     # User defined fields
     first_name = models.CharField(max_length=16)
     last_name = models.CharField(max_length=16)
@@ -57,10 +61,6 @@ class Player(models.Model):
     coach_suggestion_badges = models.JSONField(default=dict, null=True, blank=True)
     coach_suggestion_tendencies = models.JSONField(default=dict, null=True, blank=True)
     sim_rating = models.FloatField(default=0.00)
-    # Foreign key fields
-    user = models.ForeignKey("accounts.CustomUser", on_delete=models.CASCADE, null=True, blank=True)
-    team = models.ForeignKey("teams.Team", on_delete=models.CASCADE, null=True, blank=True)
-    contract = models.ForeignKey("logs.ContractLog", on_delete=models.CASCADE, null=True, blank=True, related_name="contract")
     # Timestamp fields
     created = models.DateTimeField(auto_now_add=True)
     # Miscanellous fields

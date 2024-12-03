@@ -68,6 +68,7 @@ INSTALLED_APPS = [
     "debug_toolbar",
     "django_extensions",
     "django_table_sort",
+    "widget_tweaks",
     # Local
     "accounts",
     "pages",

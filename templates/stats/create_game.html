@@ -1,126 +1,152 @@
 {% extends '_base.html' %}
 {% load static %}
+{% load widget_tweaks %}
 
 {% block title %}Create Game{% endblock %}
 
-{% block navbar %}
-    {% include 'stats/fragments/stats_navbar.html' %}
-{% endblock %}
-
 {% block content %}
-<h1>Create Game</h1><hr>
-<form>
-    {% csrf_token %}
+<div class="container mx-auto py-8">
+    <h1 class="text-3xl font-bold text-center mb-6">Input Game Stats</h1>
 
-    <!-- Game details -->
-    <div class="form-group">
-        <h2 class="mb-4 mt-4">Game Details</h2>
-        <label for="game_week">What week was this game?</label>
-        <select class="form-control js-multiple-select" id="game_week" name="game_week">
-            <option value="1">Week 1</option>
-            <option value="2">Week 2</option>
-            <option value="3">Week 3</option>
-            <option value="4">Week 4</option>
-            <option value="5">Week 5</option>
-            <option value="6">Week 6</option>
-            <option value="7">Week 7</option>
-            <option value="8">Week 8</option>
-            <option value="9">Week 9</option>
-            <option value="10">Week 10</option>
-            <option value="11">Week 11</option>
-            <option value="12">Week 12</option>
-            <option value="13">Week 13</option>
-            <option value="14">Week 14</option>
-            <option value="15">Week 15</option>
-            <option value="16">Week 16</option>
-            <option value="17">Week 17</option>
-            <option value="18">Week 18</option>
-        </select>
-        <label for="game_type">What type of game was this?</label>
-        <select class="form-control js-multiple-select" id="game_type" name="game_type">
-            <option value="regular">Regular</option>
-            <option value="playoff">Playoff</option>
-        </select>
-        <label for="surge_game">Was this a Surge game?</label>
-        <select class="form-control js-multiple-select" id="surge_game" name="surge_game">
-            <option value="1">Yes</option>
-            <option value="0">No</option>
-        </select>
-    </div>
+    <form method="post" class="space-y-8">
+        {% csrf_token %}
 
-    <!-- Team details -->
-    <div class="form-group">
-        <h2 class="mb-4 mt-4">Team Details</h2>
-        <label for="home_team">Home Team</label>
-        <select class="form-control js-multiple-select" id="home_team" name="home_team">
-            {% for team in teams %}
-                <option value="{{ team.id }}">{{ team.city }} {{ team.name }}</option>
-            {% endfor %}
-        </select>
-        <label for="away_team">Away Team</label>
-        <select class="form-control js-multiple-select" id="away_team" name="away_team">
-            {% for team in teams %}
-                <option value="{{ team.id }}">{{ team.city }} {{ team.name }}</option>
-            {% endfor %}
-        </select>
-    </div>
-
-    <!-- Player Details -->
-    <div class="form-group">
-        <h2 class="mb-4 mt-4">Player Details</h2>
-        <!-- Player selectors -->
-        <div class="row">
-            <h3>Home Team</h3>
-            <div class="col-12" id="home-player-1">
-                <select class="form-control js-multiple-select" id="home_player_1" name="home_player_1">
-                    {% for player in players %}
-                        <option value="{{ player.id }}">{{ player.first_name }} {{ player.last_name }}</option>
+        {% comment %} Game week selector & surge game toggle (true/false) {% endcomment %}
+        <div class="grid grid-cols-2 gap-4">
+            {% comment %} Game week selector {% endcomment %}
+            <div class="col-span-2">
+                <label for="game_week" class="block text-lg font-medium mb-2">Game Week</label>
+                <select name="game_week" id="game_week" class="select select-bordered w-full">
+                    <option value="1">Week 1</option>
+                    <option value="2">Week 2</option>
+                    <option value="3">Week 3</option>
+                    <option value="4">Week 4</option>
+                    <option value="5">Week 5</option>
+                    <option value="6">Week 6</option>
+                    <option value="7">Week 7</option>
+                    <option value="8">Week 8</option>
+                    <option value="9">Week 9</option>
+                    <option value="10">Week 10</option>
+                    <option value="11">Week 11</option>
+                    <option value="12">Week 12</option>
+                    <option value="13">Week 13</option>
+                    <option value="14">Week 14</option>
+                    <option value="15">Week 15</option>
+                    <option value="16">Week 16</option>
+                    <option value="17">Week 17</option>
+                    <option value="18">Week 18</option>
+                </select>
+            </div>
+            {% comment %} Surge game selector {% endcomment %}
+            <div>
+                <label for="surge_game" class="block text-lg font-medium mb-2">Surge Game</label>
+                <select name="surge_game" id="surge_game" class="select select-bordered w-full">
+                    <option value="True">Yes</option>
+                    <option value="False" selected>No</option>
+                </select>
+            </div>
+            {% comment %} Playoff game selector {% endcomment %}
+            <div>
+                <label for="playoff_game" class="block text-lg font-medium mb-2">Playoff Game</label>
+                <select name="playoff_game" id="playoff_game" class="select select-bordered w-full">
+                    <option value="True">Yes</option>
+                    <option value="False" selected>No</option>
+                </select>
+            </div>
+            {% comment %} Home team selector {% endcomment %}
+            <div>
+                <label for="home_team" class="block text-lg font-medium mb-2">Home Team</label>
+                <select 
+                    id="home_team" 
+                    name="home_team" 
+                    class="select select-bordered w-full" 
+                    hx-get="{% url 'htmx_fetch_roster' %}" 
+                    hx-target="#player_stats"
+                    hx-trigger="change"
+                    hx-swap="innerHTML"
+                    hx-include="#away_team">
+                    <option value="">Select Team</option>
+                    {% for team in teams %}
+                    <option value="{{ team.id }}">{{ team.city }} {{ team.name }}</option>
                     {% endfor %}
                 </select>
             </div>
-            <div class="col-12" id="home-player-2">
-                <select class="form-control js-multiple-select" id="home_player_2" name="home_player_2">
-                    {% for player in players %}
-                        <option value="{{ player.id }}">{{ player.first_name }} {{ player.last_name }}</option>
+            {% comment %} Away team selector {% endcomment %}
+            <div>
+                <label for="away_team" class="block text-lg font-medium mb-2">Away Team</label>
+                <select 
+                    id="away_team" 
+                    name="away_team" 
+                    class="select select-bordered w-full"
+                    hx-get="{% url 'htmx_fetch_roster' %}" 
+                    hx-target="#player_stats"
+                    hx-trigger="change"
+                    hx-swap="innerHTML"
+                    hx-include="#home_team">
+                    <option value="">Select Team</option>
+                    {% for team in teams %}
+                    <option value="{{ team.id }}">{{ team.city }} {{ team.name }}</option>
                     {% endfor %}
                 </select>
             </div>
-            <div class="col-12" id="home-player-3">
-                <select class="form-control js-multiple-select" id="home_player_3" name="home_player_3">
-                    {% for player in players %}
-                        <option value="{{ player.id }}">{{ player.first_name }} {{ player.last_name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="col-12" id="home-player-4">
-                <select class="form-control js-multiple-select" id="home_player_4" name="home_player_4">
-                    {% for player in players %}
-                        <option value="{{ player.id }}">{{ player.first_name }} {{ player.last_name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="col-12" id="home-player-5">
-                <select class="form-control js-multiple-select" id="home_player_5" name="home_player_5">
-                    {% for player in players %}
-                        <option value="{{ player.id }}">{{ player.first_name }} {{ player.last_name }}</option>
-                    {% endfor %}
-                </select>
+            {% comment %} Player statistics tables {% endcomment %}
+            <div id="player_stats" class="col-span-2">
+                <div>
+                    {% if home_players and away_players %}
+                        {% include 'stats/fragments/players_table.html' %}
+                    {% else %}
+                        <p class="text-center text-lg font-semibold alert alert-secondary">
+                            Select teams to view player stats
+                        </p>
+                    {% endif %}
+                </div>
             </div>
         </div>
-    </div>
 
-</form>
-{% endblock %}
+        <!-- Filter Button to Open Modal -->
+        <div class="flex justify-center">
+            <button type="button" class="btn btn-success btn-outline" onclick="document.getElementById('gameModal').classList.add('modal-open')">
+                <i class="fas fa-filter"></i> Finish Game
+            </button>
+        </div>
 
-{% block scripts %}
-{% include 'stafftools/fragments/select2_scripts.html' %}
+        <!-- Filter Modal -->
+        <div id="gameModal" class="modal">
+            <div class="modal-box w-full max-w-lg">
+                <!-- Modal Header -->
+                <div class="modal-header flex justify-between items-center pb-4 border-b border-gray-200">
+                    <h3 class="font-bold text-lg">Submit Game</h3>
+                    <button type="button" onclick="document.getElementById('gameModal').classList.remove('modal-open')" class="btn btn-sm btn-circle btn-ghost">
+                        ✕
+                    </button>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="modal-action">
+                    <button type="submit" class="btn btn-success btn-outline">
+                        <i class="fas fa-check"></i>
+                        Submit
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+    </form>
+</div>
 {% endblock %}
 
 {% block styles %}
+{% comment %} remove spinner from inputs {% endcomment %}
 <style>
-    input::placeholder {
-        color: gray!important;
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    input[type="number"] {
+        -moz-appearance: textfield;
     }
 </style>
-{% include 'stafftools/fragments/select2_styles.html' %}
 {% endblock %}

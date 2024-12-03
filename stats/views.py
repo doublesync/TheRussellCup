@@ -7,15 +7,14 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.shortcuts import render
-from django.views.generic import ListView
 from django.db.models import Q
 
 # Local imports
-import simulation.artificial as artificial
+import simulation.statfinder as statfinder
 from players.models import Player
 from teams.models import Team
 from stats.models import Season, Game, PlayerGameStats, TeamGameStats, PlayerSeasonStats, TeamSeasonStats
-import simulation.statfinder as statfinder
+from stats.forms import GameForm, PlayerGameStatsForm
 
 # Create your views here.
     
@@ -124,7 +123,6 @@ def recent_season_games(request, id):
 # A function that allows a user to create a new game Entree
 def create_game(request):
     context = {
-        "players": Player.objects.all(),
         "teams": Team.objects.all(),
     }
     return render(request, "stats/create_game.html", context)
@@ -214,3 +212,33 @@ def league_stats_api(request):
     ))
     # Return the data
     return JsonResponse({"teams": team_data, "players": player_data}, safe=False)
+
+def htmx_fetch_roster(request):
+    # Get home and away team IDs
+    home_team = request.GET.get("home_team")
+    away_team = request.GET.get("away_team")
+    # Check if both teams exist
+    if not home_team or not away_team or home_team == away_team:
+        return HttpResponse(
+            f"""
+            <p class="text-center text-lg font-semibold alert alert-secondary">
+                Please select two different teams
+            </p>
+            """
+        )
+    # Fetch the team & players
+    home_team = Team.objects.get(pk=home_team)
+    away_team = Team.objects.get(pk=away_team)
+    home_players = Player.objects.filter(team=home_team)
+    away_players = Player.objects.filter(team=away_team)
+    # Render the roster template
+    roster_html = render_to_string(
+        "stats/fragments/players_table.html", 
+        {
+            "home_team": home_team,
+            "away_team": away_team,
+            "home_players": home_players,
+            "away_players": away_players
+        }
+    )
+    return HttpResponse(roster_html)

@@ -151,27 +151,27 @@ class TeamGameStats(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
     points = models.IntegerField(default=0, help_text="Automatically calculated field")
     rebounds = models.IntegerField(default=0, help_text="Automatically calculated field")
-    field_goals_made = models.IntegerField()
-    field_goals_attempted = models.IntegerField()
-    three_pointers_made = models.IntegerField()
-    three_pointers_attempted = models.IntegerField()
-    free_throws_made = models.IntegerField()
-    free_throws_attempted = models.IntegerField()
-    fast_break_points = models.IntegerField()
-    points_in_paint = models.IntegerField()
-    second_chance_points = models.IntegerField()
+    field_goals_made = models.IntegerField(default=0)
+    field_goals_attempted = models.IntegerField(default=0)
+    three_pointers_made = models.IntegerField(default=0)
+    three_pointers_attempted = models.IntegerField(default=0)
+    free_throws_made = models.IntegerField(default=0)
+    free_throws_attempted = models.IntegerField(default=0)
+    fast_break_points = models.IntegerField(default=0)
+    points_in_paint = models.IntegerField(default=0)
+    second_chance_points = models.IntegerField(default=0)
     bench_points = models.IntegerField(default=0)
-    assists = models.IntegerField()
-    offensive_rebounds = models.IntegerField()
-    defensive_rebounds = models.IntegerField()
-    steals = models.IntegerField()
-    blocks = models.IntegerField()
-    turnovers = models.IntegerField()
-    points_off_turnovers = models.IntegerField()
-    personal_fouls = models.IntegerField()
-    dunks = models.IntegerField()
-    biggest_lead = models.IntegerField()
-    time_of_possession = models.DurationField()
+    assists = models.IntegerField(default=0)
+    offensive_rebounds = models.IntegerField(default=0)
+    defensive_rebounds = models.IntegerField(default=0)
+    steals = models.IntegerField(default=0)
+    blocks = models.IntegerField(default=0)
+    turnovers = models.IntegerField(default=0)
+    points_off_turnovers = models.IntegerField(default=0)
+    personal_fouls = models.IntegerField(default=0)
+    dunks = models.IntegerField(default=0)
+    biggest_lead = models.IntegerField(default=0)
+    time_of_possession = models.DurationField(default=0)
     point_differential = models.IntegerField(default=0)
     created = models.DateTimeField(auto_now_add=True)
 
@@ -187,18 +187,15 @@ class TeamGameStats(models.Model):
         }
 
     def save(self, *args, **kwargs):
-        # Prevent non-staff users from saving games that are older than 10 days
-        bypass = kwargs.pop("bypass", False)
-        if bypass or not self.created or self.created > timezone.now() - datetime.timedelta(days=40):
-            # Calculate points, point differential, & rebounds
-            self.points = (self.field_goals_made * 2) + (self.three_pointers_made) + self.free_throws_made
-            self.point_differential = self.get_point_differential()["point_differential"]
-            self.rebounds = (self.defensive_rebounds + self.offensive_rebounds)
-            # Save the season stats model (or create it if it doesn't exist)
-            season_stats, _ = TeamSeasonStats.objects.get_or_create(season=self.game.season, team=self.team)
-            season_stats.save()
-            # Save the model
-            super(TeamGameStats, self).save(*args, **kwargs)
+        # Calculate points, point differential, & rebounds
+        self.points = (self.field_goals_made * 2) + (self.three_pointers_made) + self.free_throws_made
+        self.point_differential = self.get_point_differential()["point_differential"]
+        self.rebounds = (self.defensive_rebounds + self.offensive_rebounds)
+        # Save the season stats model (or create it if it doesn't exist)
+        season_stats, _ = TeamSeasonStats.objects.get_or_create(season=self.game.season, team=self.team)
+        season_stats.save()
+        # Save the model
+        super(TeamGameStats, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name_plural = "Team game stats"

@@ -14,3 +14,4 @@ class CustomUserAdmin(UserAdmin):
     fieldsets = UserAdmin.fieldsets + (
         ('Custom Fields', {'fields': ('can_pay_players', 'can_mark_upgrades', 'has_care_package', 'has_second_player_slot')}),
     )
+    search_fields = ['players__first_name', 'players__last_name', 'username']

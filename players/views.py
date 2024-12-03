@@ -20,7 +20,7 @@ from players.models import Player, Modification
 from players.forms import PlayerForm, UpgradeForm
 from stats.models import Season, PlayerSeasonStats, TeamSeasonStats
 import simulation.statfinder as statfinder
-import simulation.artificial as ai
+# import simulation.artificial as ai
 import simulation.create as create
 import simulation.upgrade as upgrade
 import simulation.modification as modification
@@ -299,6 +299,6 @@ def htmx_upgrade_advice(request, id):
     if player and player.user != request.user:
         return render(request, "500.html", {"reason": "You do not own this player or the player does not exist"})
     # Initialize the prompt
-    response = ai.prompt_upgrade_advice(player)
+    response = "❌ Upgrade advice is currently disabled."
     # Return the response
     return HttpResponse(response)

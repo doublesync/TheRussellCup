@@ -83,7 +83,7 @@ def get_contract_year(player):
 def pay_contracts(user):
 
     # Get the user's players
-    players = user.player_set.all()
+    players = user.players.all()
     current_week = config.CONFIG_SEASON["GAME_WEEK"]
     players_paid = []
     # Loop through the players
@@ -122,7 +122,7 @@ def pay_contracts(user):
 # A method that counts the total salary cap spent for a team
 def get_salary_book(team):
     # Get the team's players
-    players = team.player_set.all()
+    players = team.players.all()
     salary_book = {"total_spent": 0}
     # Loop through the players
     for player in players:

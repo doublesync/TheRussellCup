@@ -122,7 +122,7 @@ def pay_contracts(user):
 # A method that counts the total salary cap spent for a team
 def get_salary_book(team):
     # Get the team's players
-    players = team.players.all()
+    players = team.player__set.all()
     salary_book = {"total_spent": 0}
     # Loop through the players
     for player in players:

@@ -3,7 +3,6 @@ from django.db import models
 
 # Local imports
 import simulation.config as config
-from players.models import Player, Modification
 
 # A model to store the upgrade logs
 class UpgradeLog(models.Model):

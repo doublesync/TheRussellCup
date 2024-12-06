@@ -1,9 +1,13 @@
+# Python imports
+import json
+
 # Django imports
 from django.db import models
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from django.views import View
+from django.utils import timezone as tz
 
 # Local imports
 import simulation.webhook as webhook
@@ -13,6 +17,7 @@ import simulation.scripts.badge as badge
 import simulation.scripts.tendency as tendency
 from logs.models import UpgradeLog, PaymentLog
 from players.models import Player
+from simulation.scripts.utility import compile_player_upgrades
 
 # A function based view that will be used to display all of the logs
 def view_logs(request, id):
@@ -58,6 +63,10 @@ class IncompleteLogs(View):
             return render(request, template_name="500.html", context={"reason": "You do not have permission to view this page."})
         # Get all of the logs that aren't completed
         upgrade_logs = UpgradeLog.objects.filter(complete=False).order_by("player__team")
+        compiled_upgrades = compile_player_upgrades() # for Sync2K
+        # Create a file object that can be downloaded in the template
+
+        # Render the template
         return render(request, template_name="logs/incomplete_logs.html", context={"upgrade_logs": upgrade_logs})
     
 # A function based view that will mark an upgrade as complete
@@ -78,5 +87,16 @@ def mark_upgrade_complete(request, id):
             # Return a response
             return HttpResponse("✅ Upgrade marked as complete.")
         
+
+# A function based view that will download the incomplete logs
+def download_incomplete_logs(request):
+    compiled_upgrades = compile_player_upgrades()
+    json_data = json.dumps(compiled_upgrades, indent=4)  # Beautify for readability
+    response = HttpResponse(json_data, content_type='application/json')
+    # Get the date of today separated by dashes (month and day)
+    now = tz.now().strftime("%H%M%S")
+    response['Content-Disposition'] = f'attachment; filename="{now}.json"'
+    return response
+
 def google_adsense(request):
     return HttpResponse("google.com, pub-4085265783135188, DIRECT, f08c47fec0942fa0")

@@ -36,6 +36,11 @@
               <li>
                   <details open>
                       <summary><i class="fa-solid fa-briefcase"></i>Jobs</summary>
+                      {% if user.is_staff %}                       
+                      <ul>
+                          <li><a href="{% url 'create_game' %}"><i class="fa-solid fa-user-plus"></i> Create Game</a></li>
+                      </ul>
+                      {% endif %}
                       {% if user.can_pay_players %}
                       <ul>
                           <li><a href="{% url 'payment_requests' %}"><i class="fa-solid fa-money-bill"></i> Process Requests</a></li>

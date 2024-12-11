@@ -125,6 +125,8 @@ def recent_season_games(request, id):
 
 # A function that allows a user to create a new game Entree
 def create_game(request):
+    if not request.user.is_staff:
+        return redirect("stats_home")
     context = {
         "teams": Team.objects.all(),
     }
@@ -218,6 +220,7 @@ def league_stats_api(request):
 
 # A function that fetches the roster for a team
 def htmx_fetch_roster(request):
+
     # Get home and away team IDs
     home_team = request.GET.get("home_team")
     away_team = request.GET.get("away_team")
@@ -251,6 +254,9 @@ def htmx_fetch_roster(request):
 # A function that creates a game based on the user's form
 def htmx_confirm_game(request):
     
+    if not request.user.is_staff:
+        return redirect("stats_home")
+
     # Get the form data
     game_week = request.POST.get("game_week")
     surge_game = request.POST.get("surge_game")

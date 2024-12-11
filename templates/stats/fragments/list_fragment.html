@@ -1,6 +1,6 @@
 <div class="overflow-x-auto">
-    <table class="table table-zebra w-full text-sm text-gray-800">
-        <thead class="bg-gray-700 text-white">
+    <table class="table table-zebra w-full text-sm text-white">
+        <thead class="text-white">
             <tr>
                 <th class="p-2 text-center">NAME</th>
                 <th class="p-2 text-center">T/GP</th>
@@ -32,7 +32,7 @@
                 <th class="p-2 text-center">A/TOV%</th>
             </tr>
         </thead>
-        <tbody class="bg-gray-100 hover:bg-gray-200">
+        <tbody>
             {% for season_stats in page_obj %}
                 <tr>
                     <td class="p-2 text-center">{{ season_stats.player.first_name }} {{ season_stats.player.last_name }}</td>

@@ -4,158 +4,168 @@
 {% block title %}Player Averages{% endblock %}
 
 {% block content %}
-<small class="text-muted">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</small>
-<h1>Averages</h1>
+<div class="text-gray-400">
+    <small>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</small>
+    <h1 class="text-3xl font-semibold text-white mt-4">Averages</h1>
 
-<form>
-    {% csrf_token %}
-    
-    <!-- Toggle Filters Button -->
-    <div class="form-group text-end mb-4">
-        <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="collapse" data-bs-target="#filter-collapse" aria-expanded="false" aria-controls="filter-collapse">
-            <i class="fas fa-filter"></i> Toggle Filters
-        </button>
-    </div>
+    <form>
+        {% csrf_token %}
+        
+        <!-- Toggle Filters Button -->
+        <div class="mb-4 text-left">
+            <button type="button" class="btn btn-sm btn-primary mt-4" id="toggle-filter-modal">
+                <i class="fas fa-filter"></i> Toggle Filters
+            </button>
+        </div>
 
-    <!-- Filters -->
-    <div class="collapse" id="filter-collapse">
-        <div class="mb-4">
-            <h3 class="mt-2">Player Filters</h3>
+        <!-- Modal for Filters -->
+        <div id="filter-modal" class="modal">
+            <div class="modal-box bg-dark text-white">
+                <h3 class="text-xl font-semibold text-white">Player Filters</h3>
 
-            <!-- Season Filter -->
-            <div class="col-12 mb-3">
-                <label for="selected-season" class="form-label">Filter by Season</label>
-                <select id="selected-season" class="form-select" name="selected-season">
-                    {% for season in season_list %}
-                        <option value="{{ season }}" {% if forloop.first %}selected{% endif %}>{{ season }}</option>
-                    {% endfor %}
-                    <option value="all_seasons">All Seasons</option>
-                </select>
-            </div>
+                <!-- Season Filter -->
+                <div>
+                    <label for="selected-season" class="block text-sm font-medium text-gray-300">Filter by Season</label>
+                    <select id="selected-season" class="select select-sm w-full mt-2" name="selected-season">
+                        {% for season in season_list %}
+                            <option value="{{ season }}" {% if forloop.first %}selected{% endif %}>{{ season }}</option>
+                        {% endfor %}
+                        <option value="all_seasons">All Seasons</option>
+                    </select>
+                </div>
 
-            <!-- Player Name Filter -->
-            <div class="col-12 mb-3">
-                <label for="name-filter" class="form-label">Search for Players</label>
-                <input name="name-filter" id="name-filter" class="form-control form-control-sm" type="text" placeholder="Enter a name" />
-            </div>
+                <!-- Player Name Filter -->
+                <div>
+                    <label for="name-filter" class="block text-sm font-medium text-gray-300">Search for Players</label>
+                    <input name="name-filter" id="name-filter" class="input input-sm w-full mt-2" type="text" placeholder="Enter a name"/>
+                </div>
 
-            <!-- Position Filter -->
-            <div class="col-12 mb-3">
-                <label for="position-filter" class="form-label">Filter by Position</label>
-                <select id="position-filter" class="form-select" name="position-filter" multiple>
-                    <option value="PG" selected>PG</option>
-                    <option value="SG" selected>SG</option>
-                    <option value="SF" selected>SF</option>
-                    <option value="PF" selected>PF</option>
-                    <option value="C" selected>C</option>
-                </select>
-            </div>
+                <!-- Position Filter -->
+                <div>
+                    <label for="position-filter" class="block text-sm font-medium text-gray-300">Filter by Position</label>
+                    <select id="position-filter" class="select select-sm w-full mt-2" name="position-filter" multiple>
+                        <option value="PG" selected>PG</option>
+                        <option value="SG" selected>SG</option>
+                        <option value="SF" selected>SF</option>
+                        <option value="PF" selected>PF</option>
+                        <option value="C" selected>C</option>
+                    </select>
+                </div>
 
-            <!-- League Filter -->
-            <div class="col-12 mb-3">
-                <label for="league-filter" class="form-label">Filter by League</label>
-                <select id="league-filter" class="form-select" name="league-filter">
-                    <option value="all_players" selected>All Players</option>
-                    <option value="main_league_only">Main League Only</option>
-                    <option value="surge_league_only">Surge League Only</option>
-                    <option value="both_leagues">Both Leagues</option>
-                </select>
-            </div>
+                <!-- League Filter -->
+                <div>
+                    <label for="league-filter" class="block text-sm font-medium text-gray-300">Filter by League</label>
+                    <select id="league-filter" class="select select-sm w-full mt-2" name="league-filter">
+                        <option value="all_players" selected>All Players</option>
+                        <option value="main_league_only">Main League Only</option>
+                        <option value="surge_league_only">Surge League Only</option>
+                        <option value="both_leagues">Both Leagues</option>
+                    </select>
+                </div>
 
-            <!-- Anomaly Filter -->
-            <div class="col-12 mb-3">
-                <label for="anomaly-filter" class="form-label">Filter by Anomalies</label>
-                <select id="anomaly-filter" class="form-select" name="anomaly-filter">
-                    <option value="include_anomalies" selected>Include Anomalies</option>
-                    <option value="exclude_anomalies">Exclude Anomalies</option>
-                    <option value="only_anomalies">Only Anomalies</option>
-                </select>
-            </div>
+                <!-- Anomaly Filter -->
+                <div>
+                    <label for="anomaly-filter" class="block text-sm font-medium text-gray-300">Filter by Anomalies</label>
+                    <select id="anomaly-filter" class="select select-sm w-full mt-2" name="anomaly-filter">
+                        <option value="include_anomalies" selected>Include Anomalies</option>
+                        <option value="exclude_anomalies">Exclude Anomalies</option>
+                        <option value="only_anomalies">Only Anomalies</option>
+                    </select>
+                </div>
 
-            <!-- Custom Filter -->
-            <div class="col-12 mb-3">
-                <label for="custom-filter" class="form-label">Filter by Other</label>
-                <select id="custom-filter" class="form-select form-select-sm" name="custom-filter">
-                    <option value="height">Height</option>
-                    <option value="weight">Weight</option>
-                    <option value="wingspan">Wingspan</option>
-                    <option value="sp_spent">SP Spent</option>
-                    <option value="xp_spent">XP Spent</option>
-                    <option value="sim_rating">Sim Rating</option>
-                </select>
-                <select id="custom-filter-type" class="form-select form-select-sm" name="custom-filter-type">
-                    <option value="gt">Greater Than</option>
-                    <option value="lt">Less Than</option>
-                    <option value="eq">Equal To</option>
-                </select>
-                <input type="number" id="custom-filter-value" class="form-control form-control-sm" name="custom-filter-value" placeholder="Specific Value" />
-            </div>
-            
-            <!-- Statistic Filters -->
-            <h3 class="mt-4">Statistic Filters</h3>
+                <!-- Custom Filter -->
+                <div class="mt-4">
+                    <label for="custom-filter" class="block text-sm font-medium text-gray-300">Filter by Other</label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <select id="custom-filter" class="select select-sm w-full" name="custom-filter">
+                            <option value="height">Height</option>
+                            <option value="weight">Weight</option>
+                            <option value="wingspan">Wingspan</option>
+                            <option value="sp_spent">SP Spent</option>
+                            <option value="xp_spent">XP Spent</option>
+                            <option value="sim_rating">Sim Rating</option>
+                        </select>
+                        <select id="custom-filter-type" class="select select-sm w-full" name="custom-filter-type">
+                            <option value="gt">Greater Than</option>
+                            <option value="lt">Less Than</option>
+                            <option value="eq">Equal To</option>
+                        </select>
+                        <input type="number" id="custom-filter-value" class="input input-sm w-full mt-2" name="custom-filter-value" placeholder="Specific Value" />
+                    </div>
+                </div>
 
-            <!-- Order By Filter -->
-            <div class="col-12 mb-3">
-                <label for="stat-filter-order-by" class="form-label">Order by</label>
-                <select id="stat-filter-order-by" name="stat-filter-order-by" class="form-select form-select-sm">
-                    <option value="" disabled selected>Order by</option>
-                    {% for stat_field in stat_fields %}
-                        <option value="{{ stat_field }}">{{ stat_field }}</option>
-                    {% endfor %}
-                </select>
-            </div>
+                <!-- Statistic Filters -->
+                <h3 class="text-xl font-semibold text-white mt-6">Statistic Filters</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label for="stat-filter-order-by" class="block text-sm font-medium text-gray-300">Order by</label>
+                        <select id="stat-filter-order-by" name="stat-filter-order-by" class="select select-sm w-full mt-2">
+                            <option value="" disabled selected>Order by</option>
+                            {% for stat_field in stat_fields %}
+                                <option value="{{ stat_field }}">{{ stat_field }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
 
-            <!-- Statistic Type Filter -->
-            <div class="col-12 mb-3">
-                <label for="stat-filter" class="form-label">Filter by</label>
-                <select id="stat-filter" name="stat-filter" class="form-select form-select-sm">
-                    <option value="" disabled selected>Choose a Statistic</option>
-                    {% for stat_field in stat_fields %}
-                        <option value="{{ stat_field }}">{{ stat_field }}</option>
-                    {% endfor %}
-                </select>
-            </div>
+                    <div>
+                        <label for="stat-filter" class="block text-sm font-medium text-gray-300">Filter by</label>
+                        <select id="stat-filter" name="stat-filter" class="select select-sm w-full mt-2">
+                            <option value="" disabled selected>Choose a Statistic</option>
+                            {% for stat_field in stat_fields %}
+                                <option value="{{ stat_field }}">{{ stat_field }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
 
-            <!-- Filter Type -->
-            <div class="col-12 mb-3">
-                <label for="stat-filter-type" class="form-label">Filter Type</label>
-                <select id="stat-filter-type" name="stat-filter-type" class="form-select form-select-sm">
-                    <option value="gt" selected>Greater Than Or Equal To</option>
-                    <option value="lt">Less Than Or Equal To</option>
-                    <option value="eq">Equal To</option>
-                </select>
-            </div>
+                    <div>
+                        <label for="stat-filter-type" class="block text-sm font-medium text-gray-300">Filter Type</label>
+                        <select id="stat-filter-type" name="stat-filter-type" class="select select-sm w-full mt-2">
+                            <option value="gt" selected>Greater Than Or Equal To</option>
+                            <option value="lt">Less Than Or Equal To</option>
+                            <option value="eq">Equal To</option>
+                        </select>
+                    </div>
 
-            <!-- Filter Value -->
-            <div class="col-12 mb-3">
-                <label for="stat-filter-value" class="form-label">Filter Value</label>
-                <input type="number" id="stat-filter-value" name="stat-filter-value" class="form-control form-control-sm" placeholder="Specific Value" />
-            </div>
+                    <div>
+                        <label for="stat-filter-value" class="block text-sm font-medium text-gray-300">Filter Value</label>
+                        <input type="number" id="stat-filter-value" name="stat-filter-value" class="input input-sm w-full mt-2" placeholder="Specific Value" />
+                    </div>
 
-            <!-- Order Direction -->
-            <div class="col-12 mb-3">
-                <label for="stat-filter-order" class="form-label">Order Direction</label>
-                <select id="stat-filter-order" name="stat-filter-order" class="form-select form-select-sm">
-                    <option value="asc">Ascending Order</option>
-                    <option value="desc" selected>Descending Order</option>
-                </select>
-            </div>
+                    <div>
+                        <label for="stat-filter-order" class="block text-sm font-medium text-gray-300">Order Direction</label>
+                        <select id="stat-filter-order" name="stat-filter-order" class="select select-sm w-full mt-2">
+                            <option value="asc">Ascending</option>
+                            <option value="desc" selected>Descending</option>
+                        </select>
+                    </div>
 
-            <!-- Filter Button -->
-            <div class="col-12 mb-3 text-center">
-                <button type="button" class="btn btn-sm btn-primary" hx-post="{% url 'htmx_filter_players' 'stats' %}" hx-trigger="click delay:1s" hx-target="#search-table" hx-swap="innerHTML">
-                    <i class="fas fa-filter"></i> Filter Players
-                </button>
+                    <!-- Filter Button -->
+                    <button id="close-modal" type="button" class="btn btn-primary btn-sm mt-4" hx-post="{% url 'htmx_filter_players' 'stats' %}" hx-trigger="click delay:1s" hx-target="#search-table" hx-swap="innerHTML">
+                        <i class="fas fa-filter"></i> Filter Players
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- Results Table -->
-    <div id="search-table" class="mt-4">
-        {% include 'stats/fragments/list_fragment.html' %}
-    </div>
-</form>
+        <script>
+            // JavaScript to open the modal
+            document.getElementById('toggle-filter-modal').addEventListener('click', function() {
+                document.getElementById('filter-modal').classList.add('modal-open');
+            });
 
+            // JavaScript to close the modal
+            document.getElementById('close-modal').addEventListener('click', function() {
+                document.getElementById('filter-modal').classList.remove('modal-open');
+            });
+        </script>
+
+        <!-- Results Table -->
+        <div id="search-table" class="mt-2">
+            {% include 'stats/fragments/list_fragment.html' %}
+        </div>
+
+    </form>
+</div>
 {% endblock %}
 
 {% block scripts %}

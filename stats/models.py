@@ -126,10 +126,8 @@ class Game(models.Model):
     def save(self, *args, **kwargs):
         # Automatically set the winner of the game
         self.winner = self.get_winner()
-        # Prevent non-staff users from saving games that are older than 10 days
-        bypass = kwargs.pop("bypass", False)
-        if bypass or not self.created or self.created > timezone.now() - datetime.timedelta(days=40):
-            super(Game, self).save(*args, **kwargs)
+        # Save the model
+        super(Game, self).save(*args, **kwargs)
 
 class PlayoffGame(Game):
     
@@ -157,21 +155,14 @@ class TeamGameStats(models.Model):
     three_pointers_attempted = models.IntegerField(default=0)
     free_throws_made = models.IntegerField(default=0)
     free_throws_attempted = models.IntegerField(default=0)
-    fast_break_points = models.IntegerField(default=0)
-    points_in_paint = models.IntegerField(default=0)
-    second_chance_points = models.IntegerField(default=0)
-    bench_points = models.IntegerField(default=0)
     assists = models.IntegerField(default=0)
     offensive_rebounds = models.IntegerField(default=0)
     defensive_rebounds = models.IntegerField(default=0)
     steals = models.IntegerField(default=0)
     blocks = models.IntegerField(default=0)
     turnovers = models.IntegerField(default=0)
-    points_off_turnovers = models.IntegerField(default=0)
     personal_fouls = models.IntegerField(default=0)
     dunks = models.IntegerField(default=0)
-    biggest_lead = models.IntegerField(default=0)
-    time_of_possession = models.DurationField(default=0)
     point_differential = models.IntegerField(default=0)
     created = models.DateTimeField(auto_now_add=True)
 
@@ -191,9 +182,6 @@ class TeamGameStats(models.Model):
         self.points = (self.field_goals_made * 2) + (self.three_pointers_made) + self.free_throws_made
         self.point_differential = self.get_point_differential()["point_differential"]
         self.rebounds = (self.defensive_rebounds + self.offensive_rebounds)
-        # Save the season stats model (or create it if it doesn't exist)
-        season_stats, _ = TeamSeasonStats.objects.get_or_create(season=self.game.season, team=self.team)
-        season_stats.save()
         # Save the model
         super(TeamGameStats, self).save(*args, **kwargs)
 
@@ -271,14 +259,8 @@ class PlayerGameStats(models.Model):
         self.points = (self.field_goals_made * 2) + (self.three_pointers_made) + (self.free_throws_made)
         self.defensive_rebounds = (self.rebounds - self.offensive_rebounds)
         self.set_advanced_stats()
-        # Prevent non-staff users from saving games that are older than 10 days
-        bypass = kwargs.pop("bypass", False)
-        if bypass or not self.created or self.created > timezone.now() - datetime.timedelta(days=40):
-            # Save the season stats model (or create it if it doesn't exist)
-            season_stats, _ = PlayerSeasonStats.objects.get_or_create(season=self.game.season, player=self.player)
-            season_stats.save()
-            # Save the model
-            super(PlayerGameStats, self).save(*args, **kwargs)
+        # Save the model
+        super(PlayerGameStats, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name_plural = "Player game stats"
@@ -435,11 +417,7 @@ class TeamSeasonStats(models.Model):
     defensive_rebounds = models.IntegerField(default=0)
     offensive_rebounds = models.IntegerField(default=0)
     personal_fouls = models.IntegerField(default=0)
-    points_off_turnovers = models.IntegerField(default=0)
-    points_in_paint = models.IntegerField(default=0)
-    second_chance_points = models.IntegerField(default=0)
     dunks = models.IntegerField(default=0)
-    biggest_lead = models.IntegerField(default=0)
     point_differential = models.IntegerField(default=0)
 
     # Average stats
@@ -461,11 +439,7 @@ class TeamSeasonStats(models.Model):
     average_defensive_rebounds = models.FloatField(default=0.0)
     average_offensive_rebounds = models.FloatField(default=0.0)
     average_personal_fouls = models.FloatField(default=0.0)
-    average_points_off_turnovers = models.FloatField(default=0.0)
-    average_points_in_paint = models.FloatField(default=0.0)
-    average_second_chance_points = models.FloatField(default=0.0)
     average_dunks = models.FloatField(default=0.0)
-    average_biggest_lead = models.FloatField(default=0.0)
     average_point_differential = models.FloatField(default=0.0)
 
     # Game high stats
@@ -484,11 +458,7 @@ class TeamSeasonStats(models.Model):
     game_high_defensive_rebounds = models.IntegerField(default=0)
     game_high_offensive_rebounds = models.IntegerField(default=0)
     game_high_personal_fouls = models.IntegerField(default=0)
-    game_high_points_off_turnovers = models.IntegerField(default=0)
-    game_high_points_in_paint = models.IntegerField(default=0)
-    game_high_second_chance_points = models.IntegerField(default=0)
     game_high_dunks = models.IntegerField(default=0)
-    game_high_biggest_lead = models.IntegerField(default=0)
 
     def __str__(self):
         return f"{self.team} | {self.season}"
@@ -500,7 +470,7 @@ class TeamSeasonStats(models.Model):
             "points", "rebounds", "assists", "steals", "blocks", "turnovers",
             "field_goals_made", "field_goals_attempted", "three_pointers_made", "three_pointers_attempted",
             "free_throws_made", "free_throws_attempted", "defensive_rebounds", "offensive_rebounds", "personal_fouls", 
-            "points_off_turnovers", "points_in_paint", "second_chance_points", "dunks", "biggest_lead", "point_differential"
+            "dunks", "point_differential"
         ]
         # Get the sum of the fields in 'aggregate_fields'
         aggregates = self.team.teamgamestats_set.filter(game__season=self.season).aggregate(
@@ -527,8 +497,7 @@ class TeamSeasonStats(models.Model):
         game_high_fields = [
             "points", "rebounds", "assists", "steals", "blocks", "turnovers",
             "field_goals_made", "field_goals_attempted", "three_pointers_made", "three_pointers_attempted", "free_throws_made",
-            "free_throws_attempted", "defensive_rebounds", "offensive_rebounds", "personal_fouls", "points_off_turnovers", "points_in_paint", 
-            "second_chance_points", "dunks", "biggest_lead"
+            "free_throws_attempted", "defensive_rebounds", "offensive_rebounds", "personal_fouls", "dunks"
         ]
         for field in game_high_fields:
             game_high = self.team.teamgamestats_set.filter(game__season=self.season).order_by(f"-{field}").first()

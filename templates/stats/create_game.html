@@ -11,6 +11,21 @@
     <form method="post" class="space-y-8">
         {% csrf_token %}
 
+        {% comment %} Game confirmation status {% endcomment %}
+        <div class="flex justify-center">
+            <div class="mockup-code">
+                <pre data-prefix="$"><code>Status</code></pre>
+                <pre data-prefix="$" id="game-status" class="bg-warning text-warning-content"><code></code></pre>
+            </div>
+        </div>
+
+        <!-- Filter Button to Open Modal -->
+        <div class="flex justify-center">
+            <button type="button" class="btn btn-primary w-64"  onclick="document.getElementById('gameModal').classList.add('modal-open')">
+                <i class="fas fa-filter"></i> Finish Game
+            </button>
+        </div>
+
         {% comment %} Game week selector & surge game toggle (true/false) {% endcomment %}
         <div class="grid grid-cols-2 gap-4">
             {% comment %} Game week selector {% endcomment %}
@@ -42,7 +57,7 @@
                 <label for="surge_game" class="block text-lg font-medium mb-2">Surge Game</label>
                 <select name="surge_game" id="surge_game" class="select select-bordered w-full">
                     <option value="True">Yes</option>
-                    <option value="False" selected>No</option>
+                    <option value="" selected>No</option>
                 </select>
             </div>
             {% comment %} Playoff game selector {% endcomment %}
@@ -50,7 +65,7 @@
                 <label for="playoff_game" class="block text-lg font-medium mb-2">Playoff Game</label>
                 <select name="playoff_game" id="playoff_game" class="select select-bordered w-full">
                     <option value="True">Yes</option>
-                    <option value="False" selected>No</option>
+                    <option value="" selected>No</option>
                 </select>
             </div>
             {% comment %} Home team selector {% endcomment %}
@@ -103,14 +118,6 @@
             </div>
         </div>
 
-        <!-- Filter Button to Open Modal -->
-        <div class="flex justify-center">
-            <button type="button" class="btn btn-success btn-outline" onclick="document.getElementById('gameModal').classList.add('modal-open')">
-                <i class="fas fa-filter"></i> Finish Game
-            </button>
-        </div>
-
-        <!-- Filter Modal -->
         <div id="gameModal" class="modal">
             <div class="modal-box w-full max-w-lg">
                 <!-- Modal Header -->
@@ -120,17 +127,21 @@
                         ✕
                     </button>
                 </div>
-
+        
                 <!-- Submit Button -->
                 <div class="modal-action">
-                    <button type="submit" class="btn btn-success btn-outline">
+                    <button class="btn btn-success btn-outline" 
+                            hx-post="{% url 'htmx_confirm_game' %}" 
+                            hx-target="#game-status" 
+                            hx-swap="innerHTML" 
+                            hx-trigger="click" 
+                            hx-on="htmx:afterRequest: document.getElementById('gameModal').classList.remove('modal-open')">
                         <i class="fas fa-check"></i>
                         Submit
                     </button>
                 </div>
             </div>
         </div>
-
 
     </form>
 </div>

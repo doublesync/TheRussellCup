@@ -7,9 +7,12 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.shortcuts import render
+from django.shortcuts import redirect
 from django.db.models import Q
+from django.urls import reverse
 
 # Local imports
+import simulation.config as config
 import simulation.statfinder as statfinder
 from players.models import Player
 from teams.models import Team
@@ -213,6 +216,7 @@ def league_stats_api(request):
     # Return the data
     return JsonResponse({"teams": team_data, "players": player_data}, safe=False)
 
+# A function that fetches the roster for a team
 def htmx_fetch_roster(request):
     # Get home and away team IDs
     home_team = request.GET.get("home_team")
@@ -229,8 +233,9 @@ def htmx_fetch_roster(request):
     # Fetch the team & players
     home_team = Team.objects.get(pk=home_team)
     away_team = Team.objects.get(pk=away_team)
-    home_players = Player.objects.filter(team=home_team)
-    away_players = Player.objects.filter(team=away_team)
+    all_players = Player.objects.all() # inefficient; saving for later
+    home_players = all_players.filter(team=home_team).values('id', 'first_name', 'last_name').distinct()
+    away_players = all_players.filter(team=away_team).values('id', 'first_name', 'last_name').distinct()
     # Render the roster template
     roster_html = render_to_string(
         "stats/fragments/players_table.html", 
@@ -242,3 +247,128 @@ def htmx_fetch_roster(request):
         }
     )
     return HttpResponse(roster_html)
+
+# A function that creates a game based on the user's form
+def htmx_confirm_game(request):
+    
+    # Get the form data
+    game_week = request.POST.get("game_week")
+    surge_game = request.POST.get("surge_game")
+    playoff_game = request.POST.get("playoff_game")
+    home_team = request.POST.get("home_team")
+    away_team = request.POST.get("away_team")
+    home_team_points = request.POST.get("home_team_points")
+    away_team_points = request.POST.get("away_team_points")
+
+    # Validate the form variables
+    # Surge game & playoff game will be an empty string (false) if not toggled
+    if not game_week or not home_team or not away_team or not home_team_points or not away_team_points:
+        return HttpResponse("<span class='text-danger'>Please fill out all fields</span>")
+
+    # Print all of the player stats, they go <stat_name>-<player_id>
+    player_stats = {}
+    tracked_game_fields = config.CONFIG_STATS["TRACKED_GAME_FIELDS"]
+    for key, value in request.POST.items():
+        try:
+            stat_name, player_id = key.split("-")
+            if stat_name in tracked_game_fields:
+                if "-" in key:
+                    if player_id not in player_stats:
+                        player_stats[player_id] = {}
+                    player_stats[player_id][stat_name] = value
+        except ValueError:
+            continue
+
+    # Validate the teams here
+    home_team_exists = Team.objects.filter(pk=home_team).exists()
+    away_team_exists = Team.objects.filter(pk=away_team).exists()
+    if not home_team_exists or not away_team_exists:
+        return HttpResponse("<span class='text-danger'>One or more teams do not exist</span>")
+    # Get the team objects
+    home_team = Team.objects.get(pk=home_team)
+    away_team = Team.objects.get(pk=away_team)
+
+    # Validate the form data
+    game_validator = statfinder.GameValidator(home_team_points, away_team_points, player_stats)
+    result, errors = game_validator.start()
+    if not result:
+        error_html = ""
+        for error in errors:
+            error_html += f"<span class='text-danger'>{error[1]}</span><br>"
+        return HttpResponse(error_html)
+    
+    # Create the game
+    game = Game.objects.create(
+        surge_game=bool(surge_game),
+        season=Season.objects.filter(current_season=True).first(),
+        week=int(game_week),
+        home_team=home_team,
+        home_team_score=int(home_team_points),
+        away_team=away_team,
+        away_team_score=int(away_team_points)
+    )
+    teams_to_save = [home_team, away_team]
+
+    # Create team game stats
+    for team in teams_to_save:
+        # Generate totals for stats from the player stats
+        team_totals = {}
+        for player_id, stats in player_stats.items():
+            for key, value in stats.items():
+                # Check if the stat is a player-only stat
+                if key in ["plus_minus", "minutes", "points_responsible_for"]:
+                    continue
+                # Get the real key without the "-player_id" suffix
+                real_key = key
+                if "-" in key: 
+                    real_key, player_id = key.split("-")
+                # Check if the player is on the team
+                if real_key in team_totals:
+                    team_totals[real_key] += int(value)
+                else:
+                    team_totals[real_key] = int(value)
+        print(json.dumps(team_totals, indent=4))
+        # Create the team game stats
+        TeamGameStats.objects.create(
+            game=game,
+            team=team,
+            points=game.home_team_score if team == home_team else game.away_team_score,
+            **team_totals # Unpack the team totals dictionary
+        )
+
+    # Save each team's season stats
+    for team in teams_to_save:
+        season_stats_exist = TeamSeasonStats.objects.filter(season=game.season, team=team).exists()
+        if season_stats_exist:
+            TeamSeasonStats.objects.get(season=game.season, team=team).save()
+        else:
+            TeamSeasonStats.objects.create(season=game.season, team=team).save()
+
+    # Convert player_stats to a dictionary of ints
+    for player_id, stats in player_stats.items():
+        for key, value in stats.items():
+            player_stats[player_id][key] = int(value)
+
+    # Create the player stats
+    for player_id, stats in player_stats.items():
+        player = Player.objects.get(pk=player_id)
+        # Create the player game stats
+        PlayerGameStats.objects.create(
+            game=game,
+            player=player,
+            team=player.team,
+            **stats # Unpack the stats dictionary
+        )
+        # Update the player's season stats
+        season_stats_exist = PlayerSeasonStats.objects.filter(season=game.season, player=player).exists()
+        if season_stats_exist:
+            PlayerSeasonStats.objects.get(season=game.season, player=player).save()
+        else:
+            PlayerSeasonStats.objects.create(season=game.season, player=player).save()
+
+    # Return a response
+    boxscore_url = reverse("boxscore", kwargs={"id": game.id})
+    headers = {
+        "HX-Redirect": boxscore_url
+    }
+    return HttpResponse("<span class='text-success'>Game successfully created</span>", headers=headers)

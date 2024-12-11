@@ -21,7 +21,6 @@
                 <th class="text-center bg-gray-800 text-white">TEAM</th>
                 <th class="text-center bg-gray-800 text-white">PLAYER</th>
                 <th class="text-center bg-gray-800 text-white">MP</th>
-                <th class="text-center bg-gray-800 text-white">PTS</th>
                 <th class="text-center bg-gray-800 text-white">REB</th>
                 <th class="text-center bg-gray-800 text-white">AST</th>
                 <th class="text-center bg-gray-800 text-white">STL</th>
@@ -38,40 +37,39 @@
                 <th class="text-center bg-gray-800 text-white">+/-</th>
                 <th class="text-center bg-gray-800 text-white">PRF</th>
                 <th class="text-center bg-gray-800 text-white">DNK</th>
-                <th class="text-center bg-gray-800 text-white">DREB</th>
             </tr>
         </thead>
         <tbody>
             {% for player in home_players %}
             <tr>
-                <td class="text-center font-semibold">{{ player.team.name }}</td>
-                <td class="text-center font-semibold">{{ player.first_name }} {{ player.last_name }}</td>
-                <td><input type="number" name="minutes" class="input input-bordered w-full" /></td>
-                <td><input type="number" name="points" class="input input-bordered w-full" /></td>
-                <td><input type="number" name="rebounds" class="input input-bordered w-full" /></td>
-                <td><input type="number" name="assists" class="input input-bordered w-full" /></td>
-                <td><input type="number" name="steals" class="input input-bordered w-full" /></td>
-                <td><input type="number" name="blocks" class="input input-bordered w-full" /></td>
-                <td><input type="number" name="turnovers" class="input input-bordered w-full" /></td>
-                <td><input type="number" name="field_goals_made" class="input input-bordered w-full" /></td>
-                <td><input type="number" name="field_goals_attempted" class="input input-bordered w-full" /></td>
-                <td><input type="number" name="three_pointers_made" class="input input-bordered w-full" /></td>
-                <td><input type="number" name="three_pointers_attempted" class="input input-bordered w-full" /></td>
-                <td><input type="number" name="free_throws_made" class="input input-bordered w-full" /></td>
-                <td><input type="number" name="free_throws_attempted" class="input input-bordered w-full" /></td>
-                <td><input type="number" name="offensive_rebounds" class="input input-bordered w-full" /></td>
-                <td><input type="number" name="personal_fouls" class="input input-bordered w-full" /></td>
-                <td><input type="number" name="plus_minus" class="input input-bordered w-full" /></td>
-                <td><input type="number" name="points_responsible_for" class="input input-bordered w-full" /></td>
-                <td><input type="number" name="dunks" class="input input-bordered w-full" /></td>
-                <td><input type="number" name="defensive_rebounds" class="input input-bordered w-full" /></td>
+                <td class="text-center font-semibold">{{ home_team.name }}</td>
+                <td class="text-center font-semibold w-48">
+                    {{ player.first_name }} {{ player.last_name }}
+                </td>
+                <td><input type="number" name="minutes-{{ player.id }}" class="input input-bordered w-full" /></td>
+                <td><input type="number" name="rebounds-{{ player.id }}" class="input input-bordered w-full" /></td>
+                <td><input type="number" name="assists-{{ player.id }}" class="input input-bordered w-full" /></td>
+                <td><input type="number" name="steals-{{ player.id }}" class="input input-bordered w-full" /></td>
+                <td><input type="number" name="blocks-{{ player.id }}" class="input input-bordered w-full" /></td>
+                <td><input type="number" name="turnovers-{{ player.id }}" class="input input-bordered w-full" /></td>
+                <td><input type="number" name="field_goals_made-{{ player.id }}" class="input input-bordered w-full" /></td>
+                <td><input type="number" name="field_goals_attempted-{{ player.id }}" class="input input-bordered w-full" /></td>
+                <td><input type="number" name="three_pointers_made-{{ player.id }}" class="input input-bordered w-full" /></td>
+                <td><input type="number" name="three_pointers_attempted-{{ player.id }}" class="input input-bordered w-full" /></td>
+                <td><input type="number" name="free_throws_made-{{ player.id }}" class="input input-bordered w-full" /></td>
+                <td><input type="number" name="free_throws_attempted-{{ player.id }}" class="input input-bordered w-full" /></td>
+                <td><input type="number" name="offensive_rebounds-{{ player.id }}" class="input input-bordered w-full" /></td>
+                <td><input type="number" name="personal_fouls-{{ player.id }}" class="input input-bordered w-full" /></td>
+                <td><input type="number" name="plus_minus-{{ player.id }}" class="input input-bordered w-full" /></td>
+                <td><input type="number" name="points_responsible_for-{{ player.id }}" class="input input-bordered w-full" /></td>
+                <td><input type="number" name="dunks-{{ player.id }}" class="input input-bordered w-full" /></td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
 
-{% comment %} Home players table {% endcomment %}
+{% comment %} Away players table {% endcomment %}
 <div class="overflow-x-auto">
     <table class="table table-zebra table-bordered w-full">
         <thead>
@@ -79,7 +77,6 @@
                 <th class="text-center bg-gray-800 text-white">TEAM</th>
                 <th class="text-center bg-gray-800 text-white">PLAYER</th>
                 <th class="text-center bg-gray-800 text-white">MP</th>
-                <th class="text-center bg-gray-800 text-white">PTS</th>
                 <th class="text-center bg-gray-800 text-white">REB</th>
                 <th class="text-center bg-gray-800 text-white">AST</th>
                 <th class="text-center bg-gray-800 text-white">STL</th>
@@ -96,33 +93,32 @@
                 <th class="text-center bg-gray-800 text-white">+/-</th>
                 <th class="text-center bg-gray-800 text-white">PRF</th>
                 <th class="text-center bg-gray-800 text-white">DNK</th>
-                <th class="text-center bg-gray-800 text-white">DREB</th>
             </tr>
         </thead>
         <tbody>
             {% for player in away_players %}
             <tr>
-                <td class="text-center font-semibold">{{ player.team.name }}</td>
-                <td class="text-center font-semibold">{{ player.first_name }} {{ player.last_name }}</td>
-                <td><input type="number" name="minutes" class="input input-bordered w-full" /></td>
-                <td><input type="number" name="points" class="input input-bordered w-full" /></td>
-                <td><input type="number" name="rebounds" class="input input-bordered w-full" /></td>
-                <td><input type="number" name="assists" class="input input-bordered w-full" /></td>
-                <td><input type="number" name="steals" class="input input-bordered w-full" /></td>
-                <td><input type="number" name="blocks" class="input input-bordered w-full" /></td>
-                <td><input type="number" name="turnovers" class="input input-bordered w-full" /></td>
-                <td><input type="number" name="field_goals_made" class="input input-bordered w-full" /></td>
-                <td><input type="number" name="field_goals_attempted" class="input input-bordered w-full" /></td>
-                <td><input type="number" name="three_pointers_made" class="input input-bordered w-full" /></td>
-                <td><input type="number" name="three_pointers_attempted" class="input input-bordered w-full" /></td>
-                <td><input type="number" name="free_throws_made" class="input input-bordered w-full" /></td>
-                <td><input type="number" name="free_throws_attempted" class="input input-bordered w-full" /></td>
-                <td><input type="number" name="offensive_rebounds" class="input input-bordered w-full" /></td>
-                <td><input type="number" name="personal_fouls" class="input input-bordered w-full" /></td>
-                <td><input type="number" name="plus_minus" class="input input-bordered w-full" /></td>
-                <td><input type="number" name="points_responsible_for" class="input input-bordered w-full" /></td>
-                <td><input type="number" name="dunks" class="input input-bordered w-full" /></td>
-                <td><input type="number" name="defensive_rebounds" class="input input-bordered w-full" /></td>
+                <td class="text-center font-semibold">{{ away_team.name }}</td>
+                <td class="text-center font-semibold w-48">
+                    {{ player.first_name }} {{ player.last_name }}
+                </td>
+                <td><input type="number" name="minutes-{{ player.id }}" class="input input-bordered w-full" /></td>
+                <td><input type="number" name="rebounds-{{ player.id }}" class="input input-bordered w-full" /></td>
+                <td><input type="number" name="assists-{{ player.id }}" class="input input-bordered w-full" /></td>
+                <td><input type="number" name="steals-{{ player.id }}" class="input input-bordered w-full" /></td>
+                <td><input type="number" name="blocks-{{ player.id }}" class="input input-bordered w-full" /></td>
+                <td><input type="number" name="turnovers-{{ player.id }}" class="input input-bordered w-full" /></td>
+                <td><input type="number" name="field_goals_made-{{ player.id }}" class="input input-bordered w-full" /></td>
+                <td><input type="number" name="field_goals_attempted-{{ player.id }}" class="input input-bordered w-full" /></td>
+                <td><input type="number" name="three_pointers_made-{{ player.id }}" class="input input-bordered w-full" /></td>
+                <td><input type="number" name="three_pointers_attempted-{{ player.id }}" class="input input-bordered w-full" /></td>
+                <td><input type="number" name="free_throws_made-{{ player.id }}" class="input input-bordered w-full" /></td>
+                <td><input type="number" name="free_throws_attempted-{{ player.id }}" class="input input-bordered w-full" /></td>
+                <td><input type="number" name="offensive_rebounds-{{ player.id }}" class="input input-bordered w-full" /></td>
+                <td><input type="number" name="personal_fouls-{{ player.id }}" class="input input-bordered w-full" /></td>
+                <td><input type="number" name="plus_minus-{{ player.id }}" class="input input-bordered w-full" /></td>
+                <td><input type="number" name="points_responsible_for-{{ player.id }}" class="input input-bordered w-full" /></td>
+                <td><input type="number" name="dunks-{{ player.id }}" class="input input-bordered w-full" /></td>
             </tr>
             {% endfor %}
         </tbody>

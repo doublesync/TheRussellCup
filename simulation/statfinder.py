@@ -379,7 +379,6 @@ class StatFinder:
         # Return the league averages
         return league_averages
 
-
 # Returns the season performances for the current season
 def get_season_performances():
     performances = {}
@@ -395,3 +394,71 @@ def get_season_performances():
         }
     # Return all the performances
     return performances
+
+# A manager class that validates submitted game stats
+class GameValidator:
+    def __init__(self, home_team_points, away_team_points, player_stats):
+        self.home_team_points = int(home_team_points)
+        self.away_team_points = int(away_team_points)
+        self.player_stats = player_stats
+        self.errors = []
+        self.raise_stat_error_at = {
+            "steals": 10,
+            "blocks": 10,
+        }
+
+    def start(self):
+
+        # Validate the team points and player stats
+        self.validate_team_points()
+        self.validate_player_stats()
+
+        # Return the errors
+        if self.errors:
+            return False, self.errors
+        else:
+            return True, None
+
+        return 
+
+    def validate_team_points(self):
+
+        if not self.home_team_points or not self.away_team_points:
+            self.errors.append([False, "Team points cannot be empty"])
+        if self.home_team_points < 0 or self.away_team_points < 0:
+            self.errors.append([False, "Team points cannot be negative, silly!"])
+        if self.home_team_points == self.away_team_points:
+            self.errors.append([False, "A tie? Really? Team points cannot be equal"])
+        if self.home_team_points > 99 or self.away_team_points > 99:
+            self.errors.append([False, "Team points cannot exceed 99"])
+        
+    def validate_player_stats(self):
+
+        for _, data in self.player_stats.items():
+            for stat, value in data.items():
+                # Check if the value is empty
+                value = int(value) if value else None
+                if not value:
+                    self.errors.append([False, f"{stat.title()} cannot be empty"])
+                    return
+                # Regular validations
+                if value < 0:
+                    self.errors.append([False, f"{stat.title()} cannot be negative"])
+                if value >= 70:
+                    self.errors.append([False, f"{stat.title()} cannot exceed 70"])
+                # Conditional validations
+                if stat in self.raise_stat_error_at:
+                    if value >= self.raise_stat_error_at[stat]:
+                        self.errors.append([False, f"{stat.title()} cannot exceed {self.raise_stat_error_at[stat]}"])
+                # Conditional dependent validations
+                if stat == "field_goals_made":
+                    if value > int(data["field_goals_attempted"]):
+                        self.errors.append([False, "Field Goals made cannot exceed Field Goals Attempted"])
+                if stat == "three_pointers_made":
+                    if value > int(data["three_pointers_attempted"]):
+                        self.errors.append([False, "Three Pointers made cannot exceed Three Pointers Attempted"])
+                    if value > int(data["field_goals_made"]):
+                        self.errors.append([False, "Three Pointers made cannot exceed Field Goals made"])
+                if stat == "free_throws_made":
+                    if value > int(data["free_throws_attempted"]):
+                        self.errors.append([False, "Free Throws made cannot exceed Free Throws Attempted"])

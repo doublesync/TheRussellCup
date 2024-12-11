@@ -6,39 +6,43 @@
 {% block content %}
 <small class="text-muted">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</small>
 <h1>Averages</h1>
+
 <form>
     {% csrf_token %}
-    <div class="form-group pull-right col-12">
-        <!-- Make button to toggle filters -->
+    
+    <!-- Toggle Filters Button -->
+    <div class="form-group text-end mb-4">
         <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="collapse" data-bs-target="#filter-collapse" aria-expanded="false" aria-controls="filter-collapse">
             <i class="fas fa-filter"></i> Toggle Filters
         </button>
-        <!-- Filters -->
-        <div class="mb-3 row" id="filter-collapse" aria-expanded="false" style="display: none;">
+    </div>
+
+    <!-- Filters -->
+    <div class="collapse" id="filter-collapse">
+        <div class="mb-4">
             <h3 class="mt-2">Player Filters</h3>
-            <!-- Choose season -->
-            <div class="col-12 mb-2">
-                <label for="selected-season" class="form-label">Filter by season</label>
-                <select id="selected-season" class="js-multiple-select form-select" name="selected-season">
+
+            <!-- Season Filter -->
+            <div class="col-12 mb-3">
+                <label for="selected-season" class="form-label">Filter by Season</label>
+                <select id="selected-season" class="form-select" name="selected-season">
                     {% for season in season_list %}
-                    {% if forloop.first %}
-                        <option value="{{ season }}" selected>{{ season }}</option>
-                    {% else %}
-                        <option value="{{ season }}">{{ season }}</option>
-                    {% endif %}
+                        <option value="{{ season }}" {% if forloop.first %}selected{% endif %}>{{ season }}</option>
                     {% endfor %}
-                    <option value="all_seasons">All</option>
+                    <option value="all_seasons">All Seasons</option>
                 </select>
             </div>
-            <!-- Search for players -->
-            <div class="col-12 mb-2">
-                <label for="name-filter" class="form-label mb-0">Search for players</label>
-                <input name="name-filter" id="name-filter" class="search form-control form-control-sm" type="text" placeholder="Enter a name"/>
+
+            <!-- Player Name Filter -->
+            <div class="col-12 mb-3">
+                <label for="name-filter" class="form-label">Search for Players</label>
+                <input name="name-filter" id="name-filter" class="form-control form-control-sm" type="text" placeholder="Enter a name" />
             </div>
-            <!-- Position filtering -->
-            <div class="col-12 mb-2">
-                <label for="position-filter" class="form-label">Filter by position</label>
-                <select id="position-filter" class="js-multiple-select form-select" name="position-filter" multiple="multiple">
+
+            <!-- Position Filter -->
+            <div class="col-12 mb-3">
+                <label for="position-filter" class="form-label">Filter by Position</label>
+                <select id="position-filter" class="form-select" name="position-filter" multiple>
                     <option value="PG" selected>PG</option>
                     <option value="SG" selected>SG</option>
                     <option value="SF" selected>SF</option>
@@ -46,30 +50,32 @@
                     <option value="C" selected>C</option>
                 </select>
             </div>
-            <!-- League filtering -->
-            <div class="col-12 mb-2">
-                <label for="league-filter" class="form-label">Filter by league</label>
-                <select id="league-filter" class="js-multiple-select form-select" name="league-filter">
+
+            <!-- League Filter -->
+            <div class="col-12 mb-3">
+                <label for="league-filter" class="form-label">Filter by League</label>
+                <select id="league-filter" class="form-select" name="league-filter">
                     <option value="all_players" selected>All Players</option>
                     <option value="main_league_only">Main League Only</option>
                     <option value="surge_league_only">Surge League Only</option>
                     <option value="both_leagues">Both Leagues</option>
                 </select>
             </div>
-            <!-- Anomaly filtering -->
-            <div class="col-12 mb-2">
-                <label for="anomaly-filter" class="form-label">Filter by anomalies</label>
-                <select id="anomaly-filter" class="js-multiple-select form-select" name="anomaly-filter">
+
+            <!-- Anomaly Filter -->
+            <div class="col-12 mb-3">
+                <label for="anomaly-filter" class="form-label">Filter by Anomalies</label>
+                <select id="anomaly-filter" class="form-select" name="anomaly-filter">
                     <option value="include_anomalies" selected>Include Anomalies</option>
                     <option value="exclude_anomalies">Exclude Anomalies</option>
                     <option value="only_anomalies">Only Anomalies</option>
                 </select>
             </div>
-            <!-- Custom filtering -->
-            <div class="col-12 mb-2">
-                <label for="custom-filter" class="mb-0 form-label">Filter by other</label>
-                <!-- What we're filtering -->
-                <select id="custom-filter" name="custom-filter" class="form-select form-select-sm" name="custom-filter">
+
+            <!-- Custom Filter -->
+            <div class="col-12 mb-3">
+                <label for="custom-filter" class="form-label">Filter by Other</label>
+                <select id="custom-filter" class="form-select form-select-sm" name="custom-filter">
                     <option value="height">Height</option>
                     <option value="weight">Weight</option>
                     <option value="wingspan">Wingspan</option>
@@ -77,71 +83,90 @@
                     <option value="xp_spent">XP Spent</option>
                     <option value="sim_rating">Sim Rating</option>
                 </select>
-                <!-- Greater than or less than -->
-                <select id="custom-filter-type" name="custom-filter-type" class="form-select form-select-sm" name="custom-filter-type">
+                <select id="custom-filter-type" class="form-select form-select-sm" name="custom-filter-type">
                     <option value="gt">Greater Than</option>
                     <option value="lt">Less Than</option>
                     <option value="eq">Equal To</option>
                 </select>
-                <!-- Value -->
-                <input type="number" id="custom-filter-value" class="form-control form-control-sm" name="custom-filter-value" placeholder="Specific value">
+                <input type="number" id="custom-filter-value" class="form-control form-control-sm" name="custom-filter-value" placeholder="Specific Value" />
             </div>
-            <!-- Statistic filtering -->
-            <h3 class="mt-2">Statistic Filters</h3>
-            <div class="col-12 mb-2">
-                <!-- Order by -->
-                <label for="stat-filter-order-by" class="form-label mb-2">Order by</label>
-                <select id="stat-filter-order-by" name="stat-filter-order-by" class="form-select form-select-sm js-multiple-select">
-                    <option value="" selected disabled>Order by</option>
+            
+            <!-- Statistic Filters -->
+            <h3 class="mt-4">Statistic Filters</h3>
+
+            <!-- Order By Filter -->
+            <div class="col-12 mb-3">
+                <label for="stat-filter-order-by" class="form-label">Order by</label>
+                <select id="stat-filter-order-by" name="stat-filter-order-by" class="form-select form-select-sm">
+                    <option value="" disabled selected>Order by</option>
                     {% for stat_field in stat_fields %}
                         <option value="{{ stat_field }}">{{ stat_field }}</option>
                     {% endfor %}
                 </select>
-                <!-- Statistic filter (what we're filtering) -->
-                <label for="stat-filter" class="form-label mb-2">Filter by</label>
-                <select id="stat-filter" name="stat-filter" class="form-select form-select-sm js-multiple-select">
-                    <option value="" selected disabled>Choose a statistic</option>
+            </div>
+
+            <!-- Statistic Type Filter -->
+            <div class="col-12 mb-3">
+                <label for="stat-filter" class="form-label">Filter by</label>
+                <select id="stat-filter" name="stat-filter" class="form-select form-select-sm">
+                    <option value="" disabled selected>Choose a Statistic</option>
                     {% for stat_field in stat_fields %}
                         <option value="{{ stat_field }}">{{ stat_field }}</option>
                     {% endfor %}
                 </select>
-                <!-- Greater than or less than -->
-                <label for="stat-filter-type" class="form-label mb-2">Filter type</label>
+            </div>
+
+            <!-- Filter Type -->
+            <div class="col-12 mb-3">
+                <label for="stat-filter-type" class="form-label">Filter Type</label>
                 <select id="stat-filter-type" name="stat-filter-type" class="form-select form-select-sm">
                     <option value="gt" selected>Greater Than Or Equal To</option>
                     <option value="lt">Less Than Or Equal To</option>
                     <option value="eq">Equal To</option>
                 </select>
-                <!-- Value -->
-                <label for="stat-filter-value" class="form-label mb-2">Filter value</label>
-                <input type="number" id="stat-filter-value" name="stat-filter-value" class="form-control form-control-sm" placeholder="Specific value">
-                <!-- Order -->
-                <label for="stat-filter-order" class="form-label mb-2">Ordered in</label>
+            </div>
+
+            <!-- Filter Value -->
+            <div class="col-12 mb-3">
+                <label for="stat-filter-value" class="form-label">Filter Value</label>
+                <input type="number" id="stat-filter-value" name="stat-filter-value" class="form-control form-control-sm" placeholder="Specific Value" />
+            </div>
+
+            <!-- Order Direction -->
+            <div class="col-12 mb-3">
+                <label for="stat-filter-order" class="form-label">Order Direction</label>
                 <select id="stat-filter-order" name="stat-filter-order" class="form-select form-select-sm">
                     <option value="asc">Ascending Order</option>
                     <option value="desc" selected>Descending Order</option>
                 </select>
-                <!-- Filter button -->
-                <button type="button" class="btn btn-sm btn-primary mt-3" hx-post="{% url 'htmx_filter_players' 'stats' %}" hx-trigger="click delay:1s" hx-target="#search-table" hx-swap="innerHTML"><i class="fas fa-filter"></i> Filter Players</button>
+            </div>
+
+            <!-- Filter Button -->
+            <div class="col-12 mb-3 text-center">
+                <button type="button" class="btn btn-sm btn-primary" hx-post="{% url 'htmx_filter_players' 'stats' %}" hx-trigger="click delay:1s" hx-target="#search-table" hx-swap="innerHTML">
+                    <i class="fas fa-filter"></i> Filter Players
+                </button>
             </div>
         </div>
     </div>
-    <!-- Results table  -->
-    <div id="search-table">
+
+    <!-- Results Table -->
+    <div id="search-table" class="mt-4">
         {% include 'stats/fragments/list_fragment.html' %}
     </div>
 </form>
+
 {% endblock %}
 
 {% block scripts %}
-{% include 'stafftools/fragments/select2_scripts.html' %}
+    {% include 'stafftools/fragments/select2_scripts.html' %}
 {% endblock %}
 
 {% block styles %}
-<style>
-    input::placeholder {
-        color: gray!important;
-    }
-</style>
-{% include 'stafftools/fragments/select2_styles.html' %}
+    <style>
+        input::placeholder {
+            color: gray!important;
+        }
+    </style>
+    {% include 'stafftools/fragments/select2_styles.html' %}
 {% endblock %}

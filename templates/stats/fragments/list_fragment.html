@@ -1,90 +1,92 @@
-<div class="table-responsive">
-    <table class="table table-dark table-striped">
-        <thead>
+<div class="overflow-x-auto">
+    <table class="table table-zebra w-full text-sm text-gray-800">
+        <thead class="bg-gray-700 text-white">
             <tr>
-                <th>NAME</th>
-                <TH>T/GP</TH> <!-- total_games_played -->
-                <th>A/MIN</th> <!-- average_minutes -->
-                <th>A/PTS</th> <!-- average_points -->
-                <th>A/REB</th> <!-- average_rebounds -->
-                <th>A/AST</th> <!-- average_assists -->
-                <th>A/STL</th> <!-- average_steals -->
-                <th>A/BLK</th> <!-- average_blocks -->
-                <th>A/TOV</th> <!-- average_turnovers -->
-                <th>A/FGM</th> <!-- average_field_goals_made -->
-                <th>A/FGA</th> <!-- average_field_goals_attempted -->
-                <th>A/FG%</th> <!-- average_field_goal_percentage -->
-                <th>A/3PM</th> <!-- average_three_pointers_made -->
-                <th>A/3PA</th> <!-- average_three_pointers_attempted -->
-                <th>A/3P%</th> <!-- average_three_point_percentage -->
-                <th>A/FTM</th> <!-- average_free_throws_made -->
-                <th>A/FTA</th> <!-- average_free_throws_attempted -->
-                <th>A/FT%</th> <!-- average_free_throw_percentage -->
-                <th>A/OREB</th> <!-- average_offensive_rebounds -->
-                <th>A/PF</th> <!-- average_personal_fouls -->
-                <th>A/PM</th> <!-- average_plus_minus -->
-                <th>A/PTRF</th> <!-- average_points_responsible_for -->
-                <th>A/DUNK</th> <!-- average_dunks -->
-                <th>A/DREB</th> <!-- average_defensive_rebounds -->
-                <th>A/GMSC</th> <!-- average_game_score -->
-                <th>A/EFG%</th> <!-- average_effective_field_goal_percentage -->
-                <th>A/TS%</th> <!-- average_true_shooting_percentage -->
-                <th>A/TOV%</th> <!-- average_turnover_percentage -->
+                <th class="p-2 text-center">NAME</th>
+                <th class="p-2 text-center">T/GP</th>
+                <th class="p-2 text-center">A/MIN</th>
+                <th class="p-2 text-center">A/PTS</th>
+                <th class="p-2 text-center">A/REB</th>
+                <th class="p-2 text-center">A/AST</th>
+                <th class="p-2 text-center">A/STL</th>
+                <th class="p-2 text-center">A/BLK</th>
+                <th class="p-2 text-center">A/TOV</th>
+                <th class="p-2 text-center">A/FGM</th>
+                <th class="p-2 text-center">A/FGA</th>
+                <th class="p-2 text-center">A/FG%</th>
+                <th class="p-2 text-center">A/3PM</th>
+                <th class="p-2 text-center">A/3PA</th>
+                <th class="p-2 text-center">A/3P%</th>
+                <th class="p-2 text-center">A/FTM</th>
+                <th class="p-2 text-center">A/FTA</th>
+                <th class="p-2 text-center">A/FT%</th>
+                <th class="p-2 text-center">A/OREB</th>
+                <th class="p-2 text-center">A/PF</th>
+                <th class="p-2 text-center">A/PM</th>
+                <th class="p-2 text-center">A/PTRF</th>
+                <th class="p-2 text-center">A/DUNK</th>
+                <th class="p-2 text-center">A/DREB</th>
+                <th class="p-2 text-center">A/GMSC</th>
+                <th class="p-2 text-center">A/EFG%</th>
+                <th class="p-2 text-center">A/TS%</th>
+                <th class="p-2 text-center">A/TOV%</th>
             </tr>
         </thead>
-        <tbody class="table table-dark table-hover">
+        <tbody class="bg-gray-100 hover:bg-gray-200">
             {% for season_stats in page_obj %}
                 <tr>
-                    <td>{{ season_stats.player.first_name }} {{ season_stats.player.last_name }}</td>
-                    <td>{{ season_stats.games_played }}</td>
-                    <td>{{ season_stats.average_minutes }}</td>
-                    <td>{{ season_stats.average_points }}</td>
-                    <td>{{ season_stats.average_rebounds }}</td>
-                    <td>{{ season_stats.average_assists }}</td>
-                    <td>{{ season_stats.average_steals }}</td>
-                    <td>{{ season_stats.average_blocks }}</td>
-                    <td>{{ season_stats.average_turnovers }}</td>
-                    <td>{{ season_stats.average_field_goals_made }}</td>
-                    <td>{{ season_stats.average_field_goals_attempted }}</td>
-                    <td>{{ season_stats.average_field_goal_percentage }}</td>
-                    <td>{{ season_stats.average_three_pointers_made }}</td>
-                    <td>{{ season_stats.average_three_pointers_attempted }}</td>
-                    <td>{{ season_stats.average_three_point_percentage }}</td>
-                    <td>{{ season_stats.average_free_throws_made }}</td>
-                    <td>{{ season_stats.average_free_throws_attempted }}</td>
-                    <td>{{ season_stats.average_free_throw_percentage }}</td>
-                    <td>{{ season_stats.average_offensive_rebounds }}</td>
-                    <td>{{ season_stats.average_personal_fouls }}</td>
-                    <td>{{ season_stats.average_plus_minus }}</td>
-                    <td>{{ season_stats.average_points_responsible_for }}</td>
-                    <td>{{ season_stats.average_dunks }}</td>
-                    <td>{{ season_stats.average_defensive_rebounds }}</td>
-                    <td>{{ season_stats.average_game_score }}</td>
-                    <td>{{ season_stats.average_effective_field_goal_percentage }}</td>
-                    <td>{{ season_stats.average_true_shooting_percentage }}</td>
-                    <td>{{ season_stats.average_turnover_percentage }}</td>
+                    <td class="p-2 text-center">{{ season_stats.player.first_name }} {{ season_stats.player.last_name }}</td>
+                    <td class="p-2 text-center">{{ season_stats.games_played }}</td>
+                    <td class="p-2 text-center">{{ season_stats.average_minutes }}</td>
+                    <td class="p-2 text-center">{{ season_stats.average_points }}</td>
+                    <td class="p-2 text-center">{{ season_stats.average_rebounds }}</td>
+                    <td class="p-2 text-center">{{ season_stats.average_assists }}</td>
+                    <td class="p-2 text-center">{{ season_stats.average_steals }}</td>
+                    <td class="p-2 text-center">{{ season_stats.average_blocks }}</td>
+                    <td class="p-2 text-center">{{ season_stats.average_turnovers }}</td>
+                    <td class="p-2 text-center">{{ season_stats.average_field_goals_made }}</td>
+                    <td class="p-2 text-center">{{ season_stats.average_field_goals_attempted }}</td>
+                    <td class="p-2 text-center">{{ season_stats.average_field_goal_percentage }}</td>
+                    <td class="p-2 text-center">{{ season_stats.average_three_pointers_made }}</td>
+                    <td class="p-2 text-center">{{ season_stats.average_three_pointers_attempted }}</td>
+                    <td class="p-2 text-center">{{ season_stats.average_three_point_percentage }}</td>
+                    <td class="p-2 text-center">{{ season_stats.average_free_throws_made }}</td>
+                    <td class="p-2 text-center">{{ season_stats.average_free_throws_attempted }}</td>
+                    <td class="p-2 text-center">{{ season_stats.average_free_throw_percentage }}</td>
+                    <td class="p-2 text-center">{{ season_stats.average_offensive_rebounds }}</td>
+                    <td class="p-2 text-center">{{ season_stats.average_personal_fouls }}</td>
+                    <td class="p-2 text-center">{{ season_stats.average_plus_minus }}</td>
+                    <td class="p-2 text-center">{{ season_stats.average_points_responsible_for }}</td>
+                    <td class="p-2 text-center">{{ season_stats.average_dunks }}</td>
+                    <td class="p-2 text-center">{{ season_stats.average_defensive_rebounds }}</td>
+                    <td class="p-2 text-center">{{ season_stats.average_game_score }}</td>
+                    <td class="p-2 text-center">{{ season_stats.average_effective_field_goal_percentage }}</td>
+                    <td class="p-2 text-center">{{ season_stats.average_true_shooting_percentage }}</td>
+                    <td class="p-2 text-center">{{ season_stats.average_turnover_percentage }}</td>
                 </tr>
             {% endfor %}
         </tbody>
-    </div>
-    <ul class="pagination mt-4">
+    </table>
 
-        {% if page_obj.has_previous %}
-            <li class="page-item m-1"><a class="btn btn-sm"  hx-post="{% url 'htmx_filter_players' 'stats' %}?page=1" hx-trigger="click throttle:1s" hx-target="#search-table" hx-swap="innerHTML">First</a></li>
-            <li class="page-item m-1"><a class="btn btn-sm" hx-post="{% url 'htmx_filter_players' 'stats' %}?page={{ page_obj.previous_page_number }}" hx-trigger="click throttle:1s" hx-target="#search-table" hx-swap="innerHTML">Previous</a></li>
-        {% endif %}
-
-        {% for num in page_obj.paginator.page_range %}
-            {% if page_obj.number == num %}
-                <li class="active m-1"><span class="btn btn-sm btn-primary">{{ num }}</span></li>
-            {% else %}
-                <li class=" m-1"><a class="btn btn-sm" hx-post="{% url 'htmx_filter_players' 'stats' %}?page={{ num }}" hx-trigger="click throttle:1s" hx-target="#search-table" hx-swap="innerHTML">{{ num }}</a></li>
+    <div class="mt-4 flex justify-center">
+        <ul class="pagination space-x-2">
+            {% if page_obj.has_previous %}
+                <li><a href="#" class="btn btn-sm btn-primary" hx-post="{% url 'htmx_filter_players' 'stats' %}?page=1" hx-trigger="click throttle:1s" hx-target="#search-table" hx-swap="innerHTML">First</a></li>
+                <li><a href="#" class="btn btn-sm btn-primary" hx-post="{% url 'htmx_filter_players' 'stats' %}?page={{ page_obj.previous_page_number }}" hx-trigger="click throttle:1s" hx-target="#search-table" hx-swap="innerHTML">Previous</a></li>
             {% endif %}
-        {% endfor %}
 
-        {% if page_obj.has_next %}
-            <li class="page-item m-1"><a class="btn btn-sm" hx-post="{% url 'htmx_filter_players' 'stats' %}?page={{ page_obj.next_page_number }}" hx-trigger="click throttle:1s" hx-target="#search-table" hx-swap="innerHTML">Next</a></li>
-            <li class="page-item m-1"><a class="btn btn-sm" hx-post="{% url 'htmx_filter_players' 'stats' %}?page={{ page_obj.paginator.num_pages }}" hx-trigger="click throttle:1s" hx-target="#search-table" hx-swap="innerHTML">Last</a></li>
-        {% endif %}
-    </ul>
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <li><span class="btn btn-sm btn-primary">{{ num }}</span></li>
+                {% else %}
+                    <li><a href="#" class="btn btn-sm" hx-post="{% url 'htmx_filter_players' 'stats' %}?page={{ num }}" hx-trigger="click throttle:1s" hx-target="#search-table" hx-swap="innerHTML">{{ num }}</a></li>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <li><a href="#" class="btn btn-sm btn-primary" hx-post="{% url 'htmx_filter_players' 'stats' %}?page={{ page_obj.next_page_number }}" hx-trigger="click throttle:1s" hx-target="#search-table" hx-swap="innerHTML">Next</a></li>
+                <li><a href="#" class="btn btn-sm btn-primary" hx-post="{% url 'htmx_filter_players' 'stats' %}?page={{ page_obj.paginator.num_pages }}" hx-trigger="click throttle:1s" hx-target="#search-table" hx-swap="innerHTML">Last</a></li>
+            {% endif %}
+        </ul>
+    </div>
 </div>

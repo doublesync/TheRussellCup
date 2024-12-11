@@ -4,20 +4,31 @@
 {% block title %}Player Averages{% endblock %}
 
 {% block content %}
-{% comment %} Game details table {% endcomment %}
-<div class="p-5 mb-4">
+<!-- Game details -->
+<div class="p-6 mb-6 bg-gray-100 rounded-lg shadow-md">
     <div class="container-fluid py-5">
-        <h2><a span style="color: {{ game.winner.color }}" href="{% url 'team_page' game.winner.id %}">{{ game.winner.city }} {{ game.winner.name }} won {{ game.away_team_score }} - {{ game.home_team_score }}</h2></a>
-        <h1 class="display-5 fw-bold"><a span style="color: {{ game.away_team.color }}" href="{% url 'team_page' game.away_team.id %}">{{ game.away_team.city }} {{ game.away_team.name }}</a> @ <a span style="color: {{ game.home_team.color }}" href="{% url 'team_page' game.home_team.id %}">{{ game.home_team.city }} {{ game.home_team.name }}</h2></a></h1>
-        <h2 class="col-md-8 fw-bold"></h2>
+        <h2 class="text-2xl font-bold text-center mb-4">
+            <a href="{% url 'team_page' game.winner.id %}" class="text-lg" style="color: {{ game.winner.color }}">
+                {{ game.winner.city }} {{ game.winner.name }} won {{ game.away_team_score }} - {{ game.home_team_score }}
+            </a>
+        </h2>
+        <h1 class="text-4xl font-semibold text-center">
+            <a href="{% url 'team_page' game.away_team.id %}" class="text-lg" style="color: {{ game.away_team.color }}">
+                {{ game.away_team.city }} {{ game.away_team.name }}
+            </a> @
+            <a href="{% url 'team_page' game.home_team.id %}" class="text-lg" style="color: {{ game.home_team.color }}">
+                {{ game.home_team.city }} {{ game.home_team.name }}
+            </a>
+        </h1>
     </div>
 </div>
-{% comment %} Team statistics table {% endcomment %}
-<div class="container-fluid p-5 mb-4">
-    <div class="table-responsive">
-        <table class="table table-striped table-hover table-borderless table-dark align-middle">
-            <thead class="table-light">
-                <caption>Team Details</caption>
+
+<!-- Team statistics -->
+<div class="container-fluid p-6 mb-6 bg-white shadow-md rounded-lg">
+    <div class="overflow-x-auto">
+        <table class="table table-striped table-hover table-bordered w-full">
+            <caption class="text-lg font-semibold mb-4">Team Statistics</caption>
+            <thead class="bg-gray-200">
                 <tr>
                     <th>TEAM</th>
                     <th>PTS</th>
@@ -35,11 +46,11 @@
                     <th>FTA</th>
                 </tr>
             </thead>
-            <tbody class="table-group-divider">
-                <tr class="table-dark">
+            <tbody>
+                <tr class="text-center">
                     {% for game_stats in team_stats %}
                         {% if game_stats.team == game.home_team %}
-                            <td> <a span style="color: {{ game.home_team.color }}" href="{% url 'team_page' game.home_team.id %}">{{ game.home_team.city }} {{ game.home_team.name }}</a></td>
+                            <td><a href="{% url 'team_page' game.home_team.id %}" style="color: {{ game.home_team.color }}">{{ game.home_team.city }} {{ game.home_team.name }}</a></td>
                             <td>{{ game_stats.points }}</td>
                             <td>{{ game_stats.rebounds }}</td>
                             <td>{{ game_stats.offensive_rebounds }}</td>
@@ -56,10 +67,10 @@
                         {% endif %}
                     {% endfor %}
                 </tr>
-                <tr class="table-dark">
+                <tr class="text-center">
                     {% for game_stats in team_stats %}
                         {% if game_stats.team == game.away_team %}
-                            <td> <a span style="color: {{ game.away_team.color }}" href="{% url 'team_page' game.away_team.id %}">{{ game.away_team.city }} {{ game.away_team.name }}</a></td>
+                            <td><a href="{% url 'team_page' game.away_team.id %}" style="color: {{ game.away_team.color }}">{{ game.away_team.city }} {{ game.away_team.name }}</a></td>
                             <td>{{ game_stats.points }}</td>
                             <td>{{ game_stats.rebounds }}</td>
                             <td>{{ game_stats.offensive_rebounds }}</td>
@@ -77,20 +88,16 @@
                     {% endfor %}
                 </tr>
             </tbody>
-            <tfoot>
-                
-            </tfoot>
         </table>
     </div>
-    
-
 </div>
-{% comment %} Player statistics table {% endcomment %}
-<div class="container-fluid p-5 mb-4">
-    <div class="table-responsive">
-        <table class="table table-striped table-hover table-borderless table-dark align-middle">
-            <thead class="table-light">
-                <caption>Player Details</caption>
+
+<!-- Player statistics -->
+<div class="container-fluid p-6 mb-6 bg-white shadow-md rounded-lg">
+    <div class="overflow-x-auto">
+        <table class="table table-striped table-hover table-bordered w-full">
+            <caption class="text-lg font-semibold mb-4">Player Statistics</caption>
+            <thead class="bg-gray-200">
                 <tr>
                     <th>TEAM</th>
                     <th>GMSC</th>
@@ -111,72 +118,65 @@
                     <th>DNK</th>
                 </tr>
             </thead>
-            <tbody class="table-group-divider">
-                {% comment %} Home team {% endcomment %}
-                <tr class="table-dark">
-                    <td colspan="17" class="text-left"><span style="color: {{ game.home_team.color }}" class="fw-bold">{{ game.home_team.city }} {{ game.home_team.name }}</span></td>
-                    {% for pgame_stats in player_stats %}
-                        {% if pgame_stats.team == game.home_team %}
-                            <tr> 
-                                <td><a span href="{% url 'player_page' pgame_stats.player.id %}">{{ pgame_stats.player.first_name }} {{ pgame_stats.player.last_name }}</a></td>
-                                <td>{{ pgame_stats.game_score }}</td>
-                                <td>{{ pgame_stats.points }}</td>
-                                <td>{{ pgame_stats.rebounds }}</td>
-                                <td>{{ pgame_stats.offensive_rebounds }}</td>
-                                <td>{{ pgame_stats.assists }}</td>
-                                <td>{{ pgame_stats.steals }}</td>
-                                <td>{{ pgame_stats.blocks }}</td>
-                                <td>{{ pgame_stats.turnovers }}</td>
-                                <td>{{ pgame_stats.personal_fouls }}</td>
-                                <td>{{ pgame_stats.field_goals_made }}</td>
-                                <td>{{ pgame_stats.field_goals_attempted }}</td>
-                                <td>{{ pgame_stats.three_pointers_made }}</td>
-                                <td>{{ pgame_stats.three_pointers_attempted }}</td>
-                                <td>{{ pgame_stats.free_throws_made }}</td>
-                                <td>{{ pgame_stats.free_throws_attempted }}</td>
-                                <td>{{ pgame_stats.dunks }}</td>
-                            </tr>
-                        {% endif %}
-                    {% endfor %}
+            <tbody>
+                <!-- Home team players -->
+                <tr class="font-bold text-left" style="color: {{ game.home_team.color }}">
+                    <td colspan="17">{{ game.home_team.city }} {{ game.home_team.name }}</td>
                 </tr>
-                <tr class="table-dark">
-                    <td colspan="17" class="text-left"><span style="color: {{ game.away_team.color }}" class="fw-bold">{{ game.away_team.city }} {{ game.away_team.name }}</span></td>
-                    {% for pgame_stats in player_stats %}
-                        {% if pgame_stats.team == game.away_team %}
-                            <tr> 
-                                <td><a span href="{% url 'player_page' pgame_stats.player.id %}">{{ pgame_stats.player.first_name }} {{ pgame_stats.player.last_name }}</a></td>
-                                <td>{{ pgame_stats.game_score }}</td>
-                                <td>{{ pgame_stats.points }}</td>
-                                <td>{{ pgame_stats.rebounds }}</td>
-                                <td>{{ pgame_stats.offensive_rebounds }}</td>
-                                <td>{{ pgame_stats.assists }}</td>
-                                <td>{{ pgame_stats.steals }}</td>
-                                <td>{{ pgame_stats.blocks }}</td>
-                                <td>{{ pgame_stats.turnovers }}</td>
-                                <td>{{ pgame_stats.personal_fouls }}</td>
-                                <td>{{ pgame_stats.field_goals_made }}</td>
-                                <td>{{ pgame_stats.field_goals_attempted }}</td>
-                                <td>{{ pgame_stats.three_pointers_made }}</td>
-                                <td>{{ pgame_stats.three_pointers_attempted }}</td>
-                                <td>{{ pgame_stats.free_throws_made }}</td>
-                                <td>{{ pgame_stats.free_throws_attempted }}</td>
-                                <td>{{ pgame_stats.dunks }}</td>
-                            </tr>
-                        {% endif %}
-                    {% endfor %}
-                </tr>
-                {% comment %} Away team {% endcomment %}
-                <tr class="table-dark">
-
-                </tr>
-            </tbody>
-            <tfoot>
+                {% for pgame_stats in player_stats %}
+                    {% if pgame_stats.team == game.home_team %}
+                        <tr>
+                            <td><a href="{% url 'player_page' pgame_stats.player.id %}" class="text-blue-500">{{ pgame_stats.player.first_name }} {{ pgame_stats.player.last_name }}</a></td>
+                            <td>{{ pgame_stats.game_score }}</td>
+                            <td>{{ pgame_stats.points }}</td>
+                            <td>{{ pgame_stats.rebounds }}</td>
+                            <td>{{ pgame_stats.offensive_rebounds }}</td>
+                            <td>{{ pgame_stats.assists }}</td>
+                            <td>{{ pgame_stats.steals }}</td>
+                            <td>{{ pgame_stats.blocks }}</td>
+                            <td>{{ pgame_stats.turnovers }}</td>
+                            <td>{{ pgame_stats.personal_fouls }}</td>
+                            <td>{{ pgame_stats.field_goals_made }}</td>
+                            <td>{{ pgame_stats.field_goals_attempted }}</td>
+                            <td>{{ pgame_stats.three_pointers_made }}</td>
+                            <td>{{ pgame_stats.three_pointers_attempted }}</td>
+                            <td>{{ pgame_stats.free_throws_made }}</td>
+                            <td>{{ pgame_stats.free_throws_attempted }}</td>
+                            <td>{{ pgame_stats.dunks }}</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
                 
-            </tfoot>
+                <!-- Away team players -->
+                <tr class="font-bold text-left" style="color: {{ game.away_team.color }}">
+                    <td colspan="17">{{ game.away_team.city }} {{ game.away_team.name }}</td>
+                </tr>
+                {% for pgame_stats in player_stats %}
+                    {% if pgame_stats.team == game.away_team %}
+                        <tr>
+                            <td><a href="{% url 'player_page' pgame_stats.player.id %}" class="text-blue-500">{{ pgame_stats.player.first_name }} {{ pgame_stats.player.last_name }}</a></td>
+                            <td>{{ pgame_stats.game_score }}</td>
+                            <td>{{ pgame_stats.points }}</td>
+                            <td>{{ pgame_stats.rebounds }}</td>
+                            <td>{{ pgame_stats.offensive_rebounds }}</td>
+                            <td>{{ pgame_stats.assists }}</td>
+                            <td>{{ pgame_stats.steals }}</td>
+                            <td>{{ pgame_stats.blocks }}</td>
+                            <td>{{ pgame_stats.turnovers }}</td>
+                            <td>{{ pgame_stats.personal_fouls }}</td>
+                            <td>{{ pgame_stats.field_goals_made }}</td>
+                            <td>{{ pgame_stats.field_goals_attempted }}</td>
+                            <td>{{ pgame_stats.three_pointers_made }}</td>
+                            <td>{{ pgame_stats.three_pointers_attempted }}</td>
+                            <td>{{ pgame_stats.free_throws_made }}</td>
+                            <td>{{ pgame_stats.free_throws_attempted }}</td>
+                            <td>{{ pgame_stats.dunks }}</td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </tbody>
         </table>
     </div>
-    
-
 </div>
 
 {% endblock content %}

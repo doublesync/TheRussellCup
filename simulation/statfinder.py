@@ -438,7 +438,7 @@ class GameValidator:
             for stat, value in data.items():
                 # Check if the value is empty
                 value = int(value) if value else None
-                if not value:
+                if not value and value != 0: # If the value is zero, it will be false, but zeroes are okay to input
                     self.errors.append([False, f"{stat.title()} cannot be empty"])
                     return
                 # Regular validations

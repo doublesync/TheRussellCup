@@ -401,6 +401,7 @@ class GameValidator:
         self.home_team_points = int(home_team_points)
         self.away_team_points = int(away_team_points)
         self.player_stats = player_stats
+        self.allowed_negatives = ["plus_minus"]
         self.errors = []
         self.raise_stat_error_at = {
             "steals": 10,
@@ -442,7 +443,7 @@ class GameValidator:
                     self.errors.append([False, f"{stat.title()} cannot be empty"])
                     return
                 # Regular validations
-                if value < 0:
+                if value < 0 and value not in self.allowed_negatives:
                     self.errors.append([False, f"{stat.title()} cannot be negative"])
                 if value >= 70:
                     self.errors.append([False, f"{stat.title()} cannot exceed 70"])

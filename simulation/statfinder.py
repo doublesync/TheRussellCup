@@ -443,8 +443,8 @@ class GameValidator:
                     self.errors.append([False, f"{stat.title()} cannot be empty"])
                     return
                 # Regular validations
-                if value < 0 and value not in self.allowed_negatives:
-                    self.errors.append([False, f"{stat.title()} cannot be negative"])
+                # if value < 0 and value not in self.allowed_negatives:
+                #     self.errors.append([False, f"{stat.title()} cannot be negative"])
                 if value >= 70:
                     self.errors.append([False, f"{stat.title()} cannot exceed 70"])
                 # Conditional validations

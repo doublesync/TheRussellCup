@@ -8,8 +8,8 @@ CONFIG_USER = {
 # Really this is just for limiting how much a player can earn each 'game week'
 # It has no correlation to the seasons that will appear in the stats app
 CONFIG_SEASON = {
-    "CURRENT_WEEK": 15,
-    "GAME_WEEK": 15,
+    "CURRENT_WEEK": 16,
+    "GAME_WEEK": 16,
     "CURRENT_SEASON": 4,
     "MAX_SP_WEEK": 90, # Deprecated (scared to remove it!)
     "MAX_SP_SEASON": 2340, # Raised from 1800 SP

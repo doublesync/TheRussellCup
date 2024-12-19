@@ -53,6 +53,8 @@ class PlayerListParams:
                 self.query &= Q(**{self.prefix + "anomaly": True})
             elif anomaly_filter == "exclude_anomalies":
                 self.query &= Q(**{self.prefix + "anomaly": False})
+            elif anomaly_filter == "only_rookies":
+                self.query &= Q(**{self.prefix + "rookie": True})
 
     def custom_filter(self): # Input must be configured as is in 'templates/players/player_list.html' template
         custom_filter = self.request.POST.get("custom-filter")

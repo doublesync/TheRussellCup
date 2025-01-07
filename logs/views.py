@@ -2,9 +2,10 @@
 import json
 
 # Django imports
+from django.contrib import messages
 from django.db import models
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from django.views import View
 from django.utils import timezone as tz
@@ -94,9 +95,29 @@ def download_incomplete_logs(request):
     json_data = json.dumps(compiled_upgrades, indent=4)  # Beautify for readability
     response = HttpResponse(json_data, content_type='application/json')
     # Get the date of today separated by dashes (month and day)
-    now = tz.now().strftime("%H%M%S")
-    response['Content-Disposition'] = f'attachment; filename="{now}.json"'
+    response['Content-Disposition'] = f'attachment; filename="export.json"'
     return response
+
+# A function based view that will clear all of the logs
+def mark_all_upgrades_complete(request):
+    # Check if the user has permission to mark upgrades as complete
+    if request.user.can_mark_upgrades:
+        # Get all of the logs that aren't completed
+        upgrade_logs = UpgradeLog.objects.filter(complete=False)
+        # Mark all of the logs as complete
+        for log in upgrade_logs:
+            log.complete = True
+            log.save()
+        # Create a discord webhook
+        amount_of_upgrades = len(upgrade_logs)
+        webhook.send_webhook(
+            url="marked_upgrades",
+            title=f"✅ Updated completed by {request.user.username}",
+            body=f"# Update Details\n## Amount of Upgrades\n ### {amount_of_upgrades}",
+        )
+        # Return a response
+        messages.success(request, "✔ All upgrades have been marked as complete.")
+        return redirect("incomplete_logs")
 
 def google_adsense(request):
     return HttpResponse("google.com, pub-4085265783135188, DIRECT, f08c47fec0942fa0")

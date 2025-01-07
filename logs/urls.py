@@ -13,4 +13,5 @@ urlpatterns = [
     path("upgrades/incomplete/", views.IncompleteLogs.as_view(), name="incomplete_logs"),
     path("upgrade/<int:id>/complete/", views.mark_upgrade_complete, name="mark_upgrade_complete"),
     path("upgrades/incomplete/download/", views.download_incomplete_logs, name="download_incomplete_logs"),
+    path("upgrades/incomplete/mark-all-complete/", views.mark_all_upgrades_complete, name="mark_all_upgrades_complete"),
 ]

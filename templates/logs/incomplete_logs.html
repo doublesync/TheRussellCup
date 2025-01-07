@@ -17,7 +17,15 @@
                 <span class="absolute top-0.5 right-0.5 grid min-h-[24px] min-w-[24px] translate-x-2/4 -translate-y-2/4 place-items-center rounded-full py-1 px-1 bg-black text-xs text-white">
                     {{ upgrade_logs|length }}
                 </span>
-              </div>
+            </div>
+            <div class="relative inline-flex ml-4">
+                <button class="rounded-md bg-primary border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none" type="button">
+                    <a href="{% url 'mark_all_upgrades_complete' %}" class="btn btn-sm btn-primary gap-2">
+                        <i class="fa-solid fa-check"></i>
+                        Mark All Complete
+                    </a>
+                </button>
+            </div>
         </div>
         <div class="bg-base-200 rounded-lg shadow-md">
             <h2 class="text-2xl font-semibold mb-4">Upgrade Logs</h2>

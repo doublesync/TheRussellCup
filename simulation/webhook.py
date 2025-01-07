@@ -1,12 +1,12 @@
 from discord_webhook import DiscordWebhook, DiscordEmbed
 
 webhook_urls: dict[str, str] = {
-    "new_players": "https://discord.com/api/webhooks/1254052927073685595/g6RGeNm7uEDmSRr771PAEwAGqPM09xJfvgGqSOcN5BLFqqgSUjlddxEMP54CUhFjp7vv",
-    "marked_upgrades": "https://discord.com/api/webhooks/1268653807789670561/53mrONM9fgS84cFrDhHXxyiXSV-gdvYiDpUwUOjpdXf0DoqFPObKd-qbIBbA1BRVc9nx",
-    "specialty_rolls": "https://discord.com/api/webhooks/1270538828049813595/BSTrO04VRJGs2HKz6shLnDaPotAU6IVduXR0YhNYhVRSTiV3-uajHeW92OR8Fpu9HtYy",
+    "new_players": "https://discord.com/api/webhooks/1326005929824489532/OCyiOK98HPJcKYxSavkTnuCGuj1RQSpwpT2QMxHd1WohkloYafPx49Xo-hhCGtMot-_X",
+    "marked_upgrades": "https://discord.com/api/webhooks/1326005781144932393/tmvLbqcnEKZH90K5MHG1SvIT7ttrM52Pzd8J8zXYA8VG9XtMXt7Upt4HoWwLjLMh1EQY",
+    "specialty_rolls": "https://discord.com/api/webhooks/1326005794012921897/hT8KfgxGkCJUvvku5GEkz7WQFg8fo3sycqgUqVsSgfXCfCj5KOMgax01o2MUz9KhvuP9",
     "stat_updates": "https://discord.com/api/webhooks/1282346787486699641/hrbc-Wv6V9NkCKHxJmQ6S_LKLWWvTArMW1c5vDbWuoELBJCVEcMoaInxmm6jXi_YtvgB",
-    "alt_identifier": "https://discord.com/api/webhooks/1288881934025363588/BqWgNfhFX2KjpTyqpO7bEtx8uIqwALdWq64sc68Lwl-pCgGjsN8Yi1T2f9cqrKy4EL95",
-    "payment_requests": "https://canary.discord.com/api/webhooks/1298810551480090704/AeM_2ushAiUJn_PvVMGFrjT5jVh3InNaDcHbz_IWZCrRJkLpHGIlJwZDHwIqQyQ6gImq",
+    "alt_identifier": "https://discord.com/api/webhooks/1326005937949118475/umkaVz-vGOiKq1DsEr2UpfPsF_Dj5YZycsVuD-qa5JM0nqrDPz_1jH-VrszgAz_A-NQo",
+    "payment_requests": "https://discord.com/api/webhooks/1326005936288043069/a47WxnumgPhna3DwFvzmKqvMQFwO2r--59HSC1W6t3A8LcOcFzt-6hD4NOOP9ZU5oQ6s",
 }
 
 

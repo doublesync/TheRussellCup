@@ -4,6 +4,15 @@ import json
 # Local imports
 from logs.models import UpgradeLog
 
+# Physical attributes that don't change
+physical_attributes = [
+    "Speed",
+    "Agility",
+    "Vertical",
+    "Strength",  
+    "Speed with Ball",
+]
+
 # A function used to return an accurate range by including the end of the range
 def real_range(start, end):
     return range(start, (end + 1))
@@ -28,6 +37,9 @@ def compile_player_upgrades():
             "badges": {},
             "tendencies": {},
         }
+        # Add physical attributes to attributes dictionary
+        for attribute in physical_attributes:
+            upgrades[full_name]["attributes"][attribute] = log.player.attributes[attribute]
         # Add the attributes
         for attribute, data in log.upgrades["attributes"].items():
             upgrades[full_name]["attributes"][attribute] = data["new"]

@@ -51,3 +51,28 @@ def compile_player_upgrades():
             upgrades[full_name]["tendencies"][tendency] = data["new"]
     # Return the compiled upgrades
     return upgrades
+
+# A function used to copmile a single player into a ditionary for Sync2K
+def generate_player_file(player):
+    # Initialize the upgrades we'll return.
+    upgrades = {}
+    player_file = {
+        "attributes": {},
+        "badges": {},
+        "tendencies": {}
+    }
+    # Add attributes to the player file
+    for attribute in player.attributes:
+        player_file["attributes"] = player.attributes[attribute]
+    # Add badges to the player file
+    for badge in player.badges:
+        player_file["badges"] = player.badges[badge]
+    # Add tendencies to the player file
+    for tendency in player.tendencies:
+        player_file["tendencies"] = player.tendencies[tendency]
+    # Add first and last name identifiers
+    player_file["firstName"] = player.first_name
+    player_file["lastName"] = player.last_name
+    # Return the player_file within the upgrades dictionary
+    upgrades[f"{player.first_name} {player.last_name}"] = player_file
+    return upgrades

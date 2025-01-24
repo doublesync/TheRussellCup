@@ -23,39 +23,9 @@ def imperial_height(inches):
     return f"{inches // 12}'{inches % 12}"
 
 
-# A function used to compile every player upgrade into a single dictionary for Sync2K
-def compile_player_upgrades():
-    upgrades = {}
-    upgrade_logs = UpgradeLog.objects.filter(complete=False).order_by("player__team")
-    for log in upgrade_logs:
-        # Initialize the dictionary
-        full_name = f"{log.player.first_name} {log.player.last_name}"
-        upgrades[full_name] = {
-            "firstName": log.player.first_name,
-            "lastName": log.player.last_name,
-            "attributes": {},
-            "badges": {},
-            "tendencies": {},
-        }
-        # Add physical attributes to attributes dictionary
-        for attribute in physical_attributes:
-            upgrades[full_name]["attributes"][attribute] = log.player.attributes[attribute]
-        # Add the attributes
-        for attribute, data in log.upgrades["attributes"].items():
-            upgrades[full_name]["attributes"][attribute] = data["new"]
-        # Add the badges
-        for badge, data in log.upgrades["badges"].items():
-            upgrades[full_name]["badges"][badge] = data["new"]
-        # Add the tendencies
-        for tendency, data in log.upgrades["tendencies"].items():
-            upgrades[full_name]["tendencies"][tendency] = data["new"]
-    # Return the compiled upgrades
-    return upgrades
-
 # A function used to copmile a single player into a ditionary for Sync2K
 def generate_player_file(player):
     # Initialize the upgrades we'll return.
-    upgrades = {}
     player_file = {
         "attributes": {},
         "badges": {},
@@ -63,16 +33,26 @@ def generate_player_file(player):
     }
     # Add attributes to the player file
     for attribute in player.attributes:
-        player_file["attributes"] = player.attributes[attribute]
+        player_file["attributes"][attribute] = player.attributes[attribute]
     # Add badges to the player file
     for badge in player.badges:
-        player_file["badges"] = player.badges[badge]
+        player_file["badges"][badge] = player.badges[badge]
     # Add tendencies to the player file
     for tendency in player.tendencies:
-        player_file["tendencies"] = player.tendencies[tendency]
+        player_file["tendencies"][tendency] = player.tendencies[tendency]
     # Add first and last name identifiers
     player_file["firstName"] = player.first_name
     player_file["lastName"] = player.last_name
-    # Return the player_file within the upgrades dictionary
-    upgrades[f"{player.first_name} {player.last_name}"] = player_file
+    return player_file
+
+# A function used to compile every player upgrade into a single dictionary for Sync2K
+def compile_player_upgrades():
+    upgrades = {}
+    upgrade_logs = UpgradeLog.objects.filter(complete=False)
+    for log in upgrade_logs:
+        # Fetch the player from the log (each player has a relative player)
+        player = log.player
+        # Get the upgrades we'll return
+        upgrades[player.id] = generate_player_file(player)
+    # Return the compiled upgrades
     return upgrades

@@ -39,10 +39,12 @@ def generate_player_file(player):
             player_file["attributes"][attribute] = player.attributes[attribute]
     # Add badges to the player file
     for badge in player.badges:
-        player_file["badges"][badge] = player.badges[badge]
+        if badge not in banned_items:
+            player_file["badges"][badge] = player.badges[badge]
     # Add tendencies to the player file
     for tendency in player.tendencies:
-        player_file["tendencies"][tendency] = player.tendencies[tendency]
+        if tendency not in banned_items:
+            player_file["tendencies"][tendency] = player.tendencies[tendency]
     # Add first and last name identifiers
     player_file["firstName"] = player.first_name
     player_file["lastName"] = player.last_name

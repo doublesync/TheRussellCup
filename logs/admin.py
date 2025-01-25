@@ -12,8 +12,12 @@ class TransactionMoveLogAdmin(ModelAdmin):
     search_fields = ['team', 'signed', 'released']
     autocomplete_fields = ['team', 'signed', 'released']
 
+class LogAdmin(ModelAdmin):
+    search_fields = ['player__first_name', 'player__last_name']
+    autocomplete_fields = ['player']
+
 # Register your models here.
-admin.site.register(UpgradeLog, ModelAdmin)
-admin.site.register(PaymentLog, ModelAdmin)
-admin.site.register(ContractLog, ModelAdmin)
+admin.site.register(UpgradeLog, LogAdmin)
+admin.site.register(PaymentLog, LogAdmin)
+admin.site.register(ContractLog, LogAdmin)
 admin.site.register(TransactionMoveLog, TransactionMoveLogAdmin)

@@ -9,7 +9,7 @@ CONFIG_USER = {
 # It has no correlation to the seasons that will appear in the stats app
 CONFIG_SEASON = {
     "CURRENT_WEEK": 11,
-    "GAME_WEEK": 11,
+    "GAME_WEEK": 13,
     "CURRENT_SEASON": 5,
     "MAX_SP_WEEK": 90, # Deprecated (scared to remove it!)
     "MAX_SP_SEASON": 2340, # Raised from 1800 SP

@@ -31,9 +31,12 @@ def generate_player_file(player):
         "badges": {},
         "tendencies": {}
     }
+    # Don't add the item if it's in the banned list
+    banned_items = ["Touches"]
     # Add attributes to the player file
     for attribute in player.attributes:
-        player_file["attributes"][attribute] = player.attributes[attribute]
+        if attribute not in banned_items:
+            player_file["attributes"][attribute] = player.attributes[attribute]
     # Add badges to the player file
     for badge in player.badges:
         player_file["badges"][badge] = player.badges[badge]

@@ -14,10 +14,18 @@
         <!-- Toggle Filters Button -->
         <div class="mb-4 text-left">
             <button type="button" class="btn btn-sm btn-primary mt-4" id="toggle-filter-modal">
-                <i class="fas fa-filter"></i> Toggle Filters
+                <i class="fas fa-filter"></i> Advanced Filters
             </button>
         </div>
 
+        {% comment %} Basic Filters {% endcomment %}
+
+        {% comment %} Player Name {% endcomment %}
+        <div>
+            <label for="name-filter" class="block text-sm font-medium text-gray-300">Search for Players</label>
+            <input name="name-filter" id="name-filter" class="input input-sm w-full mt-2" type="text" placeholder="Enter a name"/>
+        </div>
+        
         <!-- Modal for Filters -->
         <div id="filter-modal" class="modal">
             <div class="modal-box bg-dark text-white">
@@ -32,12 +40,6 @@
                         {% endfor %}
                         <option value="all_seasons">All Seasons</option>
                     </select>
-                </div>
-
-                <!-- Player Name Filter -->
-                <div>
-                    <label for="name-filter" class="block text-sm font-medium text-gray-300">Search for Players</label>
-                    <input name="name-filter" id="name-filter" class="input input-sm w-full mt-2" type="text" placeholder="Enter a name"/>
                 </div>
 
                 <!-- Position Filter -->

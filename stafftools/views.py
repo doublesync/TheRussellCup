@@ -98,26 +98,26 @@ class BulkAssignTeamView(View):
     
     def post(self, request):
         # Check staff status
-        if not request.user.is_superuser:
+        if not request.user.is_staff:
             return HttpResponse("You are not authorized to bulk assign users to teams.")
         # Grab the form data
-        assign_list = request.POST.getlist("assign-list")
         assign_team = request.POST.get("assign-team")
-        clear_existing_members = request.POST.get("clear-existing-members")
-        # Clear the existing members if the field is checked
+        assign_list = request.POST.getlist("assign-list")
+        remove_list = request.POST.getlist("remove-list")
         team = Team.objects.get(pk=assign_team)
-        if clear_existing_members == "on":
-            for player in team.player_set.all():
-                player.team = None
-                player.save()
         # Assign the players to the team
         for id in assign_list:
             player = Player.objects.get(pk=id)
             player.team = team
             player.save()
-            
+        # Remove the players from the team
+        # Doesn't check if player is on the team, just sets team to None
+        for id in remove_list:
+            player = Player.objects.get(pk=id)
+            player.team = None
+            player.save()
         # Return the response
-        return HttpResponse("✅ Players have been assigned to the team.")
+        return HttpResponse("✅ Changes were successfully made.")
 
 # A class that handles the refreshing of statistics
 class RefreshStatsView(View):

@@ -128,6 +128,7 @@ def create_game(request):
     if not request.user.is_staff:
         return redirect("stats_home")
     context = {
+        "players": Player.objects.all(),
         "teams": Team.objects.all(),
     }
     return render(request, "stats/create_game.html", context)
@@ -258,6 +259,7 @@ def htmx_confirm_game(request):
         return redirect("stats_home")
 
     # Get the form data
+    season = request.POST.get("season")
     game_week = request.POST.get("game_week")
     surge_game = request.POST.get("surge_game")
     playoff_game = request.POST.get("playoff_game")
@@ -288,11 +290,13 @@ def htmx_confirm_game(request):
     # Validate the teams here
     home_team_exists = Team.objects.filter(pk=home_team).exists()
     away_team_exists = Team.objects.filter(pk=away_team).exists()
-    if not home_team_exists or not away_team_exists:
-        return HttpResponse("<span class='text-danger'>One or more teams do not exist</span>")
+    season_exists = Season.objects.filter(season=season).exists()
+    if not home_team_exists or not away_team_exists or not season_exists:
+        return HttpResponse("<span class='text-danger'>A team or season does not exist</span>")
     # Get the team objects
     home_team = Team.objects.get(pk=home_team)
     away_team = Team.objects.get(pk=away_team)
+    season = Season.objects.get(season=season)
 
     # Validate the form data
     game_validator = statfinder.GameValidator(home_team_points, away_team_points, player_stats)
@@ -306,7 +310,7 @@ def htmx_confirm_game(request):
     # Create the game
     game = Game.objects.create(
         surge_game=bool(surge_game),
-        season=Season.objects.filter(current_season=True).first(),
+        season=season,
         week=int(game_week),
         home_team=home_team,
         home_team_score=int(home_team_points),

@@ -6,38 +6,7 @@
 {% block content %}
     <div class="container-fluid">
         <h1>Bulk Pay</h1>
-        <form id="bulk-assign-teams-form" class="p-4 rounded shadow-sm">
-            {% csrf_token %}
-            <div class="card-body">
-                <h5 class="card-title mb-3">Assign Team Form</h5>
-        
-                <div class="mb-3">
-                    <label for="assign-list" class="form-label">Select players to assign</label>
-                    <select id="assign-list" class="js-multiple-select form-select" name="assign-list" multiple="multiple">
-                        {% for player in players %}
-                            <option value="{{ player.id }}">{{ player.first_name }} {{ player.last_name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-        
-                <div class="mb-3">
-                    <label for="assign-team" class="form-label">Select team to assign players to</label>
-                    <select id="assign-team" class="js-multiple-select form-select" name="assign-team">
-                        {% for team in teams %}
-                            <option value="{{ team.id }}">{{ team.city }} {{ team.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-        
-                <div class="form-check mb-3">
-                    <input type="checkbox" id="clear-existing-members" name="clear-existing-members" class="form-check-input">
-                    <label for="clear-existing-members" class="form-check-label">Clear Existing Members</label>
-                </div>
-                <div class="d-grid">
-                    <button type="submit" class="btn btn-info btn-sm" hx-trigger="click throttle:1s" hx-target="#bulk-assign-teams-form" hx-swap="innerHTML" hx-post="{% url 'bulk_assign_team' %}"><i class="fas fa-person"></i> Bulk Assign Teams</button>
-                </div>
-            </div>
-        </form>
+        {% include 'stafftools/fragments/bulk_assign_team.html' %}
     </div>
 {% endblock %}
 

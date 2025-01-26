@@ -1,0 +1,67 @@
+<div class="relative p-6 rounded-lg shadow-md bg-base-100">
+
+    <!-- Title and Close Button -->
+    <div class="flex justify-between items-center mb-6">
+        <h5 class="text-lg font-bold">Bulk Assign Team</h5>
+        <button type="button" class="btn btn-sm btn-circle btn-ghost absolute top-4 right-4"  onclick="document.getElementById('swapModal').classList.remove('modal-open')">
+            ✕
+        </button>
+    </div>
+
+    {% comment %} Change status {% endcomment %}
+    {% comment %} Make this disappear after three seconds {% endcomment %}
+    <pre data-prefix="$" id="change-status" class="bg-success text-warning-content p-2"><code>Change status messages will show up here.</code></pre>
+
+    <!-- Form -->
+    <form id="bulk-assign-teams-form" class="space-y-6">
+        {% csrf_token %}
+
+        <!-- Select team to assign players to -->
+        <div class="form-control">
+            <label for="assign-team" class="label">
+                <span class="label-text">Select team to assign/remove players to and from</span>
+            </label>
+            <select id="assign-team" class="js-multiple-select w-full" name="assign-team">
+                {% for team in teams %}
+                <option value="{{ team.id }}">{{ team.city }} {{ team.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Select players to assign -->
+        <div class="form-control">
+            <label for="assign-list" class="label">
+                <span class="label-text">Select players to add to team</span>
+            </label>
+            <select id="assign-list" class="js-multiple-select w-full" name="assign-list" multiple>
+                {% for player in players %}
+                <option value="{{ player.id }}">{{ player.first_name }} {{ player.last_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        {% comment %} Select players to remove {% endcomment %}
+        <div class="form-control">
+            <label for="remove-list" class="label">
+                <span class="label-text">Select players to remove from team</span>
+            </label>
+            <select id="remove-list" class="js-multiple-select w-full" name="remove-list" multiple>
+                {% for player in players %}
+                <option value="{{ player.id }}">{{ player.first_name }} {{ player.last_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="form-control">
+            <button type="submit" 
+                class="btn btn-primary w-full" 
+                hx-trigger="click throttle:1s" 
+                hx-target="#change-status" 
+                hx-swap="innerHTML" 
+                hx-post="{% url 'bulk_assign_team' %}">
+                <i class="fas fa-person mr-2"></i> Submit Changes
+            </button>
+        </div>
+    </form>
+</div>

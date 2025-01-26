@@ -8,6 +8,15 @@
 <div class="container mx-auto py-8">
     <h1 class="text-3xl font-bold text-center mb-6">Input Game Stats</h1>
 
+
+
+    {% comment %} Modal for quick swap players {% endcomment %}
+    <div id="swapModal" class="modal">
+        <div class="modal-box w-full max-w-lg">
+            {% include 'stafftools/fragments/bulk_assign_team.html' %}
+        </div>
+    </div>
+
     <form method="post" class="space-y-8">
         {% csrf_token %}
 
@@ -20,16 +29,30 @@
         </div>
 
         <!-- Filter Button to Open Modal -->
-        <div class="flex justify-center">
-            <button type="button" class="btn btn-primary w-64"  onclick="document.getElementById('gameModal').classList.add('modal-open')">
+        <div class="flex flex-wrap justify-center gap-2 p-2">
+            <button type="button" class="btn btn-primary w-full sm:w-64 m-1" onclick="document.getElementById('gameModal').classList.add('modal-open')">
                 <i class="fas fa-filter"></i> Finish Game
             </button>
+            {% comment %} Button to open swap player teams modal {% endcomment %}
+            <button type="button" class="btn btn-primary w-full sm:w-64 m-1" onclick="document.getElementById('swapModal').classList.add('modal-open')">
+                <i class="fas fa-exchange-alt"></i> Swap Players
+            </button>
         </div>
-
         {% comment %} Game week selector & surge game toggle (true/false) {% endcomment %}
         <div class="grid grid-cols-2 gap-4">
+            {% comment %} Season selector {% endcomment %}
+            <div>
+                <label for="season" class="block text-lg font-medium mb-2">Season</label>
+                <select name="season" id="season" class="select select-bordered w-full">
+                    <option value="5">Season 5</option>
+                    <option value="4">Season 4</option>
+                    <option value="3">Season 3</option>
+                    <option value="2">Season 2</option>
+                    <option value="1">Season 1</option>
+                </select>
+            </div>
             {% comment %} Game week selector {% endcomment %}
-            <div class="col-span-2">
+            <div>
                 <label for="game_week" class="block text-lg font-medium mb-2">Game Week</label>
                 <select name="game_week" id="game_week" class="select select-bordered w-full">
                     <option value="1">Week 1</option>
@@ -144,7 +167,12 @@
         </div>
 
     </form>
+
 </div>
+{% endblock %}
+
+{% block scripts %}
+{% include 'stafftools/fragments/select2_scripts.html' %}
 {% endblock %}
 
 {% block styles %}
@@ -160,4 +188,7 @@
         -moz-appearance: textfield;
     }
 </style>
+
+{% include 'stafftools/fragments/select2_styles.html' %}
+
 {% endblock %}

@@ -1,7 +1,7 @@
 <div class="overflow-x-auto">
     <table class="table table-zebra w-full text-sm text-white">
-        <thead class="text-white">
-            <tr>
+        <thead>
+            <tr class="bg-neutral text-white">
                 <th class="p-2 text-center">NAME</th>
                 <th class="p-2 text-center">T/GP</th>
                 <th class="p-2 text-center">A/MIN</th>
@@ -68,25 +68,26 @@
         </tbody>
     </table>
 
+    <!-- Pagination -->
     <div class="mt-4 flex justify-center">
-        <ul class="pagination space-x-2">
+        <div class="btn-group">
             {% if page_obj.has_previous %}
-                <li><a href="#" class="btn btn-sm btn-primary" hx-post="{% url 'htmx_filter_players' 'stats' %}?page=1" hx-trigger="click throttle:1s" hx-target="#search-table" hx-swap="innerHTML">First</a></li>
-                <li><a href="#" class="btn btn-sm btn-primary" hx-post="{% url 'htmx_filter_players' 'stats' %}?page={{ page_obj.previous_page_number }}" hx-trigger="click throttle:1s" hx-target="#search-table" hx-swap="innerHTML">Previous</a></li>
+                <a class="btn btn-sm" hx-post="{% url 'htmx_filter_players' 'stats' %}?page=1" hx-target="#search-table" hx-swap="innerHTML">«</a>
+                <a class="btn btn-sm" hx-post="{% url 'htmx_filter_players' 'stats' %}?page={{ page_obj.previous_page_number }}" hx-target="#search-table" hx-swap="innerHTML">‹</a>
             {% endif %}
 
             {% for num in page_obj.paginator.page_range %}
                 {% if page_obj.number == num %}
-                    <li><span class="btn btn-sm btn-primary">{{ num }}</span></li>
+                    <button class="btn btn-sm btn-active">{{ num }}</button>
                 {% else %}
-                    <li><a href="#" class="btn btn-sm" hx-post="{% url 'htmx_filter_players' 'stats' %}?page={{ num }}" hx-trigger="click throttle:1s" hx-target="#search-table" hx-swap="innerHTML">{{ num }}</a></li>
+                    <a class="btn btn-sm" hx-post="{% url 'htmx_filter_players' 'stats' %}?page={{ num }}" hx-target="#search-table" hx-swap="innerHTML">{{ num }}</a>
                 {% endif %}
             {% endfor %}
 
             {% if page_obj.has_next %}
-                <li><a href="#" class="btn btn-sm btn-primary" hx-post="{% url 'htmx_filter_players' 'stats' %}?page={{ page_obj.next_page_number }}" hx-trigger="click throttle:1s" hx-target="#search-table" hx-swap="innerHTML">Next</a></li>
-                <li><a href="#" class="btn btn-sm btn-primary" hx-post="{% url 'htmx_filter_players' 'stats' %}?page={{ page_obj.paginator.num_pages }}" hx-trigger="click throttle:1s" hx-target="#search-table" hx-swap="innerHTML">Last</a></li>
+                <a class="btn btn-sm" hx-post="{% url 'htmx_filter_players' 'stats' %}?page={{ page_obj.next_page_number }}" hx-target="#search-table" hx-swap="innerHTML">›</a>
+                <a class="btn btn-sm" hx-post="{% url 'htmx_filter_players' 'stats' %}?page={{ page_obj.paginator.num_pages }}" hx-target="#search-table" hx-swap="innerHTML">»</a>
             {% endif %}
-        </ul>
+        </div>
     </div>
 </div>

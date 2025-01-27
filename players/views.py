@@ -243,7 +243,7 @@ class ModificationsListView(ListView):
     model = Player
     template_name = "players/modifications_list.html"
     context_object_name = "modifications"
-    paginate_by = 10
+    paginate_by = 20
 
     def get_context_data(self, **kwargs):
         kwargs["players"] = Player.objects.filter(user=self.request.user)

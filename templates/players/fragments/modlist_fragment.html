@@ -33,12 +33,13 @@
                                 <h3 class="font-bold text-lg">Confirm Purchase</h3>
                                 <p class="py-4">Are you sure you want to purchase "{{ mod.item }}"?</p>
                                 <div class="modal-action">
-                                    <label for="modal-{{ mod.id }}" class="btn btn-error text-white">Cancel</label>
+                                    <label for="modal-{{ mod.id }}" class="btn btn-error text-white">Close</label>
                                     <button type="button" class="btn btn-info text-white"
                                             hx-post="{% url 'purchase_modification' mod.id %}" 
                                             hx-trigger="click throttle:5s" 
                                             hx-target="#status" 
-                                            hx-swap="innerHTML">
+                                            hx-swap="innerHTML"
+                                            onclick="this.disabled = true; this.innerText = 'Purchased!';">
                                         Confirm
                                     </button>
                                 </div>

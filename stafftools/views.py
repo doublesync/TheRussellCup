@@ -104,18 +104,22 @@ class BulkAssignTeamView(View):
         assign_team = request.POST.get("assign-team")
         assign_list = request.POST.getlist("assign-list")
         remove_list = request.POST.getlist("remove-list")
+        remove_all = request.POST.get("remove-all")
         team = Team.objects.get(pk=assign_team)
+        # Remove all players from the team
+        if remove_all == "on":
+            team.player_set.all().update(team=None)
         # Assign the players to the team
         for id in assign_list:
             player = Player.objects.get(pk=id)
             player.team = team
             player.save()
         # Remove the players from the team
-        # Doesn't check if player is on the team, just sets team to None
-        for id in remove_list:
-            player = Player.objects.get(pk=id)
-            player.team = None
-            player.save()
+        if remove_all != "on":
+            for id in remove_list:
+                player = Player.objects.get(pk=id)
+                player.team = None
+                player.save()
         # Return the response
         return HttpResponse("✅ Changes were successfully made.")
 

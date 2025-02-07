@@ -12,125 +12,86 @@
 {% endblock %}
 
 {% block content %}
-<div class="container mx-auto p-5">
 
-    <!-- League Storylines -->
-    <section>
-        <h1 class="text-3xl font-semibold text-white-800">League Storylines</h1>
-        <div class="shadow-lg rounded-lg p-6 mt-4">
-            <p class="text-white-600">{{ storylines }}</p>
+<div id="title-content">
+
+    {% comment %} Title & season selector {% endcomment %}
+    <div class="flex items-center p-5">
+        <h1 class="text-3xl font-semibold text-white-800">Home</h1>
+        <div class="relative ml-5 w-32">
+            <select id="season-selector" class="select-sm select-bordered select w-full max-w-xs">
+                {% for season in seasons %}
+                {% if forloop.counter == 1 %}
+                <option selected value="{{ season }}">{{ season }}</option>
+                {% else %}
+                <option value="{{ season }}">{{ season }}</option>
+                {% endif %}
+                {% endfor %}
+            </select>
         </div>
-    </section>
+    </div>
+    <hr class="border-gray-400">
 
-    <!-- Best Game of the Season -->
-    <section class="mt-10">
-        <h1 class="text-3xl font-semibold text-white-800">Best Game of the Season</h1>
-        <div class="shadow-lg rounded-lg p-6 mt-4">
-            <div class="flex justify-between items-center">
-                <h5 class="text-lg text-green-600 font-semibold">{{ game_of_season.game_score }} GMSC</h5>
-                <h5 class="text-xl font-semibold">{{ game_of_season.game }}</h5>
+</div>
+
+{% comment %} Season content container (htmx will change this) {% endcomment %}
+<div id="season-content" class="mt-5">
+
+    {% comment %} Standings {% endcomment %}
+    <div id="standings-content" class="mt-5">
+        {% comment %} Standings banner {% endcomment %}
+        <h2 class="px-4 py-2 text-lg font-semibold text-base border border-gray-600 border-l-4 border-teal-800">
+            Standings
+        </h2>        
+        {% comment %} Standings list {% endcomment %}
+        <section>
+            <div class="overflow-x-auto shadow-lg rounded-lg">
+                <table id="standings-table" class="table-auto w-full border-collapse">
+                    <thead>
+                        <tr class="text-white-700">
+                            <th class="px-4 py-2 text-left">Rank</th>
+                            <th class="px-4 py-2 text-left">Team</th>
+                            <th class="px-4 py-2 text-center">Games</th>
+                            <th class="px-4 py-2 text-center">Wins</th>
+                            <th class="px-4 py-2 text-center">Losses</th>
+                            <th class="px-4 py-2 text-center">Differential</th>
+                            {% comment %} <th class="px-4 py-2 text-center">Tiebreakers</th> {% endcomment %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for team, data in standings.items %}
+                        <tr>
+                            <td class="px-4 py-2">{{ forloop.counter }}</td>
+                            <td class="px-4 py-2">{{ data.team.city }} {{ data.team.name }}</td>
+                            <td class="px-4 py-2 text-center">{{ data.season_stats.games_played }}</td>
+                            <td class="px-4 py-2 text-center">{{ data.season_stats.wins }}</td>
+                            <td class="px-4 py-2 text-center">{{ data.season_stats.losses }}</td>
+                            <td class="px-4 py-2 text-center">{{ data.season_stats.point_differential }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
-            <h6 class="text-sm text-white-500">{{ game_of_season.player }}</h6>
-            <p class="mt-4 text-white-700 text-sm">
-                <span class="font-semibold">{{ game_of_season.points }} PTS</span>, 
-                <span class="font-semibold">{{ game_of_season.rebounds }} REB</span>, 
-                <span class="font-semibold">{{ game_of_season.assists }} AST</span>, 
-                <span class="font-semibold">{{ game_of_season.steals }} STL</span>, 
-                <span class="font-semibold">{{ game_of_season.blocks }} BLK</span>
-            </p>
-            <p class="mt-2 text-white-600 text-sm">
-                ({{ game_of_season.field_goals_made }}/{{ game_of_season.field_goals_attempted }}) FG, 
-                ({{ game_of_season.three_pointers_made }}/{{ game_of_season.three_pointers_attempted }}) 3P, 
-                ({{ game_of_season.free_throws_made}}/{{ game_of_season.free_throws_attempted }}) FT
-            </p>
-        </div>
-    </section>
+        </section>
+    </div>
 
-    <!-- League Leaders -->
-    <section class="mt-10">
-        <h1 class="text-3xl font-semibold text-white-800">League Leaders</h1>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-4">
-            {% for category, leader in leaders.items %}
-            <div class="shadow-lg rounded-lg p-6">
-                <h5 class="text-xl font-semibold text-white-700 capitalize">{{ category }}</h5>
-                <h6 class="text-white-500">{{ leader.name }}</h6>
-                <h2 class="text-2xl font-bold text-white-900">{{ leader.average }}</h2>
-            </div>
-            {% endfor %}
-        </div>
-    </section>
+    {% comment %} League leaders banner & information {% endcomment %}
 
-    <!-- League Standings -->
-    <section class="mt-10">
-        <h1 class="text-3xl font-semibold text-white-800">League Standings</h1>
-        <div class="overflow-x-auto mt-4 shadow-lg rounded-lg">
-            <table class="table-auto w-full border-collapse">
-                <thead>
-                    <tr class="text-white-700">
-                        <th class="px-4 py-2 text-left">Rank</th>
-                        <th class="px-4 py-2 text-left">Team</th>
-                        <th class="px-4 py-2 text-center">Games</th>
-                        <th class="px-4 py-2 text-center">Wins</th>
-                        <th class="px-4 py-2 text-center">Losses</th>
-                        <th class="px-4 py-2 text-center">Differential</th>
-                        <th class="px-4 py-2 text-center">Tiebreakers</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for team, data in standings.items %}
-                    <tr>
-                        <td class="px-4 py-2">{{ forloop.counter }}</td>
-                        <td class="px-4 py-2">{{ data.team.city }} {{ data.team.name }}</td>
-                        <td class="px-4 py-2 text-center">{{ data.season_stats.games_played }}</td>
-                        <td class="px-4 py-2 text-center">{{ data.season_stats.wins }}</td>
-                        <td class="px-4 py-2 text-center">{{ data.season_stats.losses }}</td>
-                        <td class="px-4 py-2 text-center">{{ data.season_stats.point_differential }}</td>
-                        <td class="px-4 py-2 text-center">
-                            {% for tiebreaker in data.tiebreakers %}
-                            <span class="inline-block bg-blue-100 text-blue-700 px-2 py-1 text-sm rounded-full">{{ tiebreaker }}</span>
-                            {% endfor %}
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </section>
-
-    <!-- Recent Games -->
-    <section class="mt-10">
-        <h1 class="text-3xl font-semibold text-white-800">Recent Games</h1>
-        <div class="overflow-x-auto mt-4 shadow-lg rounded-lg">
-            <table class="table-auto w-full border-collapse">
-                <thead>
-                    <tr>
-                        <th class="px-4 py-2 text-left">Boxscore</th>
-                        <th class="px-4 py-2 text-left">Game ID</th>
-                        <th class="px-4 py-2 text-left">Home Team</th>
-                        <th class="px-4 py-2 text-left">Away Team</th>
-                        <th class="px-4 py-2 text-center">Score</th>
-                        <th class="px-4 py-2 text-left">Winner</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for game in recent_games %}
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-4 py-2"><a href="{% url 'boxscore' game.id %}" class="text-blue-600 hover:underline">View boxscore</a></td>
-                        <td class="px-4 py-2">{{ game.id }}</td>
-                        <td class="px-4 py-2">{{ game.home_team.city }} {{ game.home_team.name }}</td>
-                        <td class="px-4 py-2">{{ game.away_team.city }} {{ game.away_team.name }}</td>
-                        <td class="px-4 py-2 text-center">{{ game.home_team_score }} - {{ game.away_team_score }}</td>
-                        <td class="px-4 py-2">{{ game.winner.city }} {{ game.winner.name }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </section>
+    {% comment %} Recent games banner & information {% endcomment %}
 
 </div>
 
 {% endblock %}
 
 {% block scripts %}
+<script>
+    $(document).ready( function () {
+        $('#standings-table').DataTable({
+            paging: false,
+            scrollY: false,
+            scrollX: false,
+            searching: false,
+        });
+    });
+</script>
 {% endblock %}

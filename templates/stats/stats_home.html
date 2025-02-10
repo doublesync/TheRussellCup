@@ -19,15 +19,25 @@
     <div class="flex items-center p-5">
         <h1 class="text-3xl font-semibold text-white-800">Home</h1>
         <div class="relative ml-5 w-32">
-            <select id="season-selector" class="select-sm select-bordered select w-full max-w-xs">
-                {% for season in seasons %}
-                {% if forloop.counter == 1 %}
-                <option selected value="{{ season }}">{{ season }}</option>
-                {% else %}
-                <option value="{{ season }}">{{ season }}</option>
-                {% endif %}
-                {% endfor %}
-            </select>
+            <form>
+                {% csrf_token %}
+                <select 
+                    id="season-selector"
+                    name="season" 
+                    class="select-sm select-bordered select w-full max-w-xs"
+                    hx-get="{% url 'htmx_change_season' %}"
+                    hx-target="#season-content"
+                    hx-swap="innerHTML"
+                    hx-trigger="change">
+                    {% for season in seasons %}
+                    {% if forloop.counter == 1 %}
+                    <option selected value="{{ season.season }}">{{ season }}</option>
+                    {% else %}
+                    <option value="{{ season.season }}">{{ season }}</option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+            </form>
         </div>
     </div>
     <hr class="border-gray-400">
@@ -36,55 +46,13 @@
 
 {% comment %} Season content container (htmx will change this) {% endcomment %}
 <div id="season-content" class="mt-5">
-
-    {% comment %} Standings {% endcomment %}
-    <div id="standings-content" class="mt-5">
-        {% comment %} Standings banner {% endcomment %}
-        <h2 class="px-4 py-2 text-lg font-semibold text-base border border-gray-600 border-l-4 border-teal-800">
-            Standings
-        </h2>        
-        {% comment %} Standings list {% endcomment %}
-        <section>
-            <div class="overflow-x-auto shadow-lg rounded-lg">
-                <table id="standings-table" class="table-auto w-full border-collapse">
-                    <thead>
-                        <tr class="text-white-700">
-                            <th class="px-4 py-2 text-left">Rank</th>
-                            <th class="px-4 py-2 text-left">Team</th>
-                            <th class="px-4 py-2 text-center">Games</th>
-                            <th class="px-4 py-2 text-center">Wins</th>
-                            <th class="px-4 py-2 text-center">Losses</th>
-                            <th class="px-4 py-2 text-center">Differential</th>
-                            {% comment %} <th class="px-4 py-2 text-center">Tiebreakers</th> {% endcomment %}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for team, data in standings.items %}
-                        <tr>
-                            <td class="px-4 py-2">{{ forloop.counter }}</td>
-                            <td class="px-4 py-2">{{ data.team.city }} {{ data.team.name }}</td>
-                            <td class="px-4 py-2 text-center">{{ data.season_stats.games_played }}</td>
-                            <td class="px-4 py-2 text-center">{{ data.season_stats.wins }}</td>
-                            <td class="px-4 py-2 text-center">{{ data.season_stats.losses }}</td>
-                            <td class="px-4 py-2 text-center">{{ data.season_stats.point_differential }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </section>
-    </div>
-
-    {% comment %} League leaders banner & information {% endcomment %}
-
-    {% comment %} Recent games banner & information {% endcomment %}
-
+    {% include 'stats/fragments/season_fragment.html' %}
 </div>
 
 {% endblock %}
 
 {% block scripts %}
-<script>
+{% comment %} <script>
     $(document).ready( function () {
         $('#standings-table').DataTable({
             paging: false,
@@ -93,5 +61,5 @@
             searching: false,
         });
     });
-</script>
+</script> {% endcomment %}
 {% endblock %}

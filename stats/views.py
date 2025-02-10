@@ -86,7 +86,7 @@ def stats_home(request):
     finder = statfinder.StatFinder(specific_season=season)
     standings = finder.league_standings()
     leaders = finder.league_leaders()
-    recent_games = Game.objects.filter(season=season).order_by("-created")[:5]
+    recent_games = Game.objects.filter(season=season).order_by("-created")[:20]
     seasons = Season.objects.all().order_by("-season")
     return render(request, "stats/stats_home.html", {
         "seasons": seasons,
@@ -255,6 +255,35 @@ def htmx_fetch_roster(request):
         }
     )
     return HttpResponse(roster_html)
+
+# A function that changes the season of the statistics home page
+def htmx_change_season(request):
+    # Get the season parameter from the request
+    season_param = request.GET.get("season")
+    if season_param:
+        season = Season.objects.filter(season=season_param).first()
+    else:
+        season = Season.objects.filter(current_season=True).first()
+
+    # Convert the queryset to a list of dictionaries
+    finder = statfinder.StatFinder(specific_season=season)
+    standings = finder.league_standings()
+    leaders = finder.league_leaders()
+    recent_games = Game.objects.filter(season=season).order_by("-created")[:20]
+    seasons = Season.objects.all().order_by("-season")
+
+    # Render the stats home template with the new data
+    stats_home_html = render_to_string(
+        "stats/fragments/season_fragment.html",
+        {
+            "seasons": seasons,
+            "standings": standings,
+            "leaders": leaders,
+            "recent_games": recent_games,
+        },
+    )
+    
+    return HttpResponse(stats_home_html)
 
 # A function that creates a game based on the user's form
 def htmx_confirm_game(request):

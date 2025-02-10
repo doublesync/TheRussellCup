@@ -17,6 +17,7 @@ urlpatterns = [
     path("boxscore/<int:id>/", views.boxscore, name="boxscore"),
     path("averages/league/", views.league_averages, name="league_averages"),
     path("api/league/", views.league_stats_api, name="league_stats_api"),
+    path("seasons/change/", views.htmx_change_season, name="htmx_change_season"),
     path("games/create/roster/", views.htmx_fetch_roster, name="htmx_fetch_roster"),
     path("games/create/confirm/", views.htmx_confirm_game, name="htmx_confirm_game"),
 ]

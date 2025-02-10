@@ -325,21 +325,20 @@ class StatFinder:
             "assists": "average_assists",
             "steals": "average_steals",
             "blocks": "average_blocks",
-            "turnovers": "average_turnovers",
-            "game score": "average_game_score"
         }
 
         # Populate league_leaders with player name and their average in each category
         for category, field in categories.items():
-            leaders = stats.filter(player__team__surge=False)
-            leader = leaders.order_by(f"-{field}" if category != "turnovers" else field).first()
+            leaders = stats.filter(player__team__surge=False).order_by(f"-{field}" if category != "turnovers" else field)[:5]
             league_leaders.setdefault(category, []) # Initialize the category if it doesn't exist
-            if leader:
-                # Add the leader to the league leaders
-                league_leaders[category] = {
+            league_leaders[category] = {}
+            rank = 1
+            for leader in leaders:
+                league_leaders[category][rank] = {
                     "name": f"{leader.player.first_name} {leader.player.last_name}", 
                     "average": getattr(leader, field)
                 }
+                rank += 1
         
         return league_leaders
 

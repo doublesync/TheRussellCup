@@ -1,0 +1,61 @@
+{% extends '_base.html' %}
+{% load static %}
+
+{% block title %}Received Contracts{% endblock %}
+
+{% block content %}
+    {% comment %} Contract agreements {% endcomment %}
+    <div class="container mx-auto p-4">
+        <div class="bg-base-200 p-6 rounded-lg shadow-md">
+            <h1 class="text-2xl font-bold mb-4">Contract Agreements</h1>
+            {% for offer in offers_sent %}
+            {% if offer.verbally_agreed %}
+                <div class="card bg-base-200 shadow-md p-2 rounded-lg mb-4">
+                    <div class="card-body">
+                        <h2 class="card-title text-lg font-bold">Contract Status</h2>
+                        <p class="text-sm"><span class="font-semibold">{{ offer.team }}</span> offer to <span class="font-semibold">{{ offer.player }}</span> has been verbally signed.</p>
+                        
+                        {% if offer.confirmation_time %}
+                            <p class="text-sm">Confirmation Time: 
+                                <span class="font-semibold">{{ offer.confirmation_time }}</span>
+                                <p class="contract-countdown text-3xl font-extrabold text-accent" data-time="{{ offer.confirmation_time.isoformat }}"></p>
+                            </p>
+                        {% else %}
+                            <p class="text-warning">No confirmation time set.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+    {% comment %} Player offers {% endcomment %}
+    <div class="container mx-auto p-4">
+        <div class="bg-base-200 p-6 rounded-lg shadow-md">
+            <form>
+                {% csrf_token %}
+                {% comment %} Status and title {% endcomment %}
+                <h2 class="text-xl font-bold mb-4">View Player Offers</h2>
+                {% comment %} Offer options {% endcomment %}
+                <div class="flex flex-col sm:flex-row gap-2 sm:gap-4 items-start mb-4">
+                    <button hx-post="{% url 'htmx_withdraw_offers' 'return_players' %}" hx-trigger="click" hx-target="#offers-table" hx-swap="innerHTML"
+                    class="btn btn-xs btn-error w-48">
+                        Decline Selected Offers
+                    </button>
+                </div>
+                {% comment %} Offer table {% endcomment %}
+                <div class="overflow-x-auto w-full mb-4" id="offers-table" name="offers-table">
+                    {% include 'stafftools/fragments/offers_table.html' %}
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+
+{% comment %} Dynamically counts confirmation times down {% endcomment %}
+{% include 'stafftools/fragments/update_countdowns.html' %}
+
+{% endblock %}

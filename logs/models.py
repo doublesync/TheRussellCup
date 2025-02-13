@@ -31,11 +31,11 @@ class PaymentLog(models.Model):
     
 # A model to store the contract logs
 class ContractLog(models.Model):
-    # Need: Cap hit functionality
     player = models.ForeignKey("players.Player", on_delete=models.CASCADE)
     season = models.IntegerField()
     length = models.IntegerField()
-    option = models.CharField(max_length=32, default="None")
+    year_2_option = models.CharField(max_length=32, default="None")
+    year_3_option = models.CharField(max_length=32, default="None")
     year_1_payment = models.IntegerField()
     year_2_payment = models.IntegerField(default=0)
     year_3_payment = models.IntegerField(default=0)
@@ -49,6 +49,28 @@ class ContractLog(models.Model):
     def __str__(self):
         return f"S{self.season} {self.player}"
     
+class ContractOfferLog(models.Model):
+    season = models.ForeignKey("stats.Season", on_delete=models.CASCADE)
+    player = models.ForeignKey("players.Player", on_delete=models.CASCADE)
+    projected_role = models.CharField(max_length=32, choices=config.CONFIG_PLAYER["ROLES"], default="Regular")
+    team = models.ForeignKey("teams.Team", on_delete=models.CASCADE)
+    length = models.IntegerField()
+    year_2_option = models.CharField(max_length=32, default="None")
+    year_3_option = models.CharField(max_length=32, default="None")
+    year_1_payment = models.IntegerField()
+    year_2_payment = models.IntegerField(default=0)
+    year_3_payment = models.IntegerField(default=0)
+    notes = models.CharField(max_length=255, default="None")
+    no_trade_clause = models.BooleanField(default=False)
+    no_release_clause = models.BooleanField(default=False)
+    verbally_agreed = models.BooleanField(default=False)
+    officially_signed = models.BooleanField(default=False)
+    confirmation_time = models.DateTimeField(null=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.player} offer from {self.team} for {self.season}"
+
 # A model to store transaction approval logs
 class TransactionMoveLog(models.Model):
     team = models.ForeignKey("teams.Team", on_delete=models.CASCADE, help_text="The team making the transaction.")

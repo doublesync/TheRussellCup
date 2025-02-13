@@ -1,0 +1,140 @@
+{% extends '_base.html' %}
+{% load static %}
+
+{% block title %}Offer Contracts{% endblock %}
+
+{% block content %}
+    <div class="container mx-auto p-4">
+        <form method="POST" id="offer-contracts-form" class="bg-base-200 p-6 rounded-lg shadow-md">
+            {% csrf_token %}
+            <a href="{% url 'view_offers' %}" class="btn btn-xs btn-primary mb-4">View Current Offers</a>
+            <div class="card-body">
+                <h2 class="text-xl font-bold mb-4">Offer Contracts</h2>
+                
+                {% comment %} Player offer list {% endcomment %}
+                <div class="mb-4">
+                    <label for="offer-list" class="label">Select players to offer</label>
+                    <select id="offer-list" class="js-multiple-select w-full" name="offer-list" multiple required>
+                        {% for player in players %}
+                            <option value="{{ player.id }}">{{ player.first_name }} {{ player.last_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+        
+                {% comment %} Projected role {% endcomment %}
+                <div class="mb-4">
+                    <label for="projected-role" class="label">Projected Role</label>
+                    <select id="projected-role" name="projected-role" class="select select-bordered w-full">
+                        <option value="" selected disabled>Choose a role</option>
+                        {% for role in roles %}
+                            <option value="{{ role.1 }}" class="text-primary">{{ role.1 }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                {% comment %} Salary amounts {% endcomment %}
+                <div class="mb-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label for="year-one-salary" class="label">Year 1 Salary</label>
+                        <input type="number" id="year-one-salary" name="year-one-salary" class="input input-bordered w-full" placeholder="250" required />
+                    </div>
+                    <div>
+                        <label for="year-two-salary" class="label">Year 2 Salary</label>
+                        <input type="number" id="year-two-salary" name="year-two-salary" class="input input-bordered w-full" placeholder="N/A" />
+                    </div>
+                    <div>
+                        <label for="year-three-salary" class="label">Year 3 Salary</label>
+                        <input type="number" id="year-three-salary" name="year-three-salary" class="input input-bordered w-full" placeholder="N/A" />
+                    </div>
+                </div>
+
+                {% comment %} Year two option {% endcomment %}
+                <div class="mb-4">
+                    <label class="label p-0">Second Year Option</label>
+                    <small class="text-xs text-secondary-200">
+                        This option will go into effect before the second year of this contract.
+                    </small>
+                    <div class="flex flex-wrap gap-2 sm:gap-4 mt-2">
+                        <label class="cursor-pointer flex items-center gap-2">
+                            <input type="radio" name="year-two-option" value="None" class="radio radio-primary" checked />
+                            <span>None</span>
+                        </label>
+                        <label class="cursor-pointer flex items-center gap-2">
+                            <input type="radio" name="year-two-option" value="Player Option" class="radio radio-primary" />
+                            <span>Player Option</span>
+                        </label>
+                        <label class="cursor-pointer flex items-center gap-2">
+                            <input type="radio" name="year-two-option" value="Team Option" class="radio radio-primary" />
+                            <span>Team Option</span>
+                        </label>
+                    </div>
+                </div>
+                
+                {% comment %} Year three option {% endcomment %}
+                <div class="mb-4">
+                    <label class="label p-0">Third Year Option</label>
+                    <small class="text-xs text-secondary-200">
+                        This option will go into effect before the third year of this contract.
+                    </small>
+                    <div class="flex flex-wrap gap-2 sm:gap-4 mt-2">
+                        <label class="cursor-pointer flex items-center gap-2">
+                            <input type="radio" name="year-three-option" value="None" class="radio radio-primary" checked />
+                            <span>None</span>
+                        </label>
+                        <label class="cursor-pointer flex items-center gap-2">
+                            <input type="radio" name="year-three-option" value="Player Option" class="radio radio-primary" />
+                            <span>Player Option</span>
+                        </label>
+                        <label class="cursor-pointer flex items-center gap-2">
+                            <input type="radio" name="year-three-option" value="Team Option" class="radio radio-primary" />
+                            <span>Team Option</span>
+                        </label>
+                    </div>
+                </div>
+
+                {% comment %} No trade clause {% endcomment %}
+                <div class="mb-4 form-control   ">
+                    <label class="cursor-pointer flex items-center gap-2">
+                        <input type="checkbox" id="no-trade-clause" name="no-trade-clause" class="checkbox checkbox-primary" />
+                        <span>No Trade Clause</span>
+                    </label>
+                    <small class="text-xs text-secondary-200 mt-2">Only applicable to supermax contracts</small>
+                </div>
+
+                {% comment %} No release clause {% endcomment %}
+                <div class="mb-4 form-control">
+                    <label class="cursor-pointer flex items-center gap-2">
+                        <input type="checkbox" id="no-release-clause" name="no-release-clause" class="checkbox checkbox-secondary" />
+                        <span>No Release Clause</span>
+                    </label>
+                </div>
+        
+                {% comment %} Contract notes {% endcomment %}
+                <div class="mb-4">
+                    <label for="contract-notes" class="label">Notes</label>
+                    <input type="text" id="contract-notes" name="contract-notes" class="input input-bordered w-full" placeholder="Enter any notes you have..." />
+                </div>
+    
+                {% comment %} Disclaimer {% endcomment %}
+                <div class="mb-4">
+                    <small class="text-xs text-secondary-200">By sending this offer, you agree to the terms of the contract. However, you have two hours to withdraw your offer.</small>
+                </div>
+
+                {% comment %} Send contract offers {% endcomment %}
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary w-full">
+                        <i class="fas fa-coins"></i> Send Contract Offers
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+{% include 'stafftools/fragments/select2_scripts.html' %}
+{% endblock %}
+
+{% block styles %}
+{% include 'stafftools/fragments/select2_styles.html' %}
+{% endblock %}

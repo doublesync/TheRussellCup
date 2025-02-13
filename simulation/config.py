@@ -16,6 +16,7 @@ CONFIG_SEASON = {
     "CHECKIN_SP": 30,
     "CHECKIN_XP": 100,
     "DEFAULT_CONTRACT": 150,
+    "FREE_AGENCY_OPEN": False, # This is the phase where players can be signed to contracts
 }
 
 # Player configuration
@@ -36,6 +37,16 @@ CONFIG_PLAYER = {
     "SURCHARGE_DEFAULT_INTEREST": 0.02, # The default surcharge interest rate
     "SURCHARGE_THRESHOLD": 1000, # The threshold for when the surcharge interest starts to apply
     "ROOKIE_CAP_HIT": 150, # The cap hit for a rookie player
+    "ROLES": (
+        ("Regular", "Regular"),
+        ("Stash", "Stash"),
+        ("First Option", "First Option"),
+        ("Second Option", "Second Option"),
+        ("Third Option", "Third Option"),
+        ("Primary Scorer", "Primary Scorer"),
+        ("Primary Playmaker", "Primary Playmaker"),
+        ("On-Ball Defender", "On-Ball Defender")
+    ),
 }
 
 CONFIG_STATS = {

@@ -5,7 +5,7 @@ from unfold.admin import ModelAdmin
 # Local imports
 from teams.models import Team
 from players.models import Player
-from logs.models import UpgradeLog, PaymentLog, ContractLog, TransactionMoveLog
+from logs.models import UpgradeLog, PaymentLog, ContractLog, ContractOfferLog
 
 class TransactionMoveLogAdmin(ModelAdmin):
     exclude = ['approved']
@@ -20,4 +20,4 @@ class LogAdmin(ModelAdmin):
 admin.site.register(UpgradeLog, LogAdmin)
 admin.site.register(PaymentLog, LogAdmin)
 admin.site.register(ContractLog, LogAdmin)
-admin.site.register(TransactionMoveLog, TransactionMoveLogAdmin)
+admin.site.register(ContractOfferLog, LogAdmin)

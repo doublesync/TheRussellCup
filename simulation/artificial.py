@@ -7,6 +7,7 @@ from django.core.cache import cache
 # Local imports
 import simulation.config as config
 from stats.models import Season, Game, TeamGameStats, PlayerGameStats
+from logs.models import ContractOfferLog
 
 # Third party imports
 from openai import OpenAI
@@ -52,39 +53,35 @@ def prompt_upgrade_advice(player):
     response = completion.choices[0].message.content
     return response
 
+def prompt_signing_tweet(offer, official=False):
+    # Prompts a tweet for a player signing a contract
+    prompt = "You are a social media manager for the NBA (think Shams Charania or Woj). Here is the player's signing information:\n"
+    prompt += f"Player: {offer.player.first_name} {offer.player.last_name}\n"
+    prompt += f"Position: {offer.player.position}\n"
+    prompt += f"Height: {offer.player.height_imperial}\n"
+    prompt += f"Weight: {offer.player.weight} lbs\n"
+    prompt += f"Projected Role: {offer.projected_role}\n"
+    prompt += f"Team: {offer.team.name}\n"
+    prompt += f"Contract Length: {offer.length} years\n"
+    prompt += f"Contract Year 1 Payment: ${offer.year_1_payment}\n"
+    prompt += f"Contract Year 2 Payment: ${offer.year_2_payment}\n"
+    prompt += f"Contract Year 3 Payment: ${offer.year_3_payment}\n"
+    prompt += f"Contract Year 2 Option: {offer.year_2_option}\n"
+    prompt += f"Contract Year 3 Option: {offer.year_3_option}\n"
+    prompt += "Please provide a tweet announcing the player's signing with the team.\n"
+    prompt += "Feel free to add a sentence or two extra to spice up the lore.\n"
+    if official:
+        prompt += "This is an official signing announcement -- the grace period has passed.\n"
+    else:
+        prompt += "This is a verbal agreement -- the grace period has not passed yet; either party can back out of the agreement for eight hours.\n"
+    prompt += "Your response should be formatted in the way Shams or Woj formats their tweets, make sure the salary amounts are formatted as they are (do not inflate them).\n"
 
-def prompt_storylines(season, week):
-
-    # Initialize the prompts list & other data points
-    prompts = []
-    games = Game.objects.filter(season=season, week=week)
-
-    # Go through each game, get the team stats and player stats from 'sets' and make a prompt
-    for game in games:
-
-        # Get team & player stats
-        player_stats = game.playergamestats_set.all()
-        game_winner = game.home_team.name if game.home_team_score > game.away_team_score else game.away_team.name
-        # Make the prompt
-        prompt = f"Write a short (75 words), espn-like, storyline for the game between {game.home_team.name} and {game.away_team.name}, the game ended {game.home_team_score}-{game.away_team_score}, the winner was {game_winner}.\n"
-        # Add the player stats
-        prompt += f"Players stats:\n"
-        for player_stat in player_stats:
-            player_team = player_stat.player.team.name if player_stat.player.team else "Free Agent"
-            player_name = f"{player_stat.player.first_name} {player_stat.player.last_name}"
-            prompt += f"{player_team} {player_name}: {player_stat.points} PTS, {player_stat.rebounds} REB, {player_stat.assists} AST, {player_stat.steals} STL, {player_stat.blocks} BLK, {player_stat.turnovers} TOV\n, {player_stat.personal_fouls} PF\n (FG: {player_stat.field_goals_made}/{player_stat.field_goals_attempted}, 3P: {player_stat.three_pointers_made}/{player_stat.three_pointers_attempted}, FT: {player_stat.free_throws_made}/{player_stat.free_throws_attempted})\n"
-        # Add the prompt to the list
-        completion = client.chat.completions.create(
-            model="gpt-4o-mini",
-            messages=[
-                {"role": "system", "content": prompt}
-            ]
-        )
-        prompts.append(completion.choices[0].message.content)
-    
-    # Set the prompts to 'current_storylines' in the season
-    season.current_storylines = "\n".join(prompts)
-    season.save()
-
-    # Return the prompts
-    return prompts
+    # Get the completion from the API
+    completion = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {"role": "system", "content": prompt}
+        ]
+    )
+    response = completion.choices[0].message.content
+    return response

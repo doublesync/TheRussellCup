@@ -15,5 +15,10 @@ urlpatterns = [
     path("refreshstats/", views.RefreshStatsView.as_view(), name="refresh_stats"),
     path("paymentrequest/", views.PaymentRequestView.as_view(), name="payment_request"),
     path("paymentrequests/", views.PaymentRequestsView.as_view(), name="payment_requests"),
+    path("offercontracts/", views.OfferContractsView.as_view(), name="offer_contracts"),
+    path("viewoffers/", views.ViewOffersView.as_view(), name="view_offers"),
+    path("viewplayeroffers/", views.ViewPlayerOffersView.as_view(), name="view_player_offers"),
+    path("withdrawoffers/<str:return_type>/", views.htmx_withdraw_offers, name="htmx_withdraw_offers"),
+    path("acceptoffer/<int:offer_id>/", views.htmx_accept_offer, name="htmx_accept_offer"),
     # fmt:on
 ]

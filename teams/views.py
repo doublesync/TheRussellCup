@@ -51,3 +51,4 @@ class RosterMoveView(View):
 
     def post(self, request):
         return HttpResponse("POST request")
+    

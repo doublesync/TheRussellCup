@@ -1,19 +1,30 @@
+# Python imports
+from datetime import timedelta
+from django.utils import timezone
+
 # Django imports
 from django.core.management import call_command
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
+from django.urls import reverse
+from django.utils.decorators import method_decorator
 from django.views import View
 from django.shortcuts import render
+from django.template.loader import render_to_string
 
 # Local imports
+from django_project.decorators import check_free_agency_open
 from accounts.models import CustomUser
-from logs.models import PaymentLog
+from logs.models import PaymentLog, ContractLog, ContractOfferLog
 from players.models import Player
-from teams.models import Team
+from teams.models import Team, get_managed_team
 from stafftools.models import PaymentRequest
-from stats.models import PlayerSeasonStats, TeamSeasonStats
+from stats.models import Season, PlayerSeasonStats, TeamSeasonStats
 from simulation.payment import Payment, pay_contracts
 from simulation.webhook import send_webhook
+from simulation import config
+from simulation import artificial
 
 # Create your views here.
 
@@ -262,3 +273,263 @@ class PaymentRequestsView(View):
                 open_request.delete()
         # Return the response
         return HttpResponse(result)
+
+# This is a class based view that will allow managers to send contract offers to players
+class OfferContractsView(View):
+    
+    @method_decorator(check_free_agency_open)
+    def get(self, request):
+        context = {
+            "players": Player.objects.all(),
+            "teams": Team.objects.all(),
+            "roles": config.CONFIG_PLAYER["ROLES"],
+        }
+        return render(request, "stafftools/offer_contracts.html", context)
+    
+    def validate(self, request):
+    
+        # Validate user (manager)
+        team = get_managed_team(request.user)
+        if not team:
+            return render(request, "500.html", {"reason": "You are not a team manager, or manage multiple teams."})
+
+        # Fetch the form values
+        offer_list = request.POST.getlist("offer-list")
+        projected_role = request.POST.get("projected-role")
+        year_one_salary = request.POST.get("year-one-salary")
+        year_two_salary = request.POST.get("year-two-salary")
+        year_three_salary = request.POST.get("year-three-salary")
+        year_two_option = request.POST.get("year-two-option")
+        year_three_option = request.POST.get("year-three-option")
+        no_trade_clause = request.POST.get("no-trade-clause")
+        no_release_clause = request.POST.get("no-release-clause")
+        contract_notes = request.POST.get("contract-notes")
+
+        # Post-process form values
+        contract_length = bool(year_one_salary) + bool(year_two_salary) + bool(year_three_salary)
+        year_one_salary = int(year_one_salary) if year_one_salary else None
+        year_two_salary = int(year_two_salary) if year_two_salary else None
+        year_three_salary = int(year_three_salary) if year_three_salary else None
+        no_trade_clause = True if no_trade_clause == "on" else False
+        no_release_clause = True if no_release_clause == "on" else False
+        projected_role = projected_role or "Regular"
+        contract_notes = contract_notes or "No notes provided."
+
+        # Validate some form values
+        if (year_one_salary and year_one_salary > 600) or (year_two_salary and year_two_salary > 600) or (year_three_salary and year_three_salary > 600):
+            messages.error(request, "❌ The maximum salary is $600.")
+        if year_three_salary and not year_two_salary:
+            messages.error(request, "❌ Year 3 salary cannot be set without a Year 2 salary.")
+        if year_two_salary and not year_one_salary:
+            messages.error(request, "❌ Year 2 salary cannot be set without a Year 1 salary.")
+        if not year_one_salary:
+            messages.error(request, "❌ Year 1 salary is required.")
+        if not offer_list:
+            messages.error(request, "❌ No players were selected.")       
+        if not year_two_salary:
+            year_two_option = "None"
+        if not year_three_salary:
+            year_three_option = "None"
+
+        # Return validated values
+        return {
+            "team": team,
+            "offer_list": offer_list,
+            "projected_role": projected_role,
+            "year_one_salary": year_one_salary,
+            "year_two_salary": year_two_salary,
+            "year_three_salary": year_three_salary,
+            "year_two_option": year_two_option,
+            "year_three_option": year_three_option,
+            "contract_length": contract_length,
+            "no_trade_clause": no_trade_clause,
+            "no_release_clause": no_release_clause,
+            "contract_notes": contract_notes,
+        }
+    
+    @method_decorator(check_free_agency_open)
+    def post(self, request):
+        if request.method == "POST":
+            # Get validated form values
+            validated_values = self.validate(request)
+            team = validated_values.get("team")
+            offer_list = validated_values.get("offer_list")
+            projected_role = validated_values.get("projected_role")
+            year_one_salary = validated_values.get("year_one_salary")
+            year_two_salary = validated_values.get("year_two_salary")
+            year_three_salary = validated_values.get("year_three_salary")
+            year_two_option = validated_values.get("year_two_option")
+            year_three_option = validated_values.get("year_three_option")
+            contract_length = validated_values.get("contract_length")
+            no_trade_clause = validated_values.get("no_trade_clause")
+            no_release_clause = validated_values.get("no_release_clause")
+            contract_notes = validated_values.get("contract_notes")
+
+            # Create the contract offer(s)
+            season = Season.objects.filter(current_season=True).first()
+            for player_id in offer_list:
+                player = Player.objects.get(pk=player_id)
+                if player:
+                    # Check if team has existing offer to player before creating contract
+                    team_offered_already = ContractOfferLog.objects.filter(team=team, player=player, season=season).exists()
+                    if team_offered_already:
+                        messages.error(request, f"❌ {player.first_name} {player.last_name} already has an offer from {team.city} {team.name}.")
+                        continue
+                    # Create the contract if team doesn't have an offer out already
+                    contract_offer = ContractOfferLog.objects.create(
+                        season=season,
+                        player=player,
+                        projected_role=projected_role,
+                        team=team,
+                        length=contract_length,
+                        year_2_option=year_two_option,
+                        year_3_option=year_three_option,
+                        year_1_payment=year_one_salary,
+                        no_trade_clause=no_trade_clause,
+                        no_release_clause=no_release_clause,
+                        notes=contract_notes,
+                    )
+                    if year_two_salary:
+                        contract_offer.year_2_payment = year_two_salary
+                    if year_three_salary:
+                        contract_offer.year_3_payment = year_three_salary
+                    contract_offer.save()
+                    messages.success(request, f"✅ {player.first_name} {player.last_name} has been offered a contract by {team.city} {team.name}.")
+
+            # Redirect/refresh the page
+            return HttpResponseRedirect(reverse('offer_contracts'))
+
+# This is a class based view that will allow managers to view, and delete contract offers
+class ViewOffersView(View):
+
+    @method_decorator(check_free_agency_open)
+    def get(self, request):
+        # Validate user (manager)
+        team = get_managed_team(request.user)
+        if not team:
+            return render(request, "500.html", {"reason": "You are not a team manager, or manage multiple teams."})
+        # Fetch all the contract offers made by the team
+        season = Season.objects.filter(current_season=True).first()
+        offers = ContractOfferLog.objects.filter(season=season, team=team)
+        context = {
+            "team": team,
+            "offers_sent": offers,
+        }
+        return render(request, "stafftools/view_offers.html", context)
+
+# This is a class based view that allows players to see their offers
+class ViewPlayerOffersView(View):
+
+    @method_decorator(check_free_agency_open)
+    def get(self, request):
+        # Find user players
+        players = Player.objects.filter(user=request.user)
+        # Find all offers for players
+        offers = ContractOfferLog.objects.filter(player__in=players)
+        # Create context
+        context = {
+            "offers_sent": offers, # offers_sent is really offers_received here; but we are re-using the same template
+        }
+        # Render the template
+        return render(request, "stafftools/view_player_offers.html", context)
+
+# This is a function based htmx view that will allow managers to withdraw contract offers
+# This function works both for managers withdrawing offers, and players declining offers
+@check_free_agency_open
+def htmx_withdraw_offers(request, return_type):
+    if request.method == "POST":
+        # Validate user (manager)
+        team = get_managed_team(request.user)
+
+        # Grab withdraw list offers from the form
+        withdraw_list = request.POST.getlist("withdraw-list")
+        # Check if the list is empty
+        if not withdraw_list:
+            messages.info(request, "❌ No offers were selected.")
+            return HttpResponse(None, headers={"HX-Redirect": request.META.get("HTTP_REFERER")})
+
+        # Withdraw the offers
+        for id in withdraw_list:
+            # Check if the offer exists
+            offer_exists = ContractOfferLog.objects.filter(pk=id).exists()
+            if offer_exists:
+                # Find the offer
+                offer = ContractOfferLog.objects.get(pk=id)
+                # TODO: Keep an eye out on this
+                # Check if the offer has been verbally agreed to and the offer's confirmation time has passed, or if the offer has been officially signed
+                if (offer.verbally_agreed and offer.confirmation_time < timezone.now()) or offer.officially_signed:
+                    messages.error(request, "❌ This offer has already been finalized.")
+                    return HttpResponse(None, headers={"HX-Redirect": request.META.get("HTTP_REFERER")})
+                # Check if the user manages the team that amde the offer, or owns the player that was offered
+                # This logic combines team withdrawals and player withdrawals into one function
+                if (request.user != offer.player.user) and (offer.team != team):
+                    messages.error(request, "❌ You do not manage the offering team, or own the offered player.")
+                    return HttpResponse(None, headers={"HX-Redirect": request.META.get("HTTP_REFERER")})
+                else:
+                    offer.delete()
+
+        # Redirect/refresh the page
+        season = Season.objects.filter(current_season=True).first()
+        # Initialize the offers_sent variable
+        offers_sent = ContractOfferLog.objects.filter(season=season)
+        # If the offer is being 'declined' by the player, return the list of offers for players
+        if return_type == "return_players":
+            players = Player.objects.filter(user=request.user)
+            offers_sent = offers_sent.filter(player__in=players)
+            messages.info(request, "🔎 Showing offers for players owned by you.")
+        else:
+            # If the offer is being 'withdrawn' by the team, return the list of offers for teams
+            offers_sent = offers_sent.filter(team=team)
+            messages.info(request, f"🔎 Showing offers made by {team}.")
+
+        # Build the context
+        # TODO: Make the countdowns update aswell when an offer is withdrawn
+        context = {
+            "team": team,
+            "offers_sent": offers_sent,
+        }
+        html = render_to_string("stafftools/fragments/offers_table.html", context)
+        return HttpResponse(html)
+    
+# This is a function based view that will allow players to accept contract offers
+@check_free_agency_open
+def htmx_accept_offer(request, offer_id):
+    if request.method == "POST":
+        # Validate user owns player
+        offer = ContractOfferLog.objects.get(pk=offer_id)
+        if request.user != offer.player.user or offer.player.team != None:
+            messages.error(request, "❌ You do not own this player, or the player is already on a team.")
+            return HttpResponse(None, headers={"HX-Redirect": request.META.get("HTTP_REFERER")})
+        
+        # Validate the offer is not already verbally or officially signed
+        if offer.verbally_agreed or offer.officially_signed:
+            messages.error(request, "❌ This offer has already been agreed to.")
+            return HttpResponse(None, headers={"HX-Redirect": request.META.get("HTTP_REFERER")})
+        
+        # TODO: Keep an eye out on this
+        # Check if the player has any verbally-agreed-to offers with the confirmation time in the past, or if they have any officially-agreed-to offers
+        verbally_agreed_offers = ContractOfferLog.objects.filter(player=offer.player, verbally_agreed=True, confirmation_time__lte=timezone.now())
+        officially_agreed_offers = ContractOfferLog.objects.filter(player=offer.player, officially_signed=True)
+        if verbally_agreed_offers.exists() or officially_agreed_offers.exists():
+            messages.error(request, "❌ You already have an offer that is finalized.")
+            return HttpResponse(None, headers={"HX-Redirect": request.META.get("HTTP_REFERER")})
+
+        # Update the offer to be verbally signed
+        offer.verbally_agreed = True
+        offer.confirmation_time = timezone.now() + timedelta(hours=8)
+        offer.save()
+
+        # Set all other contracts 'verbally_agreed' to False
+        ContractOfferLog.objects.filter(player=offer.player, season=offer.season).exclude(pk=offer.pk).update(verbally_agreed=False)
+
+        # Send a discord webhook with an ai-generated message (similar to Shams or Woj)
+        signing_tweet = artificial.prompt_signing_tweet(offer)
+        send_webhook(
+            url="breaking_news",
+            title="",
+            body=signing_tweet,
+        )
+
+        # Send a success message & refresh the page
+        messages.success(request, "✅ You have verbally agreed to this offer.")
+        return HttpResponse(None, headers={"HX-Redirect": request.META.get("HTTP_REFERER")})

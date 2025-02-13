@@ -8,6 +8,17 @@ from simulation.scripts import default as default
 from players.models import Player
 from accounts.models import CustomUser
 
+# A function used to find which team a user manages
+def get_managed_team(user):
+    # Get count of teams & make sure it's only 1
+    teams_managed = Team.objects.filter(manager=user).count()
+    if teams_managed != 1:
+        return None
+    else:
+        # Get the team the user manages
+        team = Team.objects.filter(manager=user).first()
+        return team
+
 # Create your models here.
 class Team(models.Model):
 

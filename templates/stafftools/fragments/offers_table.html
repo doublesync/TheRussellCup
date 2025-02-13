@@ -1,0 +1,51 @@
+<table class="table table-sm w-full">
+    <thead>
+        <tr>
+            <th class="w-24">ACCEPT</th>
+            <th class="w-24">WITHDRAW</th>
+            <th class="w-24">COMMITTED</th>
+            <th class="w-24">SIGNED</th>
+            <th class="w-96">TEAM</th>
+            <th class="w-96">PLAYER</th>
+            <th class="w-96">PROJ</th>
+            <th class="w-24">YRS</th>
+            <th class="w-24">Y1</th>
+            <th class="w-24">Y2</th>
+            <th class="w-24">Y3</th>
+            <th class="w-64">Y2O</th>
+            <th class="w-64">Y30</th>
+            <th class="w-96">NOTES</th>
+        </tr>   
+    </thead>
+    <tbody>
+        {% for offer in offers_sent %}
+            <tr>
+                {% comment %} Only allow contract acceptances & withdrawals if the offer hasn't been officially signed {% endcomment %}
+                {% if offer.officially_signed %}
+                    <td><button class="btn btn-xs btn-primary" disabled>Accept</button></td>
+                    <td><input type="checkbox" class="checkbox checkbox-primary" name="withdraw-list" value="{{ offer.id }}" disabled /></td>
+                {% else %}
+                    {% comment %} Disable the button if the user doesn't own the player or if the offer has been verbally agreed to {% endcomment %}
+                    {% if request.user == offer.player.user and offer.verbally_agreed != True %}
+                        <td><button class="btn btn-xs btn-primary" hx-post="{% url 'htmx_accept_offer' offer.id %}" hx-trigger="click" hx-target="#offers-table" hx-swap="innerHTML">Accept</button></td>
+                    {% else %}
+                        <td><button class="btn btn-xs btn-primary" disabled>Accept</button></td>
+                    {% endif %}
+                    <td><input type="checkbox" class="checkbox checkbox-primary" name="withdraw-list" value="{{ offer.id }}" /></td>
+                {% endif %}
+                <td>{{ offer.verbally_agreed }}</td>
+                <td>{{ offer.officially_signed }}</td>
+                <td><a href="{% url 'team_page' offer.team.id %}">{{ offer.team }}</a></td>
+                <td><a href="{% url 'player_page' offer.player.id %}">{{ offer.player }}</a></td>
+                <td>{{ offer.projected_role }}</td>
+                <td>{{ offer.length }}</td>
+                <td>{{ offer.year_1_payment }}</td>
+                <td>{{ offer.year_1_payment }}</td>
+                <td>{{ offer.year_3_payment }}</td>
+                <td>{{ offer.year_2_option }}</td>
+                <td>{{ offer.year_3_option }}</td>
+                <td>{{ offer.notes }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

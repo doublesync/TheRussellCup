@@ -6,69 +6,94 @@
 {% block content %}
 <div class="container-fluid">
 
-    {% comment %} League hero {% endcomment %}
-    <div class="hero min-h-full">
-      {% comment %} User/player content {% endcomment %}
-      <div class="hero-content flex-col lg:flex-row">
-        <div class="max-w-full overflow-hidden m-4">
-          {% comment %} <img src="https://media.discordapp.net/attachments/1254519577258496081/1331084546074087496/kelly_sucks1.png?ex=679b8956&is=679a37d6&hm=c8ed26f1b053725e1cd3a99d64033a5e86e33446884f9faab2bbb3fd4f137ad8&=&format=webp&quality=lossless&width=362&height=437" class="w-full max-w-sm rounded-lg shadow-2xl"> {% endcomment %}
-          <img src="https://i.imgur.com/VSztb0a.png" class="w-full max-w-sm rounded-lg shadow-2xl">
-        </div>            
-        <div class="gx-6 m-4">
-          <h1 class="text-5xl font-bold">Hello there, {{ user.username }}!</h1>
-          <p class="py-6">What would you like to do today?</p>
-          <ul class="menu menu-sm bg-base-200 rounded-lg w-full max-w-xs">
-              {% comment %} Files {% endcomment %}
-              <li>
-                  {% comment %} List of career files {% endcomment %}
-                  <details open>
-                    <summary><i class="fa-solid fa-folder"></i>Files</summary>
-                    <ul>
-                      <li>
-                        {% for file in player_files %}
-                            <a href="{% url 'player_page' file.id %}"><i class="fa-solid fa-file"></i> {{ file.first_name }} {{ file.last_name }}</a></a>
-                        {% endfor %}
-                      </li>
-                    </ul>
-                  </details>
-                </li>
-              {% comment %} Admin tools {% endcomment %}
-              <li>
-                  <details open>
-                      <summary><i class="fa-solid fa-briefcase"></i>Jobs</summary>
-                      {% if user.is_staff %}                       
-                      <ul>
-                          <li><a href="{% url 'create_game' %}"><i class="fa-solid fa-user-plus"></i> Create Game</a></li>
-                      </ul>
-                      {% endif %}
-                      {% if user.can_pay_players %}
-                      <ul>
-                          <li><a href="{% url 'payment_requests' %}"><i class="fa-solid fa-money-bill"></i> Process Requests</a></li>
-                          <li><a href="{% url 'bulk_pay' %}"><i class="fa-solid fa-coins"></i> Bulk Pay Players</a></li>
-                      </ul>
-                      {% endif %}
-                      {% if user.can_mark_upgrades %}
-                      <ul>
-                          <li><a href="{% url 'incomplete_logs' %}"><i class="fa-solid fa-marker"></i> Mark Upgrades</a></li>
-                      </ul>
-                      {% endif %}
+		<div class="hero min-h-full">
+			<div class="flex flex-col md:flex-row items-stretch p-4">
+				<!-- Image Section -->
+				<div class="max-w-full overflow-hidden m-4 flex-1 flex items-center justify-center">
+						<img src="{% static 'images/home_hero.png' %}" class="w-full max-w-sm rounded-lg shadow-2xl h-full object-cover">
+				</div>
+		
+				<!-- Text + Cards Section -->
+				<div class="m-4 flex-1 flex flex-col justify-between">
+						<div>
+								<h1 class="text-5xl font-bold">Hello there, {{ user.username }}!</h1>
+								<p class="py-6">It's free agency time!</p>
+								{% comment %} Free agency phase links {% endcomment %}
+								{% comment %} Let's make two buttons: one links to team offers page, other to player offers page {% endcomment %}
+								<div class="flex flex-col md:flex-row gap-4 mb-4">
 
-                  </details>
-              </li>
-              {% comment %} Player options {% endcomment %}
-              <li>
-                  {% comment %} Other player options {% endcomment %}
-                  <details open>
-                      <summary><i class="fa-solid fa-gear"></i>Options</summary>
-                      <ul>
-                          <li><a href="{% url 'create_player' %}"><i class="fa-solid fa-user-plus"></i> Create Player</a></li>
-                          <li><a href="{% url 'mods_list' %}"><i class="fa-solid fa-user-plus"></i> Buy Modifications</a></li>
-                      </ul>
-                  </details>
-              </li>
-            </ul>
-        </div>
-      </div>
-    </div>
+								</div>
+						</div>
+		
+						<!-- Cards Grid -->
+						<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+								{% comment %} Free Agency Card {% endcomment %}
+								<div class="card bg-base-200 shadow-lg p-2 md:col-span-2 h-full">
+									{% comment %} The buttons should take up an equal amount of space in the box/card {% endcomment %}
+									<div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2">
+											<a href="{% url 'view_offers' %}" class="btn btn-secondary flex-1 md:w-auto">
+													<i class="fa-solid fa-users"></i> Team Offers
+											</a>
+											<a href="{% url 'view_player_offers' %}" class="btn btn-secondary flex-1 md:w-auto">
+													<i class="fa-solid fa-user"></i> Player Offers
+											</a>
+									</div>
+								</div>
+
+								<!-- Files Card -->
+								<div class="card bg-base-200 shadow-lg p-2 h-full">
+										<div class="card-body pt-4">
+												<h2 class="card-title"><i class="fa-solid fa-folder"></i> Files</h2>
+												<hr class="my-2">
+												<ul>
+														{% for file in player_files %}
+														<li>
+																<a href="{% url 'player_page' file.id %}" class="truncate block">
+																		<i class="fa-solid fa-file"></i> {{ file.first_name }} {{ file.last_name }}
+																</a>
+														</li>
+														{% endfor %}
+												</ul>
+										</div>
+								</div>
+		
+								<!-- Jobs Card -->
+								<div class="card bg-base-200 shadow-lg p-2 h-full">
+										<div class="card-body pt-4">
+												<h2 class="card-title"><i class="fa-solid fa-briefcase"></i> Jobs</h2>
+												<hr class="my-2">
+												<ul>
+														{% if user.is_staff %}
+														<li><a href="{% url 'create_game' %}"><i class="fa-solid fa-user-plus"></i> Create Game</a></li>
+														{% endif %}
+														{% if user.can_pay_players %}
+														<li><a href="{% url 'payment_requests' %}"><i class="fa-solid fa-money-bill"></i> Process Requests</a></li>
+														<li><a href="{% url 'bulk_pay' %}"><i class="fa-solid fa-coins"></i> Bulk Pay Players</a></li>
+														{% endif %}
+														{% if user.can_mark_upgrades %}
+														<li><a href="{% url 'incomplete_logs' %}"><i class="fa-solid fa-marker"></i> Mark Upgrades</a></li>
+														{% endif %}
+												</ul>
+										</div>
+								</div>
+		
+								<!-- Options Card (Spans 2 columns on large screens) -->
+								<div class="card bg-base-200 shadow-lg p-2 md:col-span-2 h-full">
+										<div class="card-body pt-4">
+												<h2 class="card-title"><i class="fa-solid fa-gear"></i> Options</h2>
+												<hr class="my-2">
+												<ul>
+														<li><a href="{% url 'create_player' %}"><i class="fa-solid fa-user-plus"></i> Create Player</a></li>
+														<li><a href="{% url 'mods_list' %}"><i class="fa-solid fa-user-plus"></i> Buy Modifications</a></li>
+												</ul>
+										</div>
+								</div>
+						</div>
+				</div>
+			</div>
+		
+		</div>
+
 </div>
 {% endblock content %}

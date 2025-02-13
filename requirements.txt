@@ -22,6 +22,7 @@ django-ipware==7.0.1
 django-widget-tweaks==1.5.0
 Faker==25.8.0
 gunicorn==21.2.0
+httpx==0.27.2
 idna==3.4
 Markdown==3.6
 oauthlib==3.2.2

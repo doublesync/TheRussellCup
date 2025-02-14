@@ -143,6 +143,84 @@ def activity_hidden_gem_roll(player):
     else:
         return [player, "😟 You needed to collect for atleast 12 weeks to roll for a hidden gem!"]
 
+def activity_physicals_roll(player):
+    # Find out how many weeks the player has collected
+    weeks_collected = 0
+    if player.contract: 
+        weeks_collected = len(player.contract.weeks_paid)
+    # Give reward based on weeks collected
+    if weeks_collected >= 15:
+        # Roll for the physicals boost
+        roll = random.randint(1, 50)
+        if roll == 1:
+            # Send webhook to the "rolls" channel
+            webhook.send_webhook(
+                "specialty_rolls", 
+                title=f"🔥 {player.first_name} {player.last_name} has won a Physical boost.", 
+                body="(+3) to all physical attributes (including wingspan)\n✔ Changes applied to website automatically"
+            )
+            # Apply the physicals boost
+            player.attributes["Speed"] += 3
+            player.attributes["Speed with Ball"] += 3
+            player.attributes["Strength"] += 3
+            player.attributes["Vertical"] += 3
+            player.attributes["Agility"] += 3
+            player.wingspan += 3
+            # Return the player object and a message
+            return [player, "🔥 Congratulations, this player won a Physical Boost!"]
+        else:
+            # Send webhook to the "rolls" channel
+            webhook.send_webhook(
+                "specialty_rolls", 
+                title=f"😟 {player.first_name} {player.last_name} missed the hidden gem!", 
+                body=f"You needed to roll a (1) to win, you rolled a {roll}..."
+            )
+            # Return the player object and a message
+            return [player, f"😟 You needed to roll a (1) to win, you rolled a {roll}..."]
+    else:
+        return [player, "😟 You needed to collect for atleast 15 weeks to roll for a physical boost!"]
+
+def activity_anomaly_roll(player):
+    # Find out how many weeks the player has collected
+    weeks_collected = 0
+    if player.contract: 
+        weeks_collected = len(player.contract.weeks_paid)
+    # Give reward based on weeks collected
+    if weeks_collected >= 18:
+        # Roll for the anomaly
+        roll = random.randint(1, 100)
+        if roll == 1:
+            if player.anomaly:
+                player.sp += 800
+                return [player, "🔥 Already an anomaly; wins 800SP!"]
+            else:
+                # Send webhook to the "rolls" channel
+                webhook.send_webhook(
+                    "specialty_rolls", 
+                    title=f"🔥 {player.first_name} {player.last_name} is now an ANOMALY.", 
+                    body="✔ Changes applied to website automatically, go check them out!"
+                )
+                # Apply the anomaly
+                player.height += random.randint(1, 3)
+                player.wingspan += random.randint(3, 7)
+                player.attributes["Speed"] += random.randint(1, 5)
+                player.attributes["Speed with Ball"] += random.randint(1, 5)
+                player.attributes["Strength"] += random.randint(1, 5)
+                player.attributes["Vertical"] += random.randint(1, 5)
+                player.attributes["Agility"] += random.randint(1, 5)
+                # Return the player object and a message
+                return [player, "🔥 Congratulations, this player won is now an ANOMALY!"]
+        else:
+            # Send webhook to the "rolls" channel
+            webhook.send_webhook(
+                "specialty_rolls", 
+                title=f"😟 {player.first_name} {player.last_name} missed the anomaly roll!", 
+                body=f"You needed to roll a (1) to win, you rolled a {roll}..."
+            )
+            # Return the player object and a message
+            return [player, f"😟 You needed to roll a (1) to win, you rolled a {roll}..."]
+    else:
+        return [player, "😟 You needed to collect for atleast 18 weeks to roll for an anomaly roll!"]
 
 # Modification functions 
 # Parameters: player object
@@ -154,6 +232,8 @@ MODIFICATION_FUNCTIONS = {
     'Shot Speed Increase (Guaranteed)': modify_speed,
     'Activity Roll: Hotzone': activity_hotzone_roll,
     'Activity Roll: Hidden Gem': activity_hidden_gem_roll,
+    'Activity Roll: Physicals': activity_physicals_roll,
+    'Activity Roll: Anomaly': activity_anomaly_roll,
 }
 
 # Checker function

@@ -160,7 +160,7 @@ MODIFICATION_FUNCTIONS = {
     '🔒 Jumpshot Roll': modify_jumpshot,
     '🔒 Weight Roll': modify_weight,
     '🔒 Random Hot Zone': modify_hotzone,
-    'Shot Speed Increase (Guaranteed)': modify_speed,
+    'Jumphot Speed Increase (Guaranteed)': modify_speed,
     'Activity Roll: Physicals': activity_physicals_roll,
     'Activity Roll: Anomaly': activity_anomaly_roll,
 }

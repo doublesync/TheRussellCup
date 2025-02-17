@@ -8,9 +8,9 @@ CONFIG_USER = {
 # Really this is just for limiting how much a player can earn each 'game week'
 # It has no correlation to the seasons that will appear in the stats app
 CONFIG_SEASON = {
-    "CURRENT_WEEK": 18, # This controls the player/loser of the week updates
-    "GAME_WEEK": 18, # This controls the payment week
-    "CURRENT_SEASON": 5,
+    "CURRENT_WEEK": 0, # This controls the player/loser of the week updates
+    "GAME_WEEK": 0, # This controls the payment week
+    "CURRENT_SEASON": 6,
     "MAX_SP_WEEK": 90, # Deprecated (scared to remove it!)
     "MAX_SP_SEASON": 2340, # Raised from 1800 SP
     "CHECKIN_SP": 30,
@@ -21,9 +21,9 @@ CONFIG_SEASON = {
 
 # Player configuration
 CONFIG_PLAYER = {
-    "SP_DEFAULT": 6000, # Raised from 5750 SP
+    "SP_DEFAULT": 7500, # Raised from 6000 SP
     "SP_ANOMALY_BONUS": 1500, # 30% of the starting SP
-    "XP_DEFAULT": 8500,
+    "XP_DEFAULT": 1000, # Raised from 8500 XP
     "BADGE_LABELS": {
         0: "❌ None",
         1: "🟫 Bronze",

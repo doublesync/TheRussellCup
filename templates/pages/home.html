@@ -80,19 +80,38 @@
 		
 								<!-- Options Card (Spans 2 columns on large screens) -->
 								<div class="card bg-base-200 shadow-lg p-2 md:col-span-2 h-full">
-										<div class="card-body pt-4">
-												<h2 class="card-title"><i class="fa-solid fa-gear"></i> Options</h2>
-												<hr class="my-2">
-												<ul>
-														<li><a href="{% url 'create_player' %}"><i class="fa-solid fa-user-plus"></i> Create Player</a></li>
-														<li><a href="{% url 'mods_list' %}"><i class="fa-solid fa-user-plus"></i> Buy Modifications</a></li>
-												</ul>
-										</div>
+									<div class="card-body pt-4">
+										<h2 class="card-title"><i class="fa-solid fa-gear"></i> Options</h2>
+										<hr class="my-2">
+										<ul>
+											<li><a href="{% url 'create_player' %}"><i class="fa-solid fa-user-plus"></i> Create Player</a></li>
+											<li><a href="{% url 'mods_list' %}"><i class="fa-solid fa-user-plus"></i> Buy Modifications</a></li>
+											<hr class="mt-4 mb-4">
+											<div class="flex justify-center mt-4">
+												<button class="btn btn-primary btn-lg" onclick="document.getElementById('pricing-modal').classList.add('modal-open')"><i class="fa-solid fa-shopping-cart"></i> Shop Paid Items</button>
+											</div>
+										</ul>
+									</div>
 								</div>
 						</div>
 				</div>
+
 			</div>
 		
+		</div>
+
+		{% comment %} Create a pricing modal {% endcomment %}
+		<div class="modal" id="pricing-modal">
+			<div class="modal-box">
+				<script async src="https://js.stripe.com/v3/pricing-table.js"></script>
+				<stripe-pricing-table pricing-table-id="prctbl_1Qtd7H2MLf88716PzWaQHKCN"
+				publishable-key="pk_live_51Pr2qg2MLf88716PUVkaq7ha1DnLy7GBC2sQ1FcGe0PEPfwKKfuoLCgvtuNrE1E1hYTDpjsvjNxJ2JnjhBf1HpY000VtHuf26n">
+				</stripe-pricing-table>
+				<div class="flex justify-end">
+					<button class="btn btn-primary" onclick="document.getElementById('pricing-modal').classList.remove('modal-open')">Close</button>
+				</div>
+			</div>
+			<div class="modal-backdrop" onclick="document.getElementById('pricing-modal').classList.remove('modal-open')"></div>
 		</div>
 
 </div>

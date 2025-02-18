@@ -12,7 +12,7 @@ CONFIG_SEASON = {
     "GAME_WEEK": 0, # This controls the payment week
     "CURRENT_SEASON": 6,
     "MAX_SP_WEEK": 90, # Deprecated (scared to remove it!)
-    "MAX_SP_SEASON": 2340, # Raised from 1800 SP
+    "MAX_SP_SEASON": 3000, # Raised from 2340 SP
     "CHECKIN_SP": 30,
     "CHECKIN_XP": 100,
     "DEFAULT_CONTRACT": 150,

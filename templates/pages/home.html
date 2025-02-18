@@ -6,6 +6,25 @@
 {% block content %}
 <div class="container-fluid">
 
+		<div class="container-fluid">
+			<!-- Box Score Banner -->
+			<div class="text-danger py-3 overflow-hidden relative">
+				<div class="max-w-6xl mx-auto px-4">
+					<div class="flex space-x-6 animate-marquee">
+						{% for game in recent_games %}
+						<a href="{% url 'boxscore' game.id %}" class="flex items-center space-x-3 bg-primary px-4 py-2 rounded-lg shadow-lg hover:scale-105 transition-transform duration-300">
+							<div class="text-lg font-bold">{{ game.home_team.name }}</div>
+							<div class="text-xl font-extrabold">100</div>
+							<div class="text-sm text-gray-400">vs</div>
+							<div class="text-xl font-extrabold">116</div>
+							<div class="text-lg font-bold">{{ game.away_team.name }}</div>
+						</a>
+						{% endfor %}
+					</div>
+				</div>
+			</div>
+		</div>
+	
 		<div class="hero min-h-full">
 			<div class="flex flex-col md:flex-row items-stretch p-4">
 				<!-- Image Section -->
@@ -116,3 +135,17 @@
 
 </div>
 {% endblock content %}
+
+{% block styles %}
+<style>
+	@keyframes marquee {
+		from { transform: translateX(-50%); }
+		to { transform: translateX(-100%); }
+	}
+	.animate-marquee {
+		display: flex;
+		white-space: nowrap;
+		animation: marquee 30s linear infinite;
+	}
+</style>
+{% endblock styles %}

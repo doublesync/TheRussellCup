@@ -23,8 +23,49 @@
         {% comment %} Player Name {% endcomment %}
         <div>
             <label for="name-filter" class="block text-sm font-medium text-gray-300">Search for Players</label>
-            <input name="name-filter" id="name-filter" class="input input-sm w-full mt-2" type="text" placeholder="Enter a name"/>
+            <input name="name-filter" id="name-filter" class="input input-sm w-full mt-2" type="text" placeholder="Enter a name" hx-post="{% url 'htmx_filter_players' 'stats' %}" hx-trigger="input delay:0.5s" hx-target="#search-table" hx-swap="innerHTML"/>
         </div>
+
+        {% comment %} Quick Sort Links {% endcomment %}
+        <div class="flex flex-wrap gap-2 mb-4 mt-4">
+            <button class="btn btn-xs btn-outline" hx-post="{% url 'htmx_filter_players' 'stats' %}" 
+                hx-vals='{"stat-filter-order-by": "average_gamescore", "stat-filter-order": "desc"}' 
+                hx-target="#search-table" hx-swap="innerHTML">
+                GMSC
+            </button>
+            
+            <button class="btn btn-xs btn-outline" hx-post="{% url 'htmx_filter_players' 'stats' %}" 
+                hx-vals='{"stat-filter-order-by": "average_points", "stat-filter-order": "desc"}' 
+                hx-target="#search-table" hx-swap="innerHTML">
+                PPG
+            </button>
+            
+            <button class="btn btn-xs btn-outline" hx-post="{% url 'htmx_filter_players' 'stats' %}" 
+                hx-vals='{"stat-filter-order-by": "average_rebounds", "stat-filter-order": "desc"}' 
+                hx-target="#search-table" hx-swap="innerHTML">
+                RPG
+            </button>
+            
+            <button class="btn btn-xs btn-outline" hx-post="{% url 'htmx_filter_players' 'stats' %}" 
+                hx-vals='{"stat-filter-order-by": "average_assists", "stat-filter-order": "desc"}' 
+                hx-target="#search-table" hx-swap="innerHTML">
+                APG
+            </button>
+
+            <button class="btn btn-xs btn-outline" hx-post="{% url 'htmx_filter_players' 'stats' %}" 
+                hx-vals='{"stat-filter-order-by": "average_steals", "stat-filter-order": "desc"}' 
+                hx-target="#search-table" hx-swap="innerHTML">
+                SPG
+            </button>
+
+            <button class="btn btn-xs btn-outline" hx-post="{% url 'htmx_filter_players' 'stats' %}" 
+                hx-vals='{"stat-filter-order-by": "average_blocks", "stat-filter-order": "desc"}' 
+                hx-target="#search-table" hx-swap="innerHTML">
+                BPG
+            </button>
+
+        </div>
+
         
         <!-- Modal for Filters -->
         <div id="filter-modal" class="modal">

@@ -47,6 +47,18 @@ CONFIG_PLAYER = {
         ("Primary Playmaker", "Primary Playmaker"),
         ("On-Ball Defender", "On-Ball Defender")
     ),
+    "TROPHIES": {
+        ("ASG", "ASG"),
+        ("ROY", "ROY"),
+        ("MVP", "MVP"),
+        ("DPOY", "DPOY"),
+        ("MIP", "MIP"),
+        ("FMVP", "FMVP"),
+        ("All-TRC 1ST", "All-TRC 1ST"),
+        ("All-TRC 2ND", "All-TRC 2ND"),
+        ("All-TRC D", "All-TRC D"),
+        ("CHAMP", "CHAMP"),
+    },
 }
 
 CONFIG_STATS = {

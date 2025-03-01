@@ -302,3 +302,13 @@ def htmx_upgrade_advice(request, id):
     response = "❌ Upgrade advice is currently disabled."
     # Return the response
     return HttpResponse(response)
+
+
+# This is a class-based view that will allow the user to see a player's trophy rack
+class TrophyRackView(View):
+
+    def get(self, request, id):
+        # Get the user's players
+        players = Player.objects.get(pk=id)
+        # Render the page
+        return render(request, "players/trophy_rack.html", {"players": players}) 

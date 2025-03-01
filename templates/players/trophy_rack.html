@@ -1,0 +1,53 @@
+{% extends '_base.html' %}
+{% load static %}
+
+{% block title %}{{ user.username }}s Trophy Rack{% endblock %}
+
+{% block styles %}
+<style>
+    input::placeholder {
+        color: gray !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+{% load static %}
+<div class="max-w-4xl mx-auto">
+    <!-- Title -->
+    <h1 class="text-3xl font-bold text-center mb-6">Trophy Rack</h1>
+
+    <!-- Tabs -->
+    <div class="tabs tabs-boxed flex justify-center mb-6">
+        <a class="tab tab-active" onclick="filterTrophies('all')">All</a>
+        <a class="tab" onclick="filterTrophies('player')">Player</a>
+        <a class="tab" onclick="filterTrophies('manager')">Manager</a>
+    </div>
+
+    <!-- Trophy Grid -->
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+        {% for trophy in trophies %}
+        <div class="trophy-card {{ trophy.type }} card bg-base-100 p-4 shadow-md flex flex-col items-center">
+            <div class="text-4xl">{{ trophy.icon }}</div>
+            <p class="mt-2 text-sm font-semibold">{{ trophy.name }}</p>
+            <p class="text-gray-400 text-xs">{{ trophy.year }} - {{ trophy.recipient }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    function filterTrophies(type) {
+        document.querySelectorAll(".trophy-card").forEach(card => {
+            if (type === 'all' || card.classList.contains(type)) {
+                card.style.display = "flex";
+            } else {
+                card.style.display = "none";
+            }
+        });
+
+        document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("tab-active"));
+        event.target.classList.add("tab-active");
+    }
+</script>
+{% endblock %}

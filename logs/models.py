@@ -100,3 +100,13 @@ class TransactionMoveLog(models.Model):
         if not self.approved:
             self.move_players()
             super(TransactionMoveLog, self).save(*args, **kwargs)
+
+# A model to store trophy logs
+class TrophyLog(models.Model):
+    player = models.ForeignKey("players.Player", on_delete=models.CASCADE)
+    trophy = models.CharField(max_length=32, choices=config.CONFIG_PLAYER["TROPHIES"])
+    season = models.IntegerField()
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.player} won {self.trophy} in S{self.season}"

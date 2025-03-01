@@ -7,7 +7,7 @@ from django.core.cache import cache
 # Local imports
 import simulation.config as config
 from stats.models import Season, Game, TeamGameStats, PlayerGameStats
-from logs.models import ContractOfferLog
+from logs.models import ContractOfferLog, UpgradeLog
 
 # Third party imports
 from openai import OpenAI
@@ -76,6 +76,42 @@ def prompt_signing_tweet(offer, official=False):
         prompt += "This is a verbal agreement -- the grace period has not passed yet; either party can back out of the agreement for eight hours.\n"
     prompt += "Your response should be formatted in the way Shams or Woj formats their tweets, make sure the salary amounts are formatted as they are (do not inflate them).\n"
 
+    # Get the completion from the API
+    completion = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {"role": "system", "content": prompt}
+        ]
+    )
+    response = completion.choices[0].message.content
+    return response
+
+def prompt_upgrade_tweet(upgrade):
+    # Extract player details
+    player_name = f"{upgrade.player.first_name} {upgrade.player.last_name}"
+    upgrades = upgrade.upgrades["attributes"]
+
+    # Build the narrative around the upgrades
+    upgrade_statements = []
+    for attribute, details in upgrades.items():
+        start, new = details["start"], details["new"]
+        if start < new:
+            upgrade_statements.append(
+                f"{player_name} has been putting in extra work on their {attribute}. "
+            )
+
+    # Ensure there's a tweet-worthy statement
+    if not upgrade_statements:
+        upgrade_statements.append(f"{player_name} has been locked in at the gym, sharpening their game.")
+
+    # Construct the prompt
+    prompt = "You are a social media influencer for the NBA (think Ballsack Sports, NBACentel, etc.), covering player training and development updates.\n"
+    prompt += f"Player: {player_name}\n"
+    prompt += "Recent upgrades:\n"
+    for statement in upgrade_statements:
+        prompt += f"- {statement}\n"
+    prompt += "Please format your response as a realistic insider tweet, or a funny tweet. The tone should resemble how insiders report on player workouts and improvements, or be raunchy and out of bounds. Keep it concise, engaging, and natural, or feel free to insult the player at their expense."
+    prompt += "Make the title simple and avoid referencing specific time periods like the offseason or playoffs, as the phase may change over time, and we want the title to remain relevant regardless of the current phase."
     # Get the completion from the API
     completion = client.chat.completions.create(
         model="gpt-4o-mini",

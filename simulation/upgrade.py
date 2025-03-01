@@ -5,6 +5,8 @@ import simulation.scripts.attribute as attribute
 import simulation.scripts.badge as badge
 import simulation.scripts.tendency as tendency
 import simulation.frivolity as frivolity
+from simulation.artificial import prompt_upgrade_tweet
+from simulation.webhook import send_webhook
 from logs.models import UpgradeLog
 
 # fmt: off
@@ -174,7 +176,14 @@ class UpgradeCreator:
                 self.push_upgrades(existing_log, self.cart["badges"], "badges")
                 self.push_upgrades(existing_log, self.cart["tendencies"], "tendencies")
             else:
-                UpgradeLog.objects.create(player=self.player, total_sp=self.cart["total_sp"], total_xp=self.cart["total_xp"], upgrades=self.cart)
+                existing_log = UpgradeLog.objects.create(player=self.player, total_sp=self.cart["total_sp"], total_xp=self.cart["total_xp"], upgrades=self.cart)
+            # Send a discord webhook notification
+            upgrade_tweet = prompt_upgrade_tweet(existing_log)
+            send_webhook(
+                url="player_upgrades",
+                title="",
+                body=upgrade_tweet,
+            )
             # Return a success message
             return [True, "Upgrades applied successfully."]
         else:

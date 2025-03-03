@@ -54,6 +54,8 @@ def add_badge_color(badge):
         return "background-color: #886300"
     elif badge == 4:
         return "background-color: #800080; color: white;"
+    elif badge == 5:
+        return "background-color: #a52a2a; color: white;"
     else:
         return "background-color: #212121; color: white;"
 

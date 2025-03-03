@@ -201,31 +201,28 @@
                             <div id="badge_list" class="row mt-5">
                                 {% for field in form %}
                                 {% if field.field.widget.attrs.data_type == 'badge' %}
-                                <div class="col-lg-6" data-category="{{ field.label|add_badge_category }}">
-                                    <p class="m-1">
-                                        <div class="badge p-3">
-                                            <div class="value-control flex items-center justify-center space-x-2">
-                                                <!-- Plus Button (left) -->
-                                                <button type="button" style="{{ field.value|add_badge_color }}" class="btn btn-sm btn-solid badge-plus" hx-post="{% url 'upgrade_page' player.id %}" hx-trigger="click" hx-target="#cart-table" hx-swap="innerHTML">
-                                                    <i class="fa-solid fa-plus"></i>
-                                                </button>
-                                            
-                                                <!-- Displaying the number in the center -->
-                                                <div class="flex items-center justify-center">
+                                    <div class="col-lg-6" data-category="{{ field.label|add_badge_category }}">
+                                        <p class="m-1">
+                                            <div class="badge p-3">
+                                                <div class="value-control flex items-center justify-center space-x-2">
+                                                    <button type="button" style="{{ field.value|add_badge_color }}" class="btn btn-sm btn-solid badge-plus" hx-post="{% url 'upgrade_page' player.id %}" hx-trigger="click" hx-target="#cart-table" hx-swap="innerHTML">
+                                                        <i class="fa-solid fa-plus"></i>
+                                                    </button>
+                            
                                                     <div class="flex items-center justify-center">
-                                                        {{ field }}
+                                                        <div class="flex items-center justify-center">
+                                                            {{ field }}
+                                                        </div>
                                                     </div>
+                            
+                                                    <button type="button" style="{{ field.value|add_badge_color }}" class="btn btn-sm btn-solid badge-minus" hx-post="{% url 'upgrade_page' player.id %}" hx-trigger="click" hx-target="#cart-table" hx-swap="innerHTML">
+                                                        <i class="fa-solid fa-minus"></i>
+                                                    </button>
                                                 </div>
-                                            
-                                                <!-- Minus Button (right) -->
-                                                <button type="button" style="{{ field.value|add_badge_color }}" class="btn btn-sm btn-solid badge-minus" hx-post="{% url 'upgrade_page' player.id %}" hx-trigger="click" hx-target="#cart-table" hx-swap="innerHTML">
-                                                    <i class="fa-solid fa-minus"></i>
-                                                </button>
                                             </div>
-                                        </div>
-                                        {{ field.label }}
-                                    </p>
-                                </div>
+                                            {{ field.label }}
+                                        </p>
+                                    </div>
                                 {% endif %}
                                 {% endfor %}
                             </div>

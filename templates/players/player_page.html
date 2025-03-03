@@ -289,13 +289,17 @@
 									<div class="card-body">
 										<div id="badge_list" class="row">
 											{% for category, data in badges.items %}
-											{% for k, v in data.items %}
-											<div class="col-lg-6" data-category="{{ k|add_badge_category }}">
-												<p class="mt-0 mb-0">
-													<span style="{{ v|add_badge_color }}" class="badge text-base-100">{{ v }}</span> {{ k }}
-												</p>
-											</div>
-											{% endfor %}
+												{% for k, v in data.items %}
+													<div class="col-lg-6" data-category="{{ k|add_badge_category }}">
+														<p class="mt-0 mb-0">
+															{% if v == 5 %}
+																<span style="{{ v|add_badge_color }} box-shadow: 0 0 10px rgba(255, 0, 0, 0.7); animation: pulse 2s infinite;" class="badge text-base-100">{{ v }}</span> {{ k }}
+															{% else %}
+																<span style="{{ v|add_badge_color }}" class="badge text-base-100">{{ v }}</span> {{ k }}
+															{% endif %}
+														</p>
+													</div>
+												{% endfor %}
 											{% endfor %}
 										</div>
 									</div>
@@ -386,4 +390,18 @@
 </script>
 <script src="{% static 'js/players/filter_data.js' %}" type="text/javascript"></script>
 <script src="{% static 'js/players/upg_notes.js' %}" type="text/javascript"></script>
+{% endblock %}
+
+{% block style %}
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
+    }
+    100% {
+        box-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+    }
+}
 {% endblock %}

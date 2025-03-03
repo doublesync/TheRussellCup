@@ -82,4 +82,11 @@ CONFIG_STATS = {
         "plus_minus", "points_responsible_for", "dunks", "defensive_rebounds", "game_score", "effective_field_goal_percentage",
         "true_shooting_percentage", "turnover_percentage"
     ],
+    "TRACKED_AVERAGE_FIELDS": [
+        "average_minutes", "average_game_score", "average_points", "average_rebounds", "average_assists", "average_steals", "average_blocks", 
+        "average_turnovers", "average_field_goals_made", "average_field_goals_attempted", "average_three_pointers_made", "average_three_pointers_attempted",
+        "average_free_throws_made", "average_free_throws_attempted", "average_offensive_rebounds", "average_personal_fouls",
+        "average_plus_minus", "average_points_responsible_for", "average_dunks", "average_defensive_rebounds",
+        "average_effective_field_goal_percentage", "average_true_shooting_percentage", "average_turnover_percentage"
+    ],
 }

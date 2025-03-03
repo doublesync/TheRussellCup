@@ -103,3 +103,7 @@ def percentage(value, total):
 @register.filter
 def get_item(dictionary, key):
     return dictionary.get(key)
+
+@register.filter
+def attr(obj, field_name):
+    return getattr(obj, field_name, None)

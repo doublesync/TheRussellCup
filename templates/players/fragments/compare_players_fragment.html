@@ -1,0 +1,138 @@
+{% load style_filters %}
+
+<div class="overflow-x-auto">
+    <h1 class="text-2xl font-bold text-center mt-6 mb-6">Comparison</h1>
+    {% comment %} Vitals {% endcomment %}
+    <table class="table table-fixed w-full border-collapse border border-gray-700">
+        <thead>
+            <tr class="bg-base-300 text-base-content">
+                <th class="p-2 text-left">Field</th>
+                <th class="p-2 text-center">{{ player_1.first_name }} {{ player_1.last_name }}</th>
+                <th class="p-2 text-center">{{ player_2.first_name }} {{ player_2.last_name }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for field, label in vital_fields.items %}
+            <tr class="border-t border-gray-600">
+                <td class="p-2">{{ label }}</td>
+                <td class="p-2 text-center {% if player_1|attr:field > player_2|attr:field %}text-green-500 font-bold{% elif player_1|attr:field < player_2|attr:field %}text-red-500 font-bold{% endif %}">
+                    {{ player_1|attr:field }}
+                </td>
+                <td class="p-2 text-center {% if player_2|attr:field > player_1|attr:field %}text-green-500 font-bold{% elif player_2|attr:field < player_1|attr:field %}text-red-500 font-bold{% endif %}">
+                    {{ player_2|attr:field }}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% comment %} Attributes {% endcomment %}
+    <table class="table table-fixed w-full border-collapse border border-gray-700">
+        <thead>
+            <tr class="bg-base-300 text-base-content">
+                <th class="p-2 text-left">Attribute</th>
+                <th class="p-2 text-center">{{ player_1.first_name }} {{ player_1.last_name }}</th>
+                <th class="p-2 text-center">{{ player_2.first_name }} {{ player_2.last_name }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for attribute, value_1 in player_1.attributes.items %}
+                {% with value_2=player_2.attributes|get_item:attribute %}
+                <tr class="border-t border-gray-600">
+                    <td class="p-2">{{ attribute|title }}</td>
+                    <td class="p-2 text-center {% if value_1 > value_2 %}text-green-500 font-bold{% elif value_1 < value_2 %}text-red-500 font-bold{% endif %}">
+                        {{ value_1 }}
+                    </td>
+                    <td class="p-2 text-center {% if value_2 > value_1 %}text-green-500 font-bold{% elif value_2 < value_1 %}text-red-500 font-bold{% endif %}">
+                        {{ value_2 }}
+                    </td>
+                </tr>
+                {% endwith %}
+            {% endfor %}
+        </tbody>
+    </table>
+    {% comment %} Badges {% endcomment %}
+    <table class="table table-fixed w-full border-collapse border border-gray-700">
+        <thead>
+            <tr class="bg-base-300 text-base-content">
+                <th class="p-2 text-left">Badge</th>
+                <th class="p-2 text-center">{{ player_1.first_name }} {{ player_1.last_name }}</th>
+                <th class="p-2 text-center">{{ player_2.first_name }} {{ player_2.last_name }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for badge, value_1 in player_1.badges.items %}
+                {% with value_2=player_2.badges|get_item:badge %}
+                <tr class="border-t border-gray-600">
+                    <td class="p-2">{{ badge|title }}</td>
+                    <td class="p-2 text-center {% if value_1 > value_2 %}text-green-500 font-bold{% elif value_1 < value_2 %}text-red-500 font-bold{% endif %}">
+                        {{ value_1 }}
+                    </td>
+                    <td class="p-2 text-center {% if value_2 > value_1 %}text-green-500 font-bold{% elif value_2 < value_1 %}text-red-500 font-bold{% endif %}">
+                        {{ value_2 }}
+                    </td>
+                </tr>
+                {% endwith %}
+            {% endfor %}
+        </tbody>
+    </table>
+    {% comment %} Tendencies {% endcomment %}
+    <table class="table table-fixed w-full border-collapse border border-gray-700">
+        <thead>
+            <tr class="bg-base-300 text-base-content">
+                <th class="p-2 text-left">Tendency</th>
+                <th class="p-2 text-center">{{ player_1.first_name }} {{ player_1.last_name }}</th>
+                <th class="p-2 text-center">{{ player_2.first_name }} {{ player_2.last_name }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tendency, value_1 in player_1.tendencies.items %}
+                {% with value_2=player_2.tendencies|get_item:tendency %}
+                <tr class="border-t border-gray-600">
+                    <td class="p-2">{{ tendency|title }}</td>
+                    <td class="p-2 text-center {% if value_1 > value_2 %}text-green-500 font-bold{% elif value_1 < value_2 %}text-red-500 font-bold{% endif %}">
+                        {{ value_1 }}
+                    </td>
+                    <td class="p-2 text-center {% if value_2 > value_1 %}text-green-500 font-bold{% elif value_2 < value_1 %}text-red-500 font-bold{% endif %}">
+                        {{ value_2 }}
+                    </td>
+                </tr>
+                {% endwith %}
+            {% endfor %}
+        </tbody>
+    </table>
+    {% comment %} Statistics {% endcomment %}
+    <table class="table table-fixed w-full border-collapse border border-gray-700">
+        <thead>
+            <tr class="bg-base-300 text-base-content">
+                <th class="p-2 text-left">Statistic</th>
+                <th class="p-2 text-center">{{ player_1.first_name }} {{ player_1.last_name }}</th>
+                <th class="p-2 text-center">{{ player_2.first_name }} {{ player_2.last_name }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for field in stat_fields %}
+            <tr class="border-t border-gray-600">
+                <td class="p-2">{{ field }}</td>
+                <td class="p-2 text-center 
+                    {% if player_1_stats|attr:field > player_2_stats|attr:field %}
+                        text-green-500 font-bold
+                    {% elif player_1_stats|attr:field < player_2_stats|attr:field %}
+                        text-red-500 font-bold
+                    {% endif %}
+                ">
+                    {{ player_1_stats|attr:field }}
+                </td>
+                <td class="p-2 text-center 
+                    {% if player_2_stats|attr:field > player_1_stats|attr:field %}
+                        text-green-500 font-bold
+                    {% elif player_2_stats|attr:field < player_1_stats|attr:field %}
+                        text-red-500 font-bold
+                    {% endif %}
+                ">
+                    {{ player_2_stats|attr:field }}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

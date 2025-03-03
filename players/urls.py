@@ -18,5 +18,7 @@ urlpatterns = [
     path("player/mods/purchase/<int:id>/", views.purchase_modification, name="purchase_modification"),
     path("player/<int:id>/upgrade/advice/", views.htmx_upgrade_advice, name="htmx_upgrade_advice"),
     path("player/trophyrack/<int:id>/", views.TrophyRackView.as_view(), name="trophy_rack"),
+    path("compare/", views.ComparePlayersView.as_view(), name="compare_players"),
+    path("compare/change/", views.htmx_compare_players, name="htmx_compare_players"),
     # fmt:on
 ]

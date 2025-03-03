@@ -1,0 +1,46 @@
+{% extends "_base.html" %}
+{% load style_filters %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto p-6">
+    <h1 class="text-2xl font-bold text-center mb-6">Compare Players</h1>
+    
+    <form method="POST" class="bg-base-100 shadow-md rounded-lg p-6">
+        {% csrf_token %}
+        
+        <div class="form-control mb-4">
+            <label for="player-1" class="label text-lg font-medium">Player 1</label>
+            <select id="player-1" name="player-1" class="js-multiple-select w-full">
+                <option value="">Select Player</option>
+                {% for player in players %}
+                    <option value="{{ player.id }}">{{ player.first_name }} {{ player.last_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-control mb-6">
+            <label for="player-2" class="label text-lg font-medium">Player 2</label>
+            <select id="player-2" name="player-2" class="js-multiple-select w-full">
+                <option value="">Select Player</option>
+                {% for player in players %}
+                    <option value="{{ player.id }}">{{ player.first_name }} {{ player.last_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-full" hx-post="{% url 'htmx_compare_players' %}" hx-trigger="click" hx-target="#comparison-container" hx-swap="innerHTML">Compare</button>
+    </form>
+
+    <div id="comparison-container">
+    </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% include 'stafftools/fragments/select2_scripts.html' %}
+{% endblock %}
+
+{% block styles %}
+{% include 'stafftools/fragments/select2_styles.html' %}
+{% endblock %}

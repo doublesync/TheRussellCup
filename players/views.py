@@ -19,8 +19,8 @@ from ipware import get_client_ip
 from players.models import Player, Modification
 from players.forms import PlayerForm, UpgradeForm
 from stats.models import Season, PlayerSeasonStats, TeamSeasonStats
+import simulation.config as config
 import simulation.statfinder as statfinder
-# import simulation.artificial as ai
 import simulation.create as create
 import simulation.upgrade as upgrade
 import simulation.modification as modification
@@ -312,3 +312,46 @@ class TrophyRackView(View):
         players = Player.objects.get(pk=id)
         # Render the page
         return render(request, "players/trophy_rack.html", {"players": players}) 
+    
+
+# This is a class-based view that will allow the user to compare two players
+class ComparePlayersView(View):
+
+    def get(self, request):
+        # Get the user's players
+        players = Player.objects.all()
+        # Render the page
+        return render(request, "players/compare_players.html", {"players": players})
+    
+
+# This is function based htmx view that will allow the user to change the players being compared
+def htmx_compare_players(request):
+    if request.method == "POST":
+        # Check if the players exist
+        player_1 = request.POST.get("player-1")
+        player_2 = request.POST.get("player-2")
+        # Check if player is being compared to itself
+        if not player_1 or not player_2:
+            return HttpResponse("❌ You must select two players to compare")
+        if player_1 == player_2:
+            return HttpResponse(f"❌ You cannot compare a player to themselves: ({player_1}) ({player_2}).")
+        # Check if both players exist
+        if not Player.objects.filter(pk=player_1).exists() or not Player.objects.filter(pk=player_2).exists():
+            return HttpResponse("❌ One or more of the players do not exist")
+        # Get the players
+        player_1 = Player.objects.get(pk=player_1)
+        player_2 = Player.objects.get(pk=player_2)
+        # Create a list of vital fields
+        vital_fields = {
+            "sp_spent": "SP Spent",
+            "xp_spent": "XP Spent",
+            "height": "Height",
+            "weight": "Weight",
+            "wingspan": "Wingspan",
+        }
+        stat_fields = config.CONFIG_STATS["TRACKED_AVERAGE_FIELDS"]
+        # Add player averages to the player objects
+        player_1_stats = statfinder.StatFinder().player_stats(player_1)
+        player_2_stats = statfinder.StatFinder().player_stats(player_2)
+        # Render the page
+        return render(request, "players/fragments/compare_players_fragment.html", {"player_1": player_1, "player_2": player_2, "player_1_stats": player_1_stats, "player_2_stats": player_2_stats, "vital_fields": vital_fields, "stat_fields": stat_fields})

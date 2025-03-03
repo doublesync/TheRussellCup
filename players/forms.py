@@ -104,7 +104,7 @@ class UpgradeForm(forms.Form):
                             "data-original": value,
                             "class": "badge-value text-light border-0 bg-transparent p-0 m-0 text-body",
                             "min": "0", 
-                            "max": "4"
+                            "max": "5"
                         }
                     ),
                 )

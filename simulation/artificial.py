@@ -110,7 +110,7 @@ def prompt_upgrade_tweet(upgrade):
     prompt += "Recent upgrades:\n"
     for statement in upgrade_statements:
         prompt += f"- {statement}\n"
-    prompt += "Please format your response as an update with each particular upgrade in a bullet point format.\n"
+    prompt += "Please format your response as an update with each particular upgrade in a bullet point format. Be sure to accurately list these, you should only list what has actually been upgraded.\n"
     prompt += "Make sure to keep the message concise and to the point, as it will be sent to a Discord channel.\n"
     prompt += "Make the title simple and avoid referencing specific time periods like the offseason or playoffs, as the phase may change over time, and we want the title to remain relevant regardless of the current phase."
     prompt += "Rarely, at the bottom of the message, as a joke, make a raunchy and inappropriate comment about one of the following players: Jauvy Campbell, Deion Johnson, DC Kelly Jr, or Zachary James."

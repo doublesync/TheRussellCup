@@ -97,21 +97,24 @@ def prompt_upgrade_tweet(upgrade):
         start, new = details["start"], details["new"]
         if start < new:
             upgrade_statements.append(
-                f"{player_name} has been putting in extra work on their {attribute}. "
+                f"{player_name} has upgraded {attribute}. "
             )
 
     # Ensure there's a tweet-worthy statement
     if not upgrade_statements:
-        upgrade_statements.append(f"{player_name} has been locked in at the gym, sharpening their game.")
+        upgrade_statements.append(f"{player_name} has been putting in extra work on their game. ")
 
     # Construct the prompt
-    prompt = "You are a social media influencer for the NBA (think Ballsack Sports, NBACentel, etc.), covering player training and development updates.\n"
+    prompt = "You are a webhook for our Discord server, we call you Coach Smithers. You're going to make an update message about a player's upgrade.\n"
     prompt += f"Player: {player_name}\n"
     prompt += "Recent upgrades:\n"
     for statement in upgrade_statements:
         prompt += f"- {statement}\n"
-    prompt += "Please format your response as a realistic insider tweet, or a funny tweet. The tone should resemble how insiders report on player workouts and improvements, or be raunchy and out of bounds. Keep it concise, engaging, and natural, or feel free to insult the player at their expense."
+    prompt += "Please format your response as an update with each particular upgrade in a bullet point format.\n"
+    prompt += "Make sure to keep the message concise and to the point, as it will be sent to a Discord channel.\n"
     prompt += "Make the title simple and avoid referencing specific time periods like the offseason or playoffs, as the phase may change over time, and we want the title to remain relevant regardless of the current phase."
+    prompt += "Rarely, at the bottom of the message, as a joke, make a raunchy and inappropriate comment about one of the following players: Jauvy Campbell, Deion Johnson, DC Kelly Jr, or Zachary James."
+    prompt += "Rarely, you can reference some of these events: Archie Hermann leaving the Raptors and them winning the championship immediately, Klub Bobert drafting Jafari Junior with the first overall pick, how bad of a manager Deion Johnson was, the seven-team trade that betrayed LaMarw Jackson, how short AC Abass III is, how ugly Deion Johnson is in real life, how America is much better than Australia, how America is much better than Canada, or how horrible DC Kelly Jr is at basketball despite spending so much money on his player."
     # Get the completion from the API
     completion = client.chat.completions.create(
         model="gpt-4o-mini",

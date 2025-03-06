@@ -1,7 +1,8 @@
 <tr id="container-{{ player.id }}">
+    <input type="hidden" name="team-{{ player.id }}" value="{{ player_team }}" />
     <td class="text-center font-semibold">{{ player.team.name }}</td>
     <td class="text-center font-semibold w-[200px] truncate">
-        <select class="js-multiple-select w-[200px]" hx-post="{% url 'htmx_change_stat_player' %}" hx-trigger="change" hx-target="closest tr" hx-swap="outerHTML">
+        <select name="replace-{{ player.id }}" class="js-multiple-select w-[200px]" hx-post="{% url 'htmx_change_stat_player' %}" hx-trigger="change" hx-target="closest tr" hx-swap="outerHTML">
             <option value="{{ player.id }}" selected>{{ player.first_name }} {{ player.last_name }}</option>
             {% for new_player in all_players %}
                 {% if new_player.id != player.id %}
@@ -28,11 +29,11 @@
     <td><input type="number" name="points_responsible_for-{{ player.id }}" class="input input-bordered w-full min-w-[50px]" /></td>
     <td><input type="number" name="dunks-{{ player.id }}" class="input input-bordered w-full min-w-[50px]" /></td>
 </tr>
-
+{% comment %} 
 {% block scripts %}
 {% include 'stafftools/fragments/select2_scripts.html' %}
 {% endblock %}
 
 {% block styles %}
 {% include 'stafftools/fragments/select2_styles.html' %}
-{% endblock %}
+{% endblock %} {% endcomment %}

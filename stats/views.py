@@ -241,7 +241,7 @@ def htmx_fetch_roster(request):
     # Fetch the team & players
     home_team = Team.objects.get(pk=home_team)
     away_team = Team.objects.get(pk=away_team)
-    all_players = Player.objects.all()
+    all_players = Player.objects.all().order_by("last_name")
     home_players = all_players.filter(team=home_team)
     away_players = all_players.filter(team=away_team)
     # Render the roster template
@@ -289,14 +289,24 @@ def htmx_change_season(request):
 # A function that changes a player in the statistics table
 def htmx_change_stat_player(request):
     if request.method == "POST":
-        # Get the player ID from the request
-        new_player_id = request.GET.get("new-player-id")
-        # Get the player object
-        player = Player.objects.get(pk=new_player_id)
-        context = {"player": player}
-        player_stats_html = render_to_string("stats/fragments/player_row_fragment.html", context)
-        # Render the player stats template
-        return HttpResponse(player_stats_html)
+        for field_name, selected_value in request.POST.items():
+            if field_name.startswith("replace-"):
+                original_player_id = field_name.split("-")[1]
+                original_player_team = request.POST.get(f"team-{original_player_id}")
+                if selected_value != original_player_id:
+                    try:
+                        player = Player.objects.get(id=selected_value)
+                    except Player.DoesNotExist:
+                        return HttpResponse(status=204)  # HTMX ignores this response
+                    # Return the player row fragment
+                    all_players = Player.objects.all().order_by("last_name")
+                    return render(request, "stats/fragments/player_row_fragment.html", {
+                        "player": player, 
+                        "player_team": original_player_team, 
+                        "all_players": all_players
+                    })
+
+    return HttpResponse(status=204)  # No changes, so do nothing
 
 # A function that creates a game based on the user's form
 def htmx_confirm_game(request):
@@ -383,7 +393,6 @@ def htmx_confirm_game(request):
                     team_totals[real_key] += int(value)
                 else:
                     team_totals[real_key] = int(value)
-        print(json.dumps(team_totals, indent=4))
         # Create the team game stats
         TeamGameStats.objects.create(
             game=game,
@@ -408,11 +417,13 @@ def htmx_confirm_game(request):
     # Create the player stats
     for player_id, stats in player_stats.items():
         player = Player.objects.get(pk=player_id)
+        player_team = request.POST.get(f"team-{player_id}") # Each player has a "home" or "away" declaration so we can decide which team they are on
+        print(f"Player {player} is on the {player_team} team")
         # Create the player game stats
         PlayerGameStats.objects.create(
             game=game,
             player=player,
-            team=player.team,
+            team=home_team if player_team == "home" else away_team, # Some players may be dynamically assigned to the game, so we need this.
             **stats # Unpack the stats dictionary
         )
         # Update the player's season stats

@@ -23,10 +23,6 @@
             <button type="button" class="btn btn-primary w-full sm:w-64 m-1" onclick="document.getElementById('gameModal').classList.add('modal-open')">
                 <i class="fas fa-filter"></i> Finish Game
             </button>
-            {% comment %} Button to open swap player teams modal {% endcomment %}
-            <button type="button" class="btn btn-primary w-full sm:w-64 m-1" onclick="document.getElementById('swapModal').classList.add('modal-open')">
-                <i class="fas fa-exchange-alt"></i> Swap Players
-            </button>
         </div>
         {% comment %} Game week selector & surge game toggle (true/false) {% endcomment %}
         <div class="grid grid-cols-2 gap-4">
@@ -118,17 +114,18 @@
                     {% endfor %}
                 </select>
             </div>
-            {% comment %} Player statistics tables {% endcomment %}
-            <div id="player_stats" class="col-span-2">
-                <div>
-                    {% if home_players and away_players %}
-                        {% include 'stats/fragments/players_table.html' %}
-                    {% else %}
-                        <p class="text-center text-lg font-semibold alert alert-secondary">
-                            Select teams to view player stats
-                        </p>
-                    {% endif %}
-                </div>
+        </div>
+
+        {% comment %} Player statistics table(s) {% endcomment %}
+        <div id="player_stats" class="col-span-2">
+            <div>
+                {% if home_players and away_players %}
+                    {% include 'stats/fragments/players_table.html' %}
+                {% else %}
+                    <p class="text-center text-lg font-semibold alert alert-secondary">
+                        Select teams to view player stats
+                    </p>
+                {% endif %}
             </div>
         </div>
 

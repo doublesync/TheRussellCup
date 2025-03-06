@@ -12,7 +12,6 @@
         </div>
     </div>
 </div>
-<form>
 {% comment %} Home players table {% endcomment %}
 <div class="overflow-x-auto mt-4">
     <table class="table table-zebra table-bordered w-full">
@@ -41,7 +40,7 @@
         </thead>
         <tbody>
             {% for player in home_players %}
-            {% include 'stats/fragments/player_row_fragment.html' with player=player all_players=all_players %}
+            {% include 'stats/fragments/player_row_fragment.html' with player=player player_team="home" %}
             {% endfor %}
         </tbody>
     </table>
@@ -75,8 +74,8 @@
         </thead>
         <tbody>
             {% for player in away_players %}
-            {% include 'stats/fragments/player_row_fragment.html' with player=player all_players=all_players %}
+            {% include 'stats/fragments/player_row_fragment.html' with player=player player_team="away" %}
             {% endfor %}
         </tbody>
     </table>
-</div>  
+</div>

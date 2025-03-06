@@ -19,5 +19,6 @@ urlpatterns = [
     path("api/league/", views.league_stats_api, name="league_stats_api"),
     path("seasons/change/", views.htmx_change_season, name="htmx_change_season"),
     path("games/create/roster/", views.htmx_fetch_roster, name="htmx_fetch_roster"),
+    path("games/create/player/change/", views.htmx_change_stat_player, name="htmx_change_stat_player"),
     path("games/create/confirm/", views.htmx_confirm_game, name="htmx_confirm_game"),
 ]

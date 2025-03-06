@@ -8,7 +8,11 @@ CONFIG_USER = {
 # Really this is just for limiting how much a player can earn each 'game week'
 # It has no correlation to the seasons that will appear in the stats app
 CONFIG_SEASON = {
+<<<<<<< HEAD
     "CURRENT_WEEK": 13, # This controls the player/loser of the week updates
+=======
+    "CURRENT_WEEK": 12, # This controls the player/loser of the week updates
+>>>>>>> 15bebd82bfd15c87fcaa489900b169e0fcd9da6d
     "GAME_WEEK": 12, # This controls the payment week
     "CURRENT_SEASON": 6,
     "MAX_SP_WEEK": 90, # Deprecated (scared to remove it!)

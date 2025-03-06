@@ -241,13 +241,14 @@ def htmx_fetch_roster(request):
     # Fetch the team & players
     home_team = Team.objects.get(pk=home_team)
     away_team = Team.objects.get(pk=away_team)
-    all_players = Player.objects.all() # inefficient; saving for later
-    home_players = all_players.filter(team=home_team).values('id', 'first_name', 'last_name').distinct()
-    away_players = all_players.filter(team=away_team).values('id', 'first_name', 'last_name').distinct()
+    all_players = Player.objects.all()
+    home_players = all_players.filter(team=home_team)
+    away_players = all_players.filter(team=away_team)
     # Render the roster template
     roster_html = render_to_string(
         "stats/fragments/players_table.html", 
         {
+            "all_players": all_players,
             "home_team": home_team,
             "away_team": away_team,
             "home_players": home_players,
@@ -284,6 +285,18 @@ def htmx_change_season(request):
     )
     
     return HttpResponse(stats_home_html)
+
+# A function that changes a player in the statistics table
+def htmx_change_stat_player(request):
+    if request.method == "POST":
+        # Get the player ID from the request
+        new_player_id = request.GET.get("new-player-id")
+        # Get the player object
+        player = Player.objects.get(pk=new_player_id)
+        context = {"player": player}
+        player_stats_html = render_to_string("stats/fragments/player_row_fragment.html", context)
+        # Render the player stats template
+        return HttpResponse(player_stats_html)
 
 # A function that creates a game based on the user's form
 def htmx_confirm_game(request):

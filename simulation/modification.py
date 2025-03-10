@@ -150,8 +150,8 @@ MODIFICATION_FUNCTIONS = {
     '🔒 Weight Roll': modify_weight,
     '🔒 Random Hot Zone': modify_hotzone,
     'Jumphot Speed Increase (Guaranteed)': modify_speed,
-    'Activity Roll: Hotzone': activity_hotzone_roll,
-    'Activity Roll: Hidden Gem': activity_hidden_gem_roll,
+    '(S6) Activity Roll: Hotzone': activity_hotzone_roll,
+    '(S6) Activity Roll: Hidden Gem': activity_hidden_gem_roll,
 }
 
 # Checker function

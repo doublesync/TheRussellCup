@@ -83,7 +83,7 @@ def modify_hotzone(player):
     return [player, f"✅ Hotzone Roll applied: {hotzone} - {'Hot' if hot else 'Cold'}"]
 
 # Activity rolls (temporary; change each season)
- def activity_hotzone_roll(player):
+def activity_hotzone_roll(player):
      # Find out how many weeks the player has collected
      weeks_collected = 0
      if player.contract: 
@@ -105,7 +105,7 @@ def modify_hotzone(player):
      else:
          return [player, "😟 You needed to collect for atleast 6 weeks to roll for a hotzone!"]
      
- def activity_hidden_gem_roll(player):
+def activity_hidden_gem_roll(player):
      # Find out how many weeks the player has collected
      weeks_collected = 0
      if player.contract: 

@@ -1,6 +1,6 @@
 # Python imports
 import os
-import time
+import random
 
 # Django imports
 from django.core.cache import cache

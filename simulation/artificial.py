@@ -1,5 +1,6 @@
 # Python imports
 import os
+import time
 
 # Django imports
 from django.core.cache import cache
@@ -92,35 +93,67 @@ def prompt_upgrade_tweet(upgrade):
     upgrades = upgrade.upgrades["attributes"]
 
     # Build the narrative around the upgrades
-    upgrade_statements = []
-    for attribute, details in upgrades.items():
-        start, new = details["start"], details["new"]
-        if start < new:
-            upgrade_statements.append(
-                f"{player_name} has upgraded {attribute}. "
-            )
+    upgrade_statements = [
+        f"{player_name} has upgraded {attribute}." 
+        for attribute, details in upgrades.items() if details["start"] < details["new"]
+    ]
 
     # Ensure there's a tweet-worthy statement
     if not upgrade_statements:
-        upgrade_statements.append(f"{player_name} has been putting in extra work on their game. ")
+        upgrade_statements.append(f"{player_name} has been putting in extra work on their game.")
 
     # Construct the prompt
-    prompt = "You are a webhook for our Discord server, we call you Coach Smithers. You're going to make an update message about a player's upgrade.\n"
-    prompt += f"Player: {player_name}\n"
-    prompt += "Recent upgrades:\n"
+    prompt = (
+        "You are a webhook for our Discord server, we call you Coach Smithers. "
+        "You're going to make an update message about a player's upgrade.\n"
+        f"Player: {player_name}\n"
+        "Recent upgrades:\n"
+    )
+
     for statement in upgrade_statements:
         prompt += f"- {statement}\n"
-    prompt += "Please format your response as an update with each particular upgrade in a bullet point format. Be sure to accurately list these, you should only list what has actually been upgraded.\n"
-    prompt += "Make sure to keep the message concise and to the point, as it will be sent to a Discord channel.\n"
-    prompt += "Make the title simple and avoid referencing specific time periods like the offseason or playoffs, as the phase may change over time, and we want the title to remain relevant regardless of the current phase."
-    prompt += "Rarely, at the bottom of the message, as a joke, make a raunchy and inappropriate comment about one of the following players: Jauvy Campbell, Deion Johnson, DC Kelly Jr, or Zachary James."
-    prompt += "Rarely, you can reference some of these events: Archie Hermann leaving the Raptors and them winning the championship immediately, Klub Bobert drafting Jafari Junior with the first overall pick, how bad of a manager Deion Johnson was, the seven-team trade that betrayed LaMarw Jackson, how short AC Abass III is, how ugly Deion Johnson is in real life, how America is much better than Australia, how America is much better than Canada, or how horrible DC Kelly Jr is at basketball despite spending so much money on his player."
+
+    prompt += (
+        "Please format your response as an update with each particular upgrade in a bullet point format. "
+        "Be sure to accurately list these, you should only list what has actually been upgraded.\n"
+        "Make sure to keep the message concise and to the point, as it will be sent to a Discord channel.\n"
+        "Make the title simple and avoid referencing specific time periods like the offseason or playoffs, "
+        "as the phase may change over time, and we want the title to remain relevant regardless of the current phase.\n"
+    )
+
+    # Randomly decide whether to add a joke (e.g., 10% chance)
+    if random.random() < 0.1:  # 10% probability
+        joke_targets = [
+            ("Klub Bobert", "manages his team like it’s 1950 and is a known racist"),
+            ("AC Abass", "is short and fat despite spending thousands on himself"),
+            ("Archie Hermann", "stat-chases but somehow still has a mid career"),
+            ("Billy King Jr.", "is Australian and Leo Gagnon’s son"),
+            ("DC Kelly Jr.", "is bad at basketball despite spending so much money"),
+            ("Leo Gagnon", "is getting destroyed by American tariffs")
+        ]
+        event_references = [
+            "Archie Hermann left the Raptors and they immediately won a championship",
+            "Klub Bobert drafted Jafari Junior with the first overall pick",
+            "How bad of a manager Deion Johnson was",
+            "The seven-team trade that betrayed LaMarw Jackson",
+            "How short AC Abass III is",
+            "How ugly Deion Johnson is in real life",
+            "How America is much better than Australia",
+            "How America is much better than Canada",
+            "How DC Kelly Jr. is horrible at basketball despite spending so much money",
+        ]
+
+        # Select a joke and an event randomly
+        player_joke = random.choice(joke_targets)
+        event_joke = random.choice(event_references)
+
+        prompt += f"At the bottom of the message, as a joke, make a raunchy and inappropriate comment about {player_joke[0]}: {player_joke[1]}.\n"
+        prompt += f"There's a 25% chance you can reference this event: {event_joke}.\n"
+
     # Get the completion from the API
     completion = client.chat.completions.create(
         model="gpt-4o-mini",
-        messages=[
-            {"role": "system", "content": prompt}
-        ]
+        messages=[{"role": "system", "content": prompt}]
     )
     response = completion.choices[0].message.content
     return response

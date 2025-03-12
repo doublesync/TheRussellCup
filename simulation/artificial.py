@@ -121,8 +121,8 @@ def prompt_upgrade_tweet(upgrade):
         "as the phase may change over time, and we want the title to remain relevant regardless of the current phase.\n"
     )
 
-    # Randomly decide whether to add a joke (e.g., 10% chance)
-    if random.random() < 0.1:  # 10% probability
+    # Randomly decide whether to add a joke
+    if random.random() < 0.60:  # 60% probability
         joke_targets = [
             ("Klub Bobert", "manages his team like it’s 1950 and is a known racist"),
             ("AC Abass", "is short and fat despite spending thousands on himself"),
@@ -147,8 +147,8 @@ def prompt_upgrade_tweet(upgrade):
         player_joke = random.choice(joke_targets)
         event_joke = random.choice(event_references)
 
-        prompt += f"At the bottom of the message, as a joke, make a raunchy and inappropriate comment about {player_joke[0]}: {player_joke[1]}.\n"
-        prompt += f"There's a 25% chance you can reference this event: {event_joke}.\n"
+        prompt += f"At the bottom of the message, as a joke, make a raunchy and extremely inappropriate comment about {player_joke[0]}: {player_joke[1]}. Insult them in the most inappropriate way you can\n"
+        prompt += f"Reference this event with the joke: {event_joke} or feel free to fabricate your own raunchy event.\n"
 
     # Get the completion from the API
     completion = client.chat.completions.create(

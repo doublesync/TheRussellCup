@@ -129,18 +129,26 @@ def prompt_upgrade_tweet(upgrade):
             ("Archie Hermann", "stat-chases but somehow still has a mid career"),
             ("Billy King Jr.", "is Australian and Leo Gagnon’s son"),
             ("DC Kelly Jr.", "is bad at basketball despite spending so much money"),
-            ("Leo Gagnon", "is getting destroyed by American tariffs")
+            ("Leo Gagnon", "is crippled by his insecurity and low self-esteem"),
+            ("Jauvy Campbell", "is chronically online"),
+            ("Mikael Goldman", "would be a Wendy's employee if he wasn't 7'1"),
+            ("Zaire Cape", "has less rings than Forrest Quinton and Alvin Melo"),
+            ("Zachary James", "is a Walmart version of PJ Irving"),
+            ("Adam Max-max", "doesn't shower and is incredibly smelly")
         ]
         event_references = [
             "Archie Hermann left the Raptors and they immediately won a championship",
             "Klub Bobert drafted Jafari Junior with the first overall pick",
             "How bad of a manager Deion Johnson was",
-            "The seven-team trade that betrayed LaMarw Jackson",
+            "The seven-team trade where the Houston Rockets betrayed LaMarw Jackson",
             "How short AC Abass III is",
             "How ugly Deion Johnson is in real life",
             "How America is much better than Australia",
-            "How America is much better than Canada",
+            "How Canada is much better than America",
             "How DC Kelly Jr. is horrible at basketball despite spending so much money",
+            "How Zaire Cape ring chased the first half of his career without winning a ring",
+            "How Raito Kanashimi keeps getting demoted back to second option every season",
+            "How Vonte keeps retiring his players within two seasons"
         ]
 
         # Select a joke and an event randomly

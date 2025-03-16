@@ -14,6 +14,8 @@
                             <th class="px-4 py-2 text-center">Games</th>
                             <th class="px-4 py-2 text-center">Wins</th>
                             <th class="px-4 py-2 text-center">Losses</th>
+                            <th class="px-4 py-2 text-center">Diff</th>
+                            <th class="px-4 py-2 text-center">More</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -23,6 +25,20 @@
                             <td class="px-4 py-2 text-center">{{ data.season_stats.games_played }}</td>
                             <td class="px-4 py-2 text-center">{{ data.season_stats.wins }}</td>
                             <td class="px-4 py-2 text-center">{{ data.season_stats.losses }}</td>
+                            <td class="px-4 py-2 text-center">{{ data.season_stats.point_differential }}</td>
+                            <td class="px-4 py-2 text-center">
+                                <div class="dropdown dropdown-end">
+                                    <label tabindex="0" class="btn btn-xs btn-primary">More</label>
+                                    <ul tabindex="0" class="dropdown-content z-[10] menu p-2 shadow bg-base-100 rounded-box w-52">
+                                        <li class="font-bold">Tiebreakers:</li>
+                                        {% for tiebreaker in data.tiebreakers %}
+                                            <li>{{ tiebreaker }}</li>
+                                        {% empty %}
+                                            <li>No tiebreakers</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>

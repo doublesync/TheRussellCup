@@ -90,13 +90,21 @@ def prompt_signing_tweet(offer, official=False):
 def prompt_upgrade_tweet(upgrade):
     # Extract player details
     player_name = f"{upgrade.player.first_name} {upgrade.player.last_name}"
-    upgrades = upgrade.upgrades["attributes"]
+    attributes = upgrade.upgrades["attributes"]
+    badges = upgrade.upgrades["badges"]
 
     # Build the narrative around the upgrades
-    upgrade_statements = [
+    attribute_statements = [
         f"{player_name} has upgraded {attribute}." 
-        for attribute, details in upgrades.items() if details["start"] < details["new"]
+        for attribute, details in attributes.items() if details["start"] < details["new"]
     ]
+
+    badge_statements = [
+        f"{player_name} has upgraded {badge}." 
+        for badge, details in badges.items() if details["start"] < details["new"]
+    ]
+
+    upgrade_statements = attribute_statements + badge_statements
 
     # Ensure there's a tweet-worthy statement
     if not upgrade_statements:
@@ -121,42 +129,62 @@ def prompt_upgrade_tweet(upgrade):
         "as the phase may change over time, and we want the title to remain relevant regardless of the current phase.\n"
     )
 
-    # Randomly decide whether to add a joke
+    # Randomly decide whether to add extra text
     if random.random() < 0.60:  # 60% probability
-        joke_targets = [
-            ("Klub Bobert", "manages his team like it’s 1950 and is a known racist"),
-            ("AC Abass", "is short and fat despite spending thousands on himself"),
-            ("Archie Hermann", "stat-chases but somehow still has a mid career"),
-            ("Billy King Jr.", "is Australian and Leo Gagnon’s son"),
-            ("DC Kelly Jr.", "is bad at basketball despite spending so much money"),
-            ("Leo Gagnon", "is crippled by his insecurity and low self-esteem"),
-            ("Jauvy Campbell", "is chronically online"),
-            ("Mikael Goldman", "would be a Wendy's employee if he wasn't 7'1"),
-            ("Zaire Cape", "has less rings than Forrest Quinton and Alvin Melo"),
-            ("Zachary James", "is a Walmart version of PJ Irving"),
-            ("Adam Max-max", "doesn't shower and is incredibly smelly")
-        ]
-        event_references = [
-            "Archie Hermann left the Raptors and they immediately won a championship",
-            "Klub Bobert drafted Jafari Junior with the first overall pick",
-            "How bad of a manager Deion Johnson was",
-            "The seven-team trade where the Houston Rockets betrayed LaMarw Jackson",
-            "How short AC Abass III is",
-            "How ugly Deion Johnson is in real life",
-            "How America is much better than Australia",
-            "How Canada is much better than America",
-            "How DC Kelly Jr. is horrible at basketball despite spending so much money",
-            "How Zaire Cape ring chased the first half of his career without winning a ring",
-            "How Raito Kanashimi keeps getting demoted back to second option every season",
-            "How Vonte keeps retiring his players within two seasons"
+        badge_descriptions = [
+            ("Deadeye", "Jump shots taken with a defender closing out receive less of a penalty from a shot contest"),
+            ("Limitless Range", "Extends the range from which a player can shoot three-pointers effectively from deep"),
+            ("Mini Marksman", "Elevates the likelihood of making shots over taller defenders."),
+            ("Set Shot Specialist", "Boosts chances of knocking down stand-still jump shots."),
+            ("Shifty Shooter", "Improves a player's ability to successfully make off-the-dribble, high-difficulty jump shots."),
+            ("Aerial Wizard", "	Increases the ability to finish an alley-oop from a teammate, or putback a finish off an offensive rebound"),
+            ("Float Game", "Improves a player's ability to make floaters"),
+            ("Hook Specialist", "Improves a player's ability to make post hooks"),
+            ("Layup Mixmaster", "improves a player's ability to finish fancy or acrobatic layups successfully."),
+            ("Paint Prodigy", "Improves a player's ability to quickly and efficiently score while going to work in the paint."),
+            ("Physical Finisher", "	Improves a player's ability to battle through contact and convert contact layups."),
+            ("Post Fade Phenomr", "Improves a player's ability to make post fades and hop shots"),
+            ("Post Powerhouse", "Strengthens a player's ability at backing down defenders and moving them with dropsteps."),
+            ("Post-Up Poet", "	Raises the chances of faking or getting by the defender, as well as scoring, when performing moves in the post."),
+            ("Posterizer", "Increases the chances of throwing down a dunk on your defender"),
+            ("Ankle Assassin", "Increases the ability to break down the defender or cross them up."),
+            ("Bail Out", "Passing out of a jump shot or layup yields fewer errant passes than normal. Additionally, helps passing out of double teams"),
+            ("Break Starter", "After grabbing a defensive board, deep outlet passes made up the court are more accurate. Passes must be made quickly following the defensive rebound"),
+            ("Dimer", "When in the half-court, passes by Dimers to open shooters yield a shot percentage boost"),
+            ("Handles for Days", "A player takes less of an energy hit when performing consecutive dribble moves, allowing them to chain together combos quicker and for longer periods of time"),
+            ("Lightning Launch", "Speeds up launches when attacking from the perimeter."),
+            ("Strong Handle", "	Reduces the likelihood of being bothered by defenders when dribbling."),
+            ("Unpluckable", "	Defenders have a tougher time poking the ball free with their steal attempts"),
+            ("Versatile Visionary", "Improves a player's ability to thread and fit tight passes, including alley-oops, quickly and on time."),
+            ("Challenger", "Improves the effectiveness of well-timed contests against perimeter shooters"),
+            ("Glove", "	Increases the ability to successfully steal from ball-handlers, or strip layup attempts"),
+            ("Interceptor", "	The frequency of successfully tipped or intercepted passes greatly increases"),
+            ("High-Flying Denier", "Boosts the speed and leaping ability of a defensive player in anticipation of a block attempt."),
+            ("Immovable Enforcer", "Improves a defensive player's strength when defending ball handlers and finishers"),
+            ("Off-Ball Pest", "Makes players more difficult to get past when playing off-ball, as the can grab and hold their matchup and don't get their ankles broken as often"),
+            ("On-Ball Menace", "Hounds and bodies up while defending on the perimeter."),
+            ("Paint Patroller", "Increases a player's ability to block or contest shots at the rim."),
+            ("Pick Dodger", "Improves a player's ability to navigate through and around screens while on defense. At the Hall of Fame level, can blow through screens in the park or blacktop"),
+            ("Post Lockdown", "Strengthens a player's ability to effectively defend moves in the post, with an increased chance at stripping the opponent"),
+            ("Boxout Beast", "Increases the likelihood of dunking or posterizing your opponent when standing in the painted area"),
+            ("Rebound Chaser", "Increases the likelihood of dunking or posterizing your opponent when standing in the painted area"),
+            ("Brick Wall", "	Increases the effectiveness of screens and drains energy from opponents on physical contact"),
+            ("Slippery Off-Ball", "When attempting to get open off screens, the player more effectively navigates through traffic"),
+            ("Pogo Stick", "Allows players to quickly go back up for another jump upon landing. This could be after a rebound, block attempt, or even jumpshot")
         ]
 
-        # Select a joke and an event randomly
-        player_joke = random.choice(joke_targets)
-        event_joke = random.choice(event_references)
-
-        prompt += f"At the bottom of the message, as a joke, make a raunchy and extremely inappropriate comment about {player_joke[0]}: {player_joke[1]}. Insult them in the most inappropriate way you can\n"
-        prompt += f"Reference this event with the joke: {event_joke} or feel free to fabricate your own raunchy event.\n"
+        # If a badge been upgraded, select one randomly
+        if badge_statements:
+            badges = [
+                badge 
+                for badge, details in badges.items() if details["start"] < details["new"]
+            ]
+            random_badge = random.choice(badges)
+            for description in badge_descriptions:
+                if str(random_badge) == description[0]:
+                    badge_description = description[1]
+                                            
+            prompt += f"At the bottom of the message, make an analytical comment about how {random_badge} is going to have an impact on {player_name}'s game.\For your analysis, consider that they in-game impact of the badge is based off of the following description: {badge_description}\n"
 
     # Get the completion from the API
     completion = client.chat.completions.create(

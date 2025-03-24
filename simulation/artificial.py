@@ -214,7 +214,7 @@ def prompt_upgrade_tweet(upgrade):
         upgrade_descriptions = attribute_descriptions + badge_descriptions
 
         # If a badge been upgraded, select one randomly
-        if attribute_statements or if badge_statements:
+        if upgrade_statements:
             attributes = [
                 attribute
                 for attribute, details in attributes.items() if details["start"] < details["new"]

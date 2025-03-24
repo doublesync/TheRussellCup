@@ -122,11 +122,12 @@ def prompt_upgrade_tweet(upgrade):
         prompt += f"- {statement}\n"
 
     prompt += (
-        "Please format your response as an update with each particular upgrade in a bullet point format. "
+        "Please format your response as an update with each particular upgrade in a bullet point format.\n" 
+        "As an example, if the upgrade is 'Badge', then the bullet point should be formatted like: Upgraded Badge\n"
         "Be sure to accurately list these, you should only list what has actually been upgraded.\n"
         "Make sure to keep the message concise and to the point, as it will be sent to a Discord channel.\n"
-        "Make the title simple and avoid referencing specific time periods like the offseason or playoffs, "
-        "as the phase may change over time, and we want the title to remain relevant regardless of the current phase.\n"
+        "For the title, use the following example: "
+        "If the player's name is John Smith, the title should be formatted like: Update: John Smith.\n"
     )
 
     # Randomly decide whether to add extra text
@@ -184,9 +185,9 @@ def prompt_upgrade_tweet(upgrade):
                 if str(random_badge) == description[0]:
                     badge_description = description[1]
                                             
-            prompt += f"At the bottom of the message, make an analytical comment about how {random_badge} is going to have an impact on {player_name}'s game.\
-                        For your analysis, consider that they in-game impact of the badge is based off of the following badge description: {badge_description}.\
-                        Keep the analysis to maximum two sentences and don't use the exact same words that are in the badge descriptions.\n"
+            prompt += f"At the bottom of the message, make an analytical comment about how {random_badge} is going to have an impact on {player_name}'s game.\n
+                        For your analysis, consider that they in-game impact of the badge is based off of the following badge description: {badge_description}.\n
+                        Keep the analysis to maximum one sentence and don't use the exact same words that are in the badge descriptions.\n"
 
     # Get the completion from the API
     completion = client.chat.completions.create(

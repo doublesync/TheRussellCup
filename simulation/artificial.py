@@ -140,6 +140,36 @@ def prompt_upgrade_tweet(upgrade):
 
     # Randomly decide whether to add extra text
     if random.random() < 1.00:  # 100% probability
+        attribute_descriptions = [
+            ("Ball Control", "determines a player’s ability to handle and control the basketball while dribbling, particularly in tight spaces or when attempting advanced dribble moves like crossovers, spins, or behind-the-back dribbles."),
+            ("Block", "determines a player's ability to contest or block shots from opponents, especially near the basket."),
+            ("Close Shot", "determines a player's effectiveness in making shots near the basket but outside the immediate layup and dunking range."),
+            ("Defensive Consistency", "determines a player's ability to maintain effective defensive performance throughout the game."),
+            ("Defensive Rebound", "determines a player's effectiveness in securing rebounds on the defensive end."),
+            ("Draw Foul", "determines ability to attract fouls from defenders while shooting close to the basket or driving it."),
+            ("Driving Dunk", "determines a player's ability to execute dunks while driving towards the basket."),
+            ("Free Throw", "determines a player's ability to successfully convert free throw attempts. Generally, timing the shot is easier for players with a high Free Throw attribute."),
+            ("Hands", "determines a player's ability to secure and control the basketball. This includes their effectiveness in catching passes and finishing plays."),
+            ("Help Defense IQ", "determines a player's ability to provide effective help on defense, such as knowing when to execute double teams or assist teammates without compromising coverage on their primary assignment."),
+            ("Hustle", "determines a player's effort and tenacity in making plays, particularly on defense and when going after loose balls."),
+            ("Interior Defense", "determines a player's ability to defend against opponents in the paint effectively."),
+            ("Driving Layup", "determines a player's ability to successfully make layup shots, which are typically taken close to the basket."),
+            ("Midrange Shot", "determines a player's effectiveness in shooting from mid-range distances."),
+            ("Offensive Consistency", "determines a player's ability to maintain a high level of offensive performance throughout the game."),
+            ("Offensive Rebound", "determines a player's ability to grab rebounds after missed shots."),
+            ("Pass Accuracy", "determines a player's likelihood of successfully completing passes to teammates, especially in high-pressure situations or when defenders are nearby."),
+            ("Passing IQ", "determines a player's ability to make smart passing decisions during gameplay. It influences the effectiveness of a player's passing, particularly in identifying the best options and minimizing the risk of turnovers."),
+            ("Pass Perception", "determines a player's ability to anticipate and react to passing lanes, leading to successful disruptions of the opponent's offensive plays."),
+            ("Passing Vision", "determines a player's ability to quickly recognize and anticipate passing opportunities on the court."),
+            ("Perimeter Defense", "determines a player's effectiveness in guarding opponents on the perimeter, particularly against outside shooters and drivers. It influences how well a player can stay in front of their assigned offensive player, contest shots, and prevent drives to the basket."),
+            ("Post Moves", "determines a player's ability to perform moves while backing down an opponent, execute post shots, and successfully finish around the basket."),
+            ("Post Fade", "determines a player's effectiveness in executing fadeaway shots while in the post."),
+            ("Post Hook", "determines a player's ability to successfully execute hook shots while in the post position."),
+            ("Shot IQ", "determines a player's understanding of shot selection and decision-making when taking shots. This attribute influences how well a player can read the game and make effective shooting choices based on the situation, such as recognizing when to shoot, pass, or drive."),
+            ("Standing Dunk", "determines a player's ability to successfully execute dunks while standing still, which is especially important for big men and players who primarily rely on their vertical leap in close proximity to the basket."),
+            ("Steal", "determines a player's ability to intercept passes and take the ball away from opponents."),
+            ("3pt Shot", "determines a player's ability to make three-point shots. It's important to note that the ability to time shots precisely can significantly impact a player's success rate when attempting outside shots.")
+        ]
         badge_descriptions = [
             ("Deadeye", "Jump shots taken with a defender closing out receive less of a penalty from a shot contest"),
             ("Limitless Range", "Extends the range from which a player can shoot three-pointers effectively from deep"),
@@ -181,25 +211,30 @@ def prompt_upgrade_tweet(upgrade):
             ("Slippery Off-Ball", "When attempting to get open off screens, the player more effectively navigates through traffic"),
             ("Pogo Stick", "Allows players to quickly go back up for another jump upon landing. This could be after a rebound, block attempt, or even jumpshot")
         ]
+        upgrade_descriptions = attribute_descriptions + badge_descriptions
 
         # If a badge been upgraded, select one randomly
-        if badge_statements:
+        if attribute_statements or if badge_statements:
+            attributes = [
+                attribute
+                for attribute, details in attributes.items() if details["start"] < details["new"]
+            ]
             badges = [
                 badge 
                 for badge, details in badges.items() if details["start"] < details["new"]
             ]
-            random_badge = random.choice(badges)
-            for description in badge_descriptions:
-                if str(random_badge) == description[0]:
-                    badge_description = description[1]
+            upgrades = attributes + badges
+            random_upgrade = random.choice(upgrades)
+            for description in upgrade_descriptions:
+                if str(random_upgrade) == description[0]:
+                    upgrade_description = description[1]
                                             
-            prompt += (f"At the bottom of the message, make an analytical comment about how {random_badge} is going to have an impact on {player_name}'s game.\n"
+            prompt += (f"At the bottom of the message, make an analytical comment about how {random_upgrade} is going to have an impact on {player_name}'s game. The on-court impact of the upgrade is based off of this description: {upgrade_description}.\n"
                         "Use the player's last name instead of their first name when referring to them.\n"
-                        "For your analysis, consider that the in-game impact of the badge is based off of the following badge description: {badge_description}.\n"
-                        "Keep the analysis to maximum one sentence and don't use the exact same words that are in the badge descriptions.\n"
+                        "Keep the analysis to maximum one sentence and don't always use the exact same words that are in the upgrade descriptions.\n"
                         "The analysis should not make meta reference to the name of the upgrade or the upgrade level.\n"
                         "The analysis should be in the style of a sports reporter providing a scoop on a player's efforts to improve./n"
-                        "If the player's name is John Smith and the badge that is upgraded is Pogo Stick, an example analysis would be: "
+                        "If the player's name is John Smith and the upgrade is Pogo Stick, an example analysis might be: "
                         "Team sources say that John Smith has developed some extra bounce lately, and that his blocking game has improved as a result."
                       )
 

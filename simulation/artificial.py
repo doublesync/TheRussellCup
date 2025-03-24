@@ -130,7 +130,7 @@ def prompt_upgrade_tweet(upgrade):
 
     prompt += (
         "Please format your response as an update with each particular upgrade in a bullet point format.\n" 
-        "As an example, if the upgrade is 'Badge', then the bullet point should be formatted like: Upgraded Badge\n"
+        "As an example, if the upgrade badge is 'Aerial Wizard' and the upgraded badge level is 'Bronze', then the bullet point should be formatted like: Aerial Wizard to Bronze\n"
         "Be sure to accurately list these, you should only list what has actually been upgraded.\n"
         "Make sure to keep the message concise and to the point, as it will be sent to a Discord channel.\n"
         "For the title, use the following example: "
@@ -166,7 +166,7 @@ def prompt_upgrade_tweet(upgrade):
             ("Unpluckable", "Defenders have a tougher time poking the ball free with their steal attempts"),
             ("Versatile Visionary", "Improves a player's ability to thread and fit tight passes, including alley-oops, quickly and on time."),
             ("Challenger", "Improves the effectiveness of well-timed contests against perimeter shooters"),
-            ("Glove", "	Increases the ability to successfully steal from ball-handlers, or strip layup attempts"),
+            ("Glove", "Increases the ability to successfully steal from ball-handlers, or strip layup attempts"),
             ("Interceptor", "The frequency of successfully tipped or intercepted passes greatly increases"),
             ("High-Flying Denier", "Boosts the speed and leaping ability of a defensive player in anticipation of a block attempt."),
             ("Immovable Enforcer", "Improves a defensive player's strength when defending ball handlers and finishers"),
@@ -195,7 +195,8 @@ def prompt_upgrade_tweet(upgrade):
                                             
             prompt += (f"At the bottom of the message, make an analytical comment about how {random_badge} is going to have an impact on {player_name}'s game.\n"
                         "For your analysis, consider that they in-game impact of the badge is based off of the following badge description: {badge_description}.\n"
-                        "Keep the analysis to maximum one sentence and don't use the exact same words that are in the badge descriptions.\n"
+                        "Keep the analysis to maximum one sentence and don't use the exact same words that are in the badge descriptions.\n
+                        "The analsysis should immersively reflect on how this upgrade will impact the player on the court. Do not make meta reference to the name of the upgrade or it's upgrade level."
                       )
 
     # Get the completion from the API

@@ -153,12 +153,12 @@ def prompt_upgrade_tweet(upgrade):
             ("Dimer", "When in the half-court, passes by Dimers to open shooters yield a shot percentage boost"),
             ("Handles for Days", "A player takes less of an energy hit when performing consecutive dribble moves, allowing them to chain together combos quicker and for longer periods of time"),
             ("Lightning Launch", "Speeds up launches when attacking from the perimeter."),
-            ("Strong Handle", "	Reduces the likelihood of being bothered by defenders when dribbling."),
-            ("Unpluckable", "	Defenders have a tougher time poking the ball free with their steal attempts"),
+            ("Strong Handle", "Reduces the likelihood of being bothered by defenders when dribbling."),
+            ("Unpluckable", "Defenders have a tougher time poking the ball free with their steal attempts"),
             ("Versatile Visionary", "Improves a player's ability to thread and fit tight passes, including alley-oops, quickly and on time."),
             ("Challenger", "Improves the effectiveness of well-timed contests against perimeter shooters"),
             ("Glove", "	Increases the ability to successfully steal from ball-handlers, or strip layup attempts"),
-            ("Interceptor", "	The frequency of successfully tipped or intercepted passes greatly increases"),
+            ("Interceptor", "The frequency of successfully tipped or intercepted passes greatly increases"),
             ("High-Flying Denier", "Boosts the speed and leaping ability of a defensive player in anticipation of a block attempt."),
             ("Immovable Enforcer", "Improves a defensive player's strength when defending ball handlers and finishers"),
             ("Off-Ball Pest", "Makes players more difficult to get past when playing off-ball, as the can grab and hold their matchup and don't get their ankles broken as often"),
@@ -168,7 +168,7 @@ def prompt_upgrade_tweet(upgrade):
             ("Post Lockdown", "Strengthens a player's ability to effectively defend moves in the post, with an increased chance at stripping the opponent"),
             ("Boxout Beast", "Increases the likelihood of dunking or posterizing your opponent when standing in the painted area"),
             ("Rebound Chaser", "Increases the likelihood of dunking or posterizing your opponent when standing in the painted area"),
-            ("Brick Wall", "	Increases the effectiveness of screens and drains energy from opponents on physical contact"),
+            ("Brick Wall", "Increases the effectiveness of screens and drains energy from opponents on physical contact"),
             ("Slippery Off-Ball", "When attempting to get open off screens, the player more effectively navigates through traffic"),
             ("Pogo Stick", "Allows players to quickly go back up for another jump upon landing. This could be after a rebound, block attempt, or even jumpshot")
         ]
@@ -184,7 +184,9 @@ def prompt_upgrade_tweet(upgrade):
                 if str(random_badge) == description[0]:
                     badge_description = description[1]
                                             
-            prompt += f"At the bottom of the message, make an analytical comment about how {random_badge} is going to have an impact on {player_name}'s game.\For your analysis, consider that they in-game impact of the badge is based off of the following description: {badge_description}\n"
+            prompt += f"At the bottom of the message, make an analytical comment about how {random_badge} is going to have an impact on {player_name}'s game.\
+                        For your analysis, consider that they in-game impact of the badge is based off of the following badge description: {badge_description}.\
+                        Keep the analysis to maximum two sentences and don't use the exact same words that are in the badge descriptions.\n"
 
     # Get the completion from the API
     completion = client.chat.completions.create(

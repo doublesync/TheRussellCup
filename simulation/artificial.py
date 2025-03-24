@@ -194,10 +194,12 @@ def prompt_upgrade_tweet(upgrade):
                     badge_description = description[1]
                                             
             prompt += (f"At the bottom of the message, make an analytical comment about how {random_badge} is going to have an impact on {player_name}'s game.\n"
-                        "For your analysis, consider that they in-game impact of the badge is based off of the following badge description: {badge_description}.\n"
+                        "For your analysis, consider that the in-game impact of the badge is based off of the following badge description: {badge_description}.\n"
                         "Keep the analysis to maximum one sentence and don't use the exact same words that are in the badge descriptions.\n"
-                        "The analsysis should immersively reflect on how this upgrade will impact the player on the court.\n"
-                        "The analysis should not make meta reference to the name of the upgrade, the upgrade level or the fact that it is an in-game upgrade."
+                        "The analysis should not make meta reference to the name of the upgrade or the upgrade level.\n"
+                        "The analysis should be in the style of a sports reporter providing a scoop on a player's efforts to improve./n"
+                        "If the player's name is John Smith and the badge that is upgraded is Pogo Stick, an example analysis would be: "
+                        "Team sources say that John Smith has developed some extra bounce lately, and that his blocking game has improved as a result."
                       )
 
     # Get the completion from the API

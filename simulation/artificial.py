@@ -92,6 +92,13 @@ def prompt_upgrade_tweet(upgrade):
     player_name = f"{upgrade.player.first_name} {upgrade.player.last_name}"
     attributes = upgrade.upgrades["attributes"]
     badges = upgrade.upgrades["badges"]
+    badge_levels = {
+        "0": "None",
+        "1": "Bronze",
+        "2": "Silver",
+        "3": "Gold",
+        "4": "Hall of Fame"
+    }
 
     # Build the narrative around the upgrades
     attribute_statements = [
@@ -100,7 +107,7 @@ def prompt_upgrade_tweet(upgrade):
     ]
 
     badge_statements = [
-        f"{player_name} has upgraded {badge}." 
+        f"{player_name} has upgraded {badge} to {badge_levels[str(details["new"])]}." 
         for badge, details in badges.items() if details["start"] < details["new"]
     ]
 
@@ -128,6 +135,7 @@ def prompt_upgrade_tweet(upgrade):
         "Make sure to keep the message concise and to the point, as it will be sent to a Discord channel.\n"
         "For the title, use the following example: "
         "If the player's name is John Smith, the title should be formatted like: Update: John Smith.\n"
+        "The title should be in bold."
     )
 
     # Randomly decide whether to add extra text
@@ -143,10 +151,10 @@ def prompt_upgrade_tweet(upgrade):
             ("Hook Specialist", "Improves a player's ability to make post hooks"),
             ("Layup Mixmaster", "improves a player's ability to finish fancy or acrobatic layups successfully."),
             ("Paint Prodigy", "Improves a player's ability to quickly and efficiently score while going to work in the paint."),
-            ("Physical Finisher", "	Improves a player's ability to battle through contact and convert contact layups."),
+            ("Physical Finisher", "Improves a player's ability to battle through contact and convert contact layups."),
             ("Post Fade Phenomr", "Improves a player's ability to make post fades and hop shots"),
             ("Post Powerhouse", "Strengthens a player's ability at backing down defenders and moving them with dropsteps."),
-            ("Post-Up Poet", "	Raises the chances of faking or getting by the defender, as well as scoring, when performing moves in the post."),
+            ("Post-Up Poet", "Raises the chances of faking or getting by the defender, as well as scoring, when performing moves in the post."),
             ("Posterizer", "Increases the chances of throwing down a dunk on your defender"),
             ("Ankle Assassin", "Increases the ability to break down the defender or cross them up."),
             ("Bail Out", "Passing out of a jump shot or layup yields fewer errant passes than normal. Additionally, helps passing out of double teams"),

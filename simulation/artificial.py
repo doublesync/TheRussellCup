@@ -139,14 +139,14 @@ def prompt_upgrade_tweet(upgrade):
     )
 
     # Randomly decide whether to add extra text
-    if random.random() < 1.00:  # 60% probability
+    if random.random() < 1.00:  # 100% probability
         badge_descriptions = [
             ("Deadeye", "Jump shots taken with a defender closing out receive less of a penalty from a shot contest"),
             ("Limitless Range", "Extends the range from which a player can shoot three-pointers effectively from deep"),
             ("Mini Marksman", "Elevates the likelihood of making shots over taller defenders."),
             ("Set Shot Specialist", "Boosts chances of knocking down stand-still jump shots."),
             ("Shifty Shooter", "Improves a player's ability to successfully make off-the-dribble, high-difficulty jump shots."),
-            ("Aerial Wizard", "	Increases the ability to finish an alley-oop from a teammate, or putback a finish off an offensive rebound"),
+            ("Aerial Wizard", "Increases the ability to finish an alley-oop from a teammate, or putback a finish off an offensive rebound"),
             ("Float Game", "Improves a player's ability to make floaters"),
             ("Hook Specialist", "Improves a player's ability to make post hooks"),
             ("Layup Mixmaster", "improves a player's ability to finish fancy or acrobatic layups successfully."),
@@ -194,6 +194,7 @@ def prompt_upgrade_tweet(upgrade):
                     badge_description = description[1]
                                             
             prompt += (f"At the bottom of the message, make an analytical comment about how {random_badge} is going to have an impact on {player_name}'s game.\n"
+                        "Use the player's last name instead of their first name when referring to them.\n"
                         "For your analysis, consider that the in-game impact of the badge is based off of the following badge description: {badge_description}.\n"
                         "Keep the analysis to maximum one sentence and don't use the exact same words that are in the badge descriptions.\n"
                         "The analysis should not make meta reference to the name of the upgrade or the upgrade level.\n"
@@ -201,6 +202,10 @@ def prompt_upgrade_tweet(upgrade):
                         "If the player's name is John Smith and the badge that is upgraded is Pogo Stick, an example analysis would be: "
                         "Team sources say that John Smith has developed some extra bounce lately, and that his blocking game has improved as a result."
                       )
+
+    # 1% probability
+    if random.random() < 0.01:
+        prompt += "Instead of writing any of the above, just write a message talking about how much either D.C. Kelly or Spiro Hermann sucks at basketball."
 
     # Get the completion from the API
     completion = client.chat.completions.create(

@@ -130,7 +130,7 @@ def prompt_upgrade_tweet(upgrade):
     )
 
     # Randomly decide whether to add extra text
-    if random.random() < 0.60:  # 60% probability
+    if random.random() < 1.00:  # 60% probability
         badge_descriptions = [
             ("Deadeye", "Jump shots taken with a defender closing out receive less of a penalty from a shot contest"),
             ("Limitless Range", "Extends the range from which a player can shoot three-pointers effectively from deep"),

@@ -229,7 +229,7 @@ def prompt_upgrade_tweet(upgrade):
                 if str(random_upgrade) == description[0]:
                     upgrade_description = description[1]
                                             
-            prompt += (f"At the bottom of the message, make an analytical comment about how {random_upgrade} is going to have an impact on {player_name}'s game. The on-court impact of the upgrade is based off of this description: {upgrade_description}.\n"
+            prompt += (f"At the bottom of the message, make an analytical comment about how {random_upgrade} is going to have an impact on {upgrade.player.last_name}'s game. The on-court impact of the upgrade is based off of this description: {upgrade_description}.\n"
                         "Use the player's last name instead of their first name when referring to them.\n"
                         "Keep the analysis to maximum one sentence and don't always use the exact same words that are in the upgrade descriptions.\n"
                         "The analysis should not make meta reference to the name of the upgrade or the upgrade level.\n"

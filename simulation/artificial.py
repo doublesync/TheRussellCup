@@ -185,9 +185,10 @@ def prompt_upgrade_tweet(upgrade):
                 if str(random_badge) == description[0]:
                     badge_description = description[1]
                                             
-            prompt += f"At the bottom of the message, make an analytical comment about how {random_badge} is going to have an impact on {player_name}'s game.\n"
+            prompt += (f"At the bottom of the message, make an analytical comment about how {random_badge} is going to have an impact on {player_name}'s game.\n"
                         "For your analysis, consider that they in-game impact of the badge is based off of the following badge description: {badge_description}.\n"
                         "Keep the analysis to maximum one sentence and don't use the exact same words that are in the badge descriptions.\n"
+                      )
 
     # Get the completion from the API
     completion = client.chat.completions.create(

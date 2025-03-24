@@ -102,7 +102,7 @@ def prompt_upgrade_tweet(upgrade):
 
     # Build the narrative around the upgrades
     attribute_statements = [
-        f"{player_name} has upgraded {attribute}." 
+        f"{player_name} has upgraded {attribute} to {details["new"]}." 
         for attribute, details in attributes.items() if details["start"] < details["new"]
     ]
 

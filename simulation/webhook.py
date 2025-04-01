@@ -1,14 +1,14 @@
 from discord_webhook import DiscordWebhook, DiscordEmbed
 
-webhook_urls: dict[str, str] = {
-    "new_players": "https://discord.com/api/webhooks/1326005929824489532/OCyiOK98HPJcKYxSavkTnuCGuj1RQSpwpT2QMxHd1WohkloYafPx49Xo-hhCGtMot-_X",
-    "marked_upgrades": "https://discord.com/api/webhooks/1326005781144932393/tmvLbqcnEKZH90K5MHG1SvIT7ttrM52Pzd8J8zXYA8VG9XtMXt7Upt4HoWwLjLMh1EQY",
-    "specialty_rolls": "https://discord.com/api/webhooks/1326005794012921897/hT8KfgxGkCJUvvku5GEkz7WQFg8fo3sycqgUqVsSgfXCfCj5KOMgax01o2MUz9KhvuP9",
+webhook_urls = {
+    "new_players": "https://discord.com/api/webhooks/1355379450992398437/sW2jfPi24doIirzYvkzQA2teqYEPRBcefuoVnvJmWTSuGwmPKJfa5vkfZLspj4_nzzOl",
+    "marked_upgrades": "https://discord.com/api/webhooks/1356639814182502591/TD0NeNQyWjF7Ds2wUf70m-vvxYW9B4Hii9Cg26E1iBj9IcoEUpN3p9BUsqihsf0rToAF",
+    "specialty_rolls": "https://discord.com/api/webhooks/1356639719315865712/8D5KfRIzwlUzJfnNfq52Lki4T9j9QmoLmaSB5uvjiTaKVTAK8S3utuNBQqkhhV13YCiK",
     "stat_updates": "https://discord.com/api/webhooks/1282346787486699641/hrbc-Wv6V9NkCKHxJmQ6S_LKLWWvTArMW1c5vDbWuoELBJCVEcMoaInxmm6jXi_YtvgB",
-    "alt_identifier": "https://discord.com/api/webhooks/1326005937949118475/umkaVz-vGOiKq1DsEr2UpfPsF_Dj5YZycsVuD-qa5JM0nqrDPz_1jH-VrszgAz_A-NQo",
+    "alt_identifier": "https://discord.com/api/webhooks/1356639605927186475/_0QbjS8Rb9Jxi3ZLXwe_9b3HzO4sfK_Wb76q9-sPn5Qg84fB6Sm3JA__X7wh5v90x9BP",
     "payment_requests": "https://discord.com/api/webhooks/1326005936288043069/a47WxnumgPhna3DwFvzmKqvMQFwO2r--59HSC1W6t3A8LcOcFzt-6hD4NOOP9ZU5oQ6s",
-    "breaking_news": "https://canary.discord.com/api/webhooks/1339340914778439752/56wK6XnDHQ6lk5HRj3GkwPahW2VrY9-Jg-I84uU3HoWEFQyrNhGTpJRfbQxdYsGCxelm",
-    "player_upgrades": "https://canary.discord.com/api/webhooks/1345458561802698783/_VKXybnkiH_DgRuWVbHtUE8dcmL1rPtYZBt4trwj1ulHQKK_LoLIYasWupPf9pp__xoJ"
+    "breaking_news": "https://discord.com/api/webhooks/1356639948933173359/14wfoaOLRFl4S_ux31Vs3MteIi5ztSKa_vF3LFl1JInqhcFW6FdPF0M1i5-qs3rZxRSQ",
+    "player_upgrades": "https://discord.com/api/webhooks/1356639655893667851/jkPt6CmfMgeI5C6paDcVF80FqCswVe998nVEcxNwSXWo717a_vvYg4OtNwW_VEDJt7ZA"
 }
 
 

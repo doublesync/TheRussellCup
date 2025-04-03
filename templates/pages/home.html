@@ -53,9 +53,6 @@
 										<a href="{% url 'view_player_offers' %}" class="btn btn-secondary flex-1 md:w-auto">
 											<i class="fa-solid fa-user"></i> Player Offers
 										</a>
-										<a href="{% url 'compare_players' %}" class="btn btn-secondary flex-1 md:w-auto">
-											<i class="fa-solid fa-user"></i> Compare Players
-										</a>
 									</div>
 								</div>
 
@@ -104,6 +101,7 @@
 										<ul>
 											<li><a href="{% url 'create_player' %}"><i class="fa-solid fa-user-plus"></i> Create Player</a></li>
 											<li><a href="{% url 'mods_list' %}"><i class="fa-solid fa-user-plus"></i> Buy Modifications</a></li>
+											<li><a href="{% url 'compare_players' %}"><i class="fa-solid fa-person"></i> Compare Players</a></li>
 											<hr class="mt-4 mb-4">
 											<div class="flex justify-center mt-4">
 												<button class="btn btn-primary btn-lg" onclick="document.getElementById('pricing-modal').classList.add('modal-open')"><i class="fa-solid fa-shopping-cart"></i> Shop Paid Items</button>

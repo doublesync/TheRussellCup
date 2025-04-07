@@ -98,7 +98,7 @@ class BulkAssignTeamView(View):
 
     def get(self, request):
         # Check staff status
-        if not request.user.is_superuser:
+        if not request.user.is_staff:
             return HttpResponse("You are not authorized to bulk assign users.")
         # Create the context & render the template
         context = {

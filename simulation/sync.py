@@ -82,12 +82,46 @@ shared_lists = {
     "Fingers": {
         0: 'None', 1: 'Index Finger', 2: 'Middle Finger', 3: 'Ring Finger', 4: 'Pinky Finger', 5: 'Hand Wrap', 6: 'Index And Middle Fingers', 7: 'Middle And Ring Fingers', 8: 'Ring And Pinky Fingers', 9: 'Index And Ring Fingers'
     },
+    "Legs": {
+        0: 'None', 1: 'Leg Sleeve', 2: 'Calf Sleeve', 3: 'Padded Calf Sleeve', 4: 'Half Calf Sleeve', 5: 'Jordan Calf Sleeve', 6: 'Tape', 7: 'Strap', 8: 'Calf Band', 9: 'Calf Sleeve Pad Retro'
+    },
+    "Knees": {
+        0: 'None', 1: 'Pad', 2: 'Hex Pad', 3: 'Brace', 4: 'Sleeve', 5: 'Strap', 6: 'Short Sleeve', 7: 'Tape', 8: 'Angular Pad', 9: 'Knee Pad Retro'
+    },
+    "Ankles": {
+        0: 'None', 1: 'Ankle Brace', 2: 'Ankle Tape', 3: 'Curry Ankle Brace'
+    },
     "YesNo": {
         0: 'No', 1: 'Yes'
     }
 }
 conversion_list = {
-    # Accessories
+    "Left Leg": shared_lists["Legs"],
+    "Left Leg Frequency": shared_lists["Frequencies"],
+    "Left Leg Home Color": shared_lists["ItemColors"],
+    "Left Leg Away Color": shared_lists["ItemColors"],
+    "Left Knee": shared_lists["Knees"],
+    "Left Knee Frequency": shared_lists["Frequencies"],
+    "Left Knee Home Color": shared_lists["ItemColors"],
+    "Left Knee Away Color": shared_lists["ItemColors"],
+    "Left Ankle": shared_lists["Ankles"],
+    "Left Ankle Frequency": shared_lists["Frequencies"],
+    "Left Ankle Home Color": shared_lists["ItemColors"],
+    "Left Ankle Away Color": shared_lists["ItemColors"],
+    "Right Leg": shared_lists["Legs"],
+    "Right Leg Frequency": shared_lists["Frequencies"],
+    "Right Leg Home Color": shared_lists["ItemColors"],
+    "Right Leg Away Color": shared_lists["ItemColors"],
+    "Right Knee": shared_lists["Knees"],
+    "Right Knee Frequency": shared_lists["Frequencies"],
+    "Right Knee Home Color": shared_lists["ItemColors"],
+    "Right Knee Away Color": shared_lists["ItemColors"],
+    "Right Ankle": shared_lists["Ankles"],
+    "Right Ankle Frequency": shared_lists["Frequencies"],
+    "Right Ankle Home Color": shared_lists["ItemColors"],
+    "Right Ankle Away Color": shared_lists["ItemColors"],
+    "Leg Frequency Paired": shared_lists["YesNo"],
+    "Knee Frequency Paired": shared_lists["YesNo"],
     "Headband": {
         0: 'None', 1: 'Headband', 2: 'Tie', 3: 'Headband 2', 4: 'Yes'
     },
@@ -128,7 +162,6 @@ conversion_list = {
     "Right Fingers Home Color": shared_lists["ItemColors"],
     "Right Fingers Away Color": shared_lists["ItemColors"],
     "Arm Frequency Paired": shared_lists["YesNo"],
-    # Vitals
     "Position": shared_lists["Positions"],
     "Secondary Position": shared_lists["Positions"],
     "Play Initiator": shared_lists["YesNo"],
@@ -136,7 +169,6 @@ conversion_list = {
     "Play Type 2": shared_lists["Playtypes"],
     "Play Type 3": shared_lists["Playtypes"],
     "Play Type 4": shared_lists["Playtypes"],
-    # Hotzones
     "Under Basket": shared_lists["Hotzones"],
     "Close Left": shared_lists["Hotzones"],
     "Close Middle": shared_lists["Hotzones"],
@@ -151,7 +183,6 @@ conversion_list = {
     "Three Center": shared_lists["Hotzones"],
     "Three Right-Center": shared_lists["Hotzones"],
     "Three Right": shared_lists["Hotzones"],
-    # Gear
     "Shoe Home": shared_lists["Shoes"],
     "Shoe Away": shared_lists["Shoes"],
     "Sock Length Home": shared_lists["Sock Lengths"],
@@ -167,9 +198,9 @@ conversion_list = {
     "Shorts Preferred Type": {
         0: 'None', 1: 'Short', 2: 'Long', 3: 'Folded'
     },
+    "Shorts Frequency": shared_lists["Frequencies"],
     "Shorts Home Color": shared_lists["Short Colors"],
     "Shorts Away Color": shared_lists["Short Colors"],
-    # Signatures
     "Jumpshot Base": shared_lists["Jumpshots"],
     "Release 1": shared_lists["Jumpshots"],
     "Release 2": shared_lists["Jumpshots"],

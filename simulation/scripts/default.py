@@ -409,7 +409,6 @@ def default_badges():
         "Boxout Beast": 0,
     }
 
-
 # Callable for tendencies
 def default_tendencies():
     return {
@@ -512,6 +511,21 @@ def default_tendencies():
         "Attack Strong On Drive": 50
     }
 
+# Callable for hotzones
+def default_hotzones():
+    return {}
+
+# Callable for gear
+def default_gear():
+    return {}
+
+# Callable for accessories
+def default_accessories():
+    return {}
+
+# Callable for animations
+def default_animations():
+    return {}
 
 # Callable for modifications
 def default_modifications():

@@ -33,6 +33,8 @@
 						<a href="{% url 'upgrade_page' player.id %}" class="btn btn-md btn-circle btn-outline mr-2 ml-2"><i class="fas fa-shopping-cart"></i></a>
 						<a href="{% url 'recent_season_games' player.id %}" class="btn btn-md btn-circle btn-outline mr-2 ml-2"><i class="fas fa-chart-line"></i></a>
 						<a href="{% url 'edit_appearance' player.id %}" class="btn btn-md btn-circle btn-outline mr-2 ml-2"><i class="fas fa-user-edit"></i></a>
+						<a href="{% url 'player_styles' player.id %}" class="btn btn-md btn-circle btn-outline mr-2 ml-2"><i class="fas fa-paint-brush"></i></a>
+						<a href="{% url 'player_animations' player.id %}" class="btn btn-md btn-circle btn-outline mr-2 ml-2"><i class="fas fa-film"></i></a>
 					</div>
 					{% comment %} Player page tabs {% endcomment %}
 					<div role="tablist" class="tabs tabs-lifted">

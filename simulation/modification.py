@@ -82,66 +82,6 @@ def modify_hotzone(player):
     # Return the player object and a message
     return [player, f"✅ Hotzone Roll applied: {hotzone} - {'Hot' if hot else 'Cold'}"]
 
-# Activity rolls (temporary; change each season)
-def activity_hotzone_roll(player):
-     # Find out how many weeks the player has collected
-     weeks_collected = 0
-     if player.contract: 
-         weeks_collected = len(player.contract.weeks_paid)
-     if weeks_collected >= 6:
-         # Give reward based on weeks collected
-         roll = random.randint(1, 10)
-         if roll == 1:
-             return modify_hotzone(player)
-         else:
-             # Send webhook to the "rolls" channel
-             webhook.send_webhook(
-                 "specialty_rolls", 
-                 title=f"😟 {player.first_name} {player.last_name} missed the hotzone!", 
-                 body=f"You needed to roll a (1) to win, you rolled a {roll}..."
-             )
-             # Return the player object and a message
-             return [player, f"😟 You needed to roll a (1) to win, you rolled a {roll}..."]
-     else:
-         return [player, "😟 You needed to collect for atleast 6 weeks to roll for a hotzone!"]
-     
-def activity_hidden_gem_roll(player):
-     # Find out how many weeks the player has collected
-     weeks_collected = 0
-     if player.contract: 
-         weeks_collected = len(player.contract.weeks_paid)
-     # Give reward based on weeks collected
-     if weeks_collected >= 12:
-         # Roll for the hidden gem
-         roll = random.randint(1, 50)
-         if roll == 1:
-             # Send webhook to the "rolls" channel
-             webhook.send_webhook(
-                 "specialty_rolls", 
-                 title=f"🔥 {player.first_name} {player.last_name} is a Hidden Gem!", 
-                 body="💎 (+5) to all physical attributes\n💎 (+5) to wingspan\n✔ Changes applied to website automatically"
-             )
-             # Apply the hidden gem
-             player.attributes["Speed"] += 5
-             player.attributes["Speed with Ball"] += 5
-             player.attributes["Strength"] += 5
-             player.attributes["Vertical"] += 5
-             player.attributes["Agility"] += 5
-             player.wingspan += 5
-             # Return the player object and a message
-             return [player, "🔥 Congratulations, this player is a Hidden Gem!"]
-         else:
-             # Send webhook to the "rolls" channel
-             webhook.send_webhook(
-                 "specialty_rolls", 
-                 title=f"😟 {player.first_name} {player.last_name} missed the hidden gem!", 
-                 body=f"You needed to roll a (1) to win, you rolled a {roll}..."
-             )
-             # Return the player object and a message
-             return [player, f"😟 You needed to roll a (1) to win, you rolled a {roll}..."]
-     else:
-         return [player, "😟 You needed to collect for atleast 12 weeks to roll for a hidden gem!"]
-
 # Modification functions 
 # Parameters: player object
 # Returns: [player object, message]
@@ -150,8 +90,6 @@ MODIFICATION_FUNCTIONS = {
     '🔒 Weight Roll': modify_weight,
     '🔒 Random Hot Zone': modify_hotzone,
     'Jumphot Speed Increase (Guaranteed)': modify_speed,
-    '(S6) Six Collections Reward': activity_hotzone_roll,
-    '(S6) Twelve Collections Reward': activity_hidden_gem_roll,
 }
 
 # Checker function

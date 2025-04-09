@@ -57,9 +57,10 @@ class Player(models.Model):
     attributes = models.JSONField(default=default.default_attributes)
     badges = models.JSONField(default=default.default_badges)
     tendencies = models.JSONField(default=default.default_tendencies, null=True, blank=True)
-    coach_suggestion_attributes = models.JSONField(default=dict, null=True, blank=True)
-    coach_suggestion_badges = models.JSONField(default=dict, null=True, blank=True)
-    coach_suggestion_tendencies = models.JSONField(default=dict, null=True, blank=True)
+    hotzones = models.JSONField(default=default.default_hotzones, null=True, blank=True)
+    gear = models.JSONField(default=default.default_gear, null=True, blank=True)
+    accessories = models.JSONField(default=default.default_accessories, null=True, blank=True)
+    signatures = models.JSONField(default=default.default_animations, null=True, blank=True)
     sim_rating = models.FloatField(default=0.00)
     # Timestamp fields
     created = models.DateTimeField(auto_now_add=True)

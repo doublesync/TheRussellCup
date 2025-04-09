@@ -20,5 +20,8 @@ urlpatterns = [
     path("player/trophyrack/<int:id>/", views.TrophyRackView.as_view(), name="trophy_rack"),
     path("compare/", views.ComparePlayersView.as_view(), name="compare_players"),
     path("compare/change/", views.htmx_compare_players, name="htmx_compare_players"),
+    path("player/<int:id>/animations/", views.PlayerAnimationsView.as_view(), name="player_animations"),
+    path("player/<int:id>/styles/", views.PlayerStylesView.as_view(), name="player_styles"),
+    path("player/<int:id>/styles/update/", views.htmx_update_player_styles, name="htmx_update_player_styles"),
     # fmt:on
 ]

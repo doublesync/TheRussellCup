@@ -102,12 +102,12 @@ def prompt_upgrade_tweet(upgrade):
 
     # Build the narrative around the upgrades
     attribute_statements = [
-        f"{player_name} has upgraded {attribute} to {details["new"]}." 
+        f'{player_name} has upgraded {attribute} to {details["new"]}.'
         for attribute, details in attributes.items() if details["start"] < details["new"]
     ]
 
     badge_statements = [
-        f"{player_name} has upgraded {badge} to {badge_levels[str(details["new"])]}." 
+        f'{player_name} has upgraded {badge} to {badge_levels[str(details["new"])]}.'
         for badge, details in badges.items() if details["start"] < details["new"]
     ]
 

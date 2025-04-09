@@ -27,27 +27,44 @@ def imperial_height(inches):
 def generate_player_file(player):
     # Initialize the upgrades we'll return.
     player_file = {
-        "attributes": {},
-        "badges": {},
-        "tendencies": {}
+        "Attributes": {},
+        "Badges": {},
+        "Tendencies": {},
+        "Hotzones": {},
+        "Signatures": {},
+        "Gear": {},
+        "Accessories": {}
     }
     # Don't add the item if it's in the banned list
     banned_items = ["Touches"]
     # Add attributes to the player file
     for attribute in player.attributes:
         if attribute not in banned_items:
-            player_file["attributes"][attribute] = player.attributes[attribute]
+            player_file["Attributes"][attribute] = player.attributes[attribute]
     # Add badges to the player file
     for badge in player.badges:
         if badge not in banned_items:
-            player_file["badges"][badge] = player.badges[badge]
+            player_file["Badges"][badge] = player.badges[badge]
     # Add tendencies to the player file
     for tendency in player.tendencies:
         if tendency not in banned_items:
-            player_file["tendencies"][tendency] = player.tendencies[tendency]
-    # Add first and last name identifiers
-    player_file["firstName"] = player.first_name
-    player_file["lastName"] = player.last_name
+            player_file["Tendencies"][tendency] = player.tendencies[tendency]
+    # Add signatures (animations) to the player file
+    for signature in player.signatures:
+        if signature not in banned_items:
+            player_file["Signatures"][signature] = player.signatures[signature]
+    # Add hotzones to the player file
+    for hotzone in player.hotzones:
+        if hotzone not in banned_items:
+            player_file["Hotzones"][hotzone] = player.hotzones[hotzone]
+    # Add gear to the player file
+    for gear in player.gear:
+        if gear not in banned_items:
+            player_file["Gear"][gear] = player.gear[gear]
+    # Add accessories to the player file
+    for accessory in player.accessories:
+        if accessory not in banned_items:
+            player_file["Accessories"][accessory] = player.accessories[accessory]
     return player_file
 
 # A function used to compile every player upgrade into a single dictionary for Sync2K
@@ -58,6 +75,6 @@ def compile_player_upgrades():
         # Fetch the player from the log (each player has a relative player)
         player = log.player
         # Get the upgrades we'll return
-        upgrades[player.id] = generate_player_file(player)
+        upgrades[f"{player.first_name} {player.last_name}"] = generate_player_file(player)
     # Return the compiled upgrades
     return upgrades

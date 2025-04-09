@@ -7,8 +7,7 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.http import HttpResponse
-from django.shortcuts import render
-from django.shortcuts import redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
 from django.views.generic.edit import FormView
 from django.views.generic.base import View
@@ -29,6 +28,9 @@ import simulation.scripts.attribute as attribute
 import simulation.scripts.badge as badge
 import simulation.scripts.tendency as tendency
 import simulation.scripts.sorting as sorting
+import simulation.scripts.animation as animation
+import simulation.scripts.accessory as accessory
+import simulation.scripts.gear as gear
 
 
 # This is a class based view that will render the form to create a player
@@ -324,6 +326,41 @@ class ComparePlayersView(View):
         return render(request, "players/compare_players.html", {"players": players})
     
 
+# This is a class-based view that will allow the user to view & change player animations
+class PlayerAnimationsView(View):
+
+    def get(self, request, id):
+        # Check if the player exists & if the player belongs to the user
+        player = get_object_or_404(Player, pk=id)
+        if player.user != request.user:
+            return render(request, "500.html", {"reason": "You do not own this player"})
+        # Get the animation options
+        context = {
+            "player": player,
+            "animation_options": animation.animation_options
+        }
+        # Render the page
+        return render(request, "players/player_animations.html", context)
+
+
+# This is a class-based view that will allow the user to view & change player accessories and gear
+class PlayerStylesView(View):
+
+    def get(self, request, id):
+        # Check if the player exists & if the player belongs to the user
+        player = get_object_or_404(Player, pk=id)
+        if player.user != request.user:
+            return render(request, "500.html", {"reason": "You do not own this player"})
+        # Get the accessory options
+        context = {
+            "player": player,
+            "accessory_options": accessory.accessory_options,
+            "gear_options": gear.gear_options,
+        }
+        # Render the page
+        return render(request, "players/player_styles.html", context)
+
+
 # This is function based htmx view that will allow the user to change the players being compared
 def htmx_compare_players(request):
     if request.method == "POST":
@@ -355,3 +392,40 @@ def htmx_compare_players(request):
         player_2_stats = statfinder.StatFinder().player_stats(player_2)
         # Render the page
         return render(request, "players/fragments/compare_players_fragment.html", {"player_1": player_1, "player_2": player_2, "player_1_stats": player_1_stats, "player_2_stats": player_2_stats, "vital_fields": vital_fields, "stat_fields": stat_fields})
+
+
+# This function based htmx view will allow the user to update the player's styles
+def htmx_update_player_styles(request, id):
+    # Check if the player exists & if the player belongs to the user
+    player = get_object_or_404(Player, pk=id)
+    if player.user != request.user:
+        return render(request, "500.html", {"reason": "You do not own this player"})
+    # Get the accessory & gear data from the request
+    accessory_choices = {
+        key: value
+        for key, value in request.POST.items()
+        if key in accessory.accessory_options and value
+    }
+    gear_choices = {
+        key: value
+        for key, value in request.POST.items()
+        if key in gear.gear_options and value
+    }
+    # Check if the player has any accessories or gear to update
+    updated = False
+    for accessory_item, value in accessory_choices.items():
+        if player.accessories.get(accessory_item) != value:
+            player.accessories[accessory_item] = value
+            updated = True
+    for gear_item, value in gear_choices.items():
+        if player.gear.get(gear_item) != value:
+            player.gear[gear_item] = value
+            updated = True
+    # Only save the player if there were changes made
+    if updated:
+        player.save()
+        messages.success(request, "✅ Player styles updated successfully")
+    else:
+        messages.info(request, "ℹ️ No changes were made.")
+    # Return a refresh with a success message
+    return HttpResponse(status=204, headers={"HX-Refresh": "true"})

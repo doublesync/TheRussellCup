@@ -1,0 +1,92 @@
+{% extends '_base.html' %}
+{% load static %}
+{% load style_filters %}
+
+{% block title %}Player Styles{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-8">
+    <h1 class="text-4xl font-bold text-center mb-10">🎽 Customize Your Player Style</h1>
+
+    <form method="POST" id="player-styles-form" class="space-y-12">
+        {% csrf_token %}
+
+        <!-- Gear Section -->
+        <div class="card shadow-md bg-base-100 p-6">
+            <h2 class="text-2xl font-semibold mb-6 border-b pb-2">🛡️ Gear Options</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {% for type, options in gear_options.items %}
+                    <div class="form-control w-full">
+                        <label class="label">
+                            <span class="label-text font-medium capitalize flex items-center gap-2">
+                                {{ type }}
+                                {% if type in player.gear and player.gear|get_item:type %}
+                                    <span class="badge badge-success text-xs">Equipped</span>
+                                {% endif %}
+                            </span>
+                        </label>
+                        <select name="{{ type }}" class="select select-bordered select-sm w-full">
+                            {% if type in player.gear %}
+                                <option value="{{ player.gear|get_item:type }}" disabled selected>
+                                    {{ player.gear|get_item:type }}
+                                </option>
+                            {% else %}
+                                <option value="" disabled selected>Unequipped</option>
+                            {% endif %}
+                            {% for code, string in options.items %}
+                                <option value="{{ string }}">{{ string }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Accessories Section -->
+        <div class="card shadow-md bg-base-100 p-6">
+            <h2 class="text-2xl font-semibold mb-6 border-b pb-2">🧢 Accessory Options</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {% for type, options in accessory_options.items %}
+                    <div class="form-control w-full">
+                        <label class="label">
+                            <span class="label-text font-medium capitalize flex items-center gap-2">
+                                {{ type }}
+                                {% if type in player.accessories and player.accessories|get_item:type %}
+                                    <span class="badge badge-success text-xs">Equipped</span>
+                                {% endif %}
+                            </span>                            
+                        </label>
+                        <select name="{{ type }}" class="select select-bordered select-sm w-full">
+                            {% if type in player.accessories %}
+                                <option value="{{ player.accessories|get_item:type }}" disabled selected>
+                                    {{ player.accessories|get_item:type }}
+                                </option>
+                            {% else %}
+                                <option value="" disabled selected>Unequipped</option>
+                            {% endif %}
+                            {% for code, string in options.items %}
+                                <option value="{{ string }}">{{ string }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+
+        <!-- Confirm Button -->
+        <div class="flex justify-center">
+            <button 
+                class="btn btn-success btn-wide btn-lg shadow-lg"
+                type="submit"
+                hx-post="{% url 'htmx_update_player_styles' player.id %}"
+                hx-target="#player-styles-form"
+                hx-swap="innerHTML"
+                hx-trigger="click"
+            >
+                Confirm Styles
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

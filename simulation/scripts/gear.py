@@ -11,6 +11,7 @@ gear_options = {
     "Undershirt Away Color": conversion_list["Undershirt Away Color"],
     "Shorts": conversion_list["Shorts"],
     "Shorts Preferred Type": conversion_list["Shorts Preferred Type"],
+    "Shorts Frequency": conversion_list["Shorts Frequency"],
     "Shorts Home Color": conversion_list["Shorts Home Color"],
     "Shorts Away Color": conversion_list["Shorts Away Color"],
 }

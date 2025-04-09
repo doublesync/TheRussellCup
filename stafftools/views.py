@@ -98,8 +98,8 @@ class BulkAssignTeamView(View):
 
     def get(self, request):
         # Check staff status
-        if not request.user.is_staff:
-            return HttpResponse("You are not authorized to bulk assign users.")
+        # if not request.user.is_staff:
+        #     return HttpResponse("You are not authorized to bulk assign users.")
         # Create the context & render the template
         context = {
             "players": Player.objects.values("id", "first_name", "last_name"),
@@ -109,8 +109,8 @@ class BulkAssignTeamView(View):
     
     def post(self, request):
         # Check staff status
-        if not request.user.is_staff:
-            return HttpResponse("You are not authorized to bulk assign users to teams.")
+        # if not request.user.is_staff:
+        #     return HttpResponse("You are not authorized to bulk assign users to teams.")
         # Grab the form data
         assign_team = request.POST.get("assign-team")
         assign_list = request.POST.getlist("assign-list")

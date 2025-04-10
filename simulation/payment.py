@@ -82,7 +82,7 @@ def get_contract_year(player):
 # A method that pays a user's players based on their contract
 def pay_contracts(user):
 
-    return "Payment Status: Payments are disabled for the offseason."
+    # return "Payment Status: Payments are disabled for the offseason."
 
     # Get the user's players
     players = user.players.all()

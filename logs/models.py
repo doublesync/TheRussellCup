@@ -1,11 +1,13 @@
-# Django imports
 from django.db import models
 
-# Local imports
 import simulation.config as config
 
-# A model to store the upgrade logs
+
 class UpgradeLog(models.Model):
+    """
+    A model to store the upgrade logs for players.
+    """
+
     player = models.ForeignKey("players.Player", on_delete=models.CASCADE)
     total_sp = models.IntegerField()
     total_xp = models.IntegerField()
@@ -15,8 +17,12 @@ class UpgradeLog(models.Model):
     complete = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
 
-# A model to store the payment logs
+
 class PaymentLog(models.Model):
+    """
+    A model to store the payment logs for players.
+    """
+
     staff = models.ForeignKey("accounts.CustomUser", on_delete=models.CASCADE)
     player = models.ForeignKey("players.Player", on_delete=models.CASCADE)
     payment = models.IntegerField()
@@ -27,10 +33,18 @@ class PaymentLog(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
+        """
+        Returns a string representation of the PaymentLog instance.
+        """
+
         return f"{self.staff.username} paid {self.player} ${self.payment} {self.type} for {self.reason}"
-    
-# A model to store the contract logs
+
+
 class ContractLog(models.Model):
+    """
+    A model to store the contract logs for players.
+    """
+
     player = models.ForeignKey("players.Player", on_delete=models.CASCADE)
     season = models.IntegerField()
     length = models.IntegerField()
@@ -43,16 +57,31 @@ class ContractLog(models.Model):
     no_release_clause = models.BooleanField(default=False)
     incentives = models.CharField(max_length=255, default="None")
     weeks_paid = models.JSONField(default=dict, null=True, blank=True)
-    current_year = models.CharField(max_length=32, choices=(("Year 1", "Year 1"), ("Year 2", "Year 2"), ("Year 3", "Year 3")), default="Year 1")
+    current_year = models.CharField(
+        max_length=32,
+        choices=(("Year 1", "Year 1"), ("Year 2", "Year 2"), ("Year 3", "Year 3")),
+        default="Year 1",
+    )
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
+        """
+        Returns a string representation of the ContractLog instance.
+        """
+
         return f"S{self.season} {self.player}"
-    
+
+
 class ContractOfferLog(models.Model):
+    """
+    A model to store the contract offer logs for players.
+    """
+
     season = models.ForeignKey("stats.Season", on_delete=models.CASCADE)
     player = models.ForeignKey("players.Player", on_delete=models.CASCADE)
-    projected_role = models.CharField(max_length=32, choices=config.CONFIG_PLAYER["ROLES"], default="Regular")
+    projected_role = models.CharField(
+        max_length=32, choices=config.CONFIG_PLAYER["ROLES"], default="Regular"
+    )
     team = models.ForeignKey("teams.Team", on_delete=models.CASCADE)
     length = models.IntegerField()
     year_2_option = models.CharField(max_length=32, default="None")
@@ -69,25 +98,56 @@ class ContractOfferLog(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
+        """
+        Returns a string representation of the ContractOfferLog instance.
+        """
+
         return f"{self.player} offer from {self.team} for {self.season}"
 
-# A model to store transaction approval logs
+
 class TransactionMoveLog(models.Model):
-    team = models.ForeignKey("teams.Team", on_delete=models.CASCADE, help_text="The team making the transaction.")
-    signed = models.ForeignKey("players.Player", on_delete=models.CASCADE, related_name="signed", help_text="The player being signed.")
-    released = models.ForeignKey("players.Player", on_delete=models.CASCADE, related_name="released", help_text="The player being released.")
-    approved = models.BooleanField(default=False, help_text="Whether the transaction has been approved.")
+    """
+    A model to store the transaction move logs for players.
+    """
+
+    team = models.ForeignKey(
+        "teams.Team",
+        on_delete=models.CASCADE,
+        help_text="The team making the transaction.",
+    )
+    signed = models.ForeignKey(
+        "players.Player",
+        on_delete=models.CASCADE,
+        related_name="signed",
+        help_text="The player being signed.",
+    )
+    released = models.ForeignKey(
+        "players.Player",
+        on_delete=models.CASCADE,
+        related_name="released",
+        help_text="The player being released.",
+    )
+    approved = models.BooleanField(
+        default=False, help_text="Whether the transaction has been approved."
+    )
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
+        """
+        Returns a string representation of the TransactionMoveLog instance.
+        """
+
         return f"{self.team} released {self.released} for {self.signed}"
-    
+
     def move_players(self):
-        # Make sure both player exists & they're not the same
-        if (self.team and self.released and self.signed) and (self.released != self.signed):
-            # Make sure the team has the player it's releasing & the player it's signing is a free agent
-            if (self.released.team == self.team and self.signed.team == None):
-                # Release & Sign logic
+        """
+        Moves the players from one team to another.
+        """
+
+        if (self.team and self.released and self.signed) and (
+            self.released != self.signed
+        ):
+            if self.released.team == self.team and self.signed.team is None:
                 self.released.team = None
                 self.signed.team = self.team
                 self.approved = True
@@ -96,17 +156,28 @@ class TransactionMoveLog(models.Model):
                 self.save()
 
     def save(self, *args, **kwargs):
-        # We will only save the log if it's not been approved (to prevent accidental moves)
+        """
+        Saves the TransactionMoveLog instance and moves the players if not approved.
+        """
+
         if not self.approved:
             self.move_players()
             super(TransactionMoveLog, self).save(*args, **kwargs)
 
-# A model to store trophy logs
+
 class TrophyLog(models.Model):
+    """
+    A model to store the trophy logs for players.
+    """
+
     player = models.ForeignKey("players.Player", on_delete=models.CASCADE)
     trophy = models.CharField(max_length=32, choices=config.CONFIG_PLAYER["TROPHIES"])
     season = models.IntegerField()
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
+        """
+        Returns a string representation of the TrophyLog instance.
+        """
+
         return f"{self.player} won {self.trophy} in S{self.season}"

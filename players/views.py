@@ -1,36 +1,32 @@
-# Python imports
 import json
 
-# Django imports
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.db.models import Q
 from django.http import HttpResponse
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
-from django.views.generic.edit import FormView
 from django.views.generic.base import View
+from django.views.generic.edit import FormView
 from django.views.generic.list import ListView
-
-# Local imports
 from ipware import get_client_ip
-from players.models import Player, Modification
-from players.forms import PlayerForm, UpgradeForm
-from stats.models import Season, PlayerSeasonStats, TeamSeasonStats
+
 import simulation.config as config
-import simulation.statfinder as statfinder
 import simulation.create as create
-import simulation.upgrade as upgrade
 import simulation.modification as modification
-import simulation.webhook as webhook
+import simulation.scripts.accessory as accessory
+import simulation.scripts.animation as animation
 import simulation.scripts.attribute as attribute
 import simulation.scripts.badge as badge
-import simulation.scripts.tendency as tendency
-import simulation.scripts.sorting as sorting
-import simulation.scripts.animation as animation
-import simulation.scripts.accessory as accessory
 import simulation.scripts.gear as gear
+import simulation.scripts.sorting as sorting
+import simulation.scripts.tendency as tendency
+import simulation.statfinder as statfinder
+import simulation.upgrade as upgrade
+import simulation.webhook as webhook
+from players.forms import PlayerForm, UpgradeForm
+from players.models import Modification, Player
+from stats.models import PlayerSeasonStats, Season
 
 
 # This is a class based view that will render the form to create a player
@@ -171,7 +167,7 @@ class PlayerListView(ListView):
 
 # This is a function based view that will render a filtered player list
 def htmx_filter_players(request, model):
-    
+
     # Initialize some objects
     model_sorting = model
     fragment_name = None
@@ -202,13 +198,17 @@ def htmx_filter_players(request, model):
         order_by_str = f"{params.order_direction}{params.ordering}"
         player_list = finder.all_player_stats(query=query, order_by=order_by_str)
     else:
-        player_list = model_sorting.objects.filter(query).order_by(f"{params.order_direction}{params.ordering}")
+        player_list = model_sorting.objects.filter(query).order_by(
+            f"{params.order_direction}{params.ordering}"
+        )
     # Paginate the page
     paginator = Paginator(player_list, 10)
     players = paginator.get_page(page)
     # Return the page
     context: dict = {"page_obj": players}
-    html: str = render_to_string(fragment_name, context) # Render a fragment based on what HTMX requested
+    html: str = render_to_string(
+        fragment_name, context
+    )  # Render a fragment based on what HTMX requested
     return HttpResponse(html)
 
 
@@ -223,7 +223,7 @@ class EditAppearanceView(View):
             return render(request, "500.html", {"reason": "You do not own this player"})
         # Render the page
         return render(request, "players/edit_appearance.html", {"player": player})
-    
+
     def post(self, request, id):
         # Grab the player
         player = Player.objects.get(pk=id)
@@ -236,7 +236,10 @@ class EditAppearanceView(View):
         player.save()
         # Redirect to the player page
         # HX-REDIRECT
-        return HttpResponse("Successful! Redirecting...", headers={"HX-Redirect": f"/players/player/{player.id}/"})
+        return HttpResponse(
+            "Successful! Redirecting...",
+            headers={"HX-Redirect": f"/players/player/{player.id}/"},
+        )
 
 
 # This is a class based view that will render the modifications list
@@ -253,7 +256,7 @@ class ModificationsListView(ListView):
 
     def get_queryset(self):
         return Modification.objects.all().order_by("created")
-    
+
 
 # This is a function based view that will allow the user to purchase a modification
 def purchase_modification(request, id):
@@ -266,10 +269,12 @@ def purchase_modification(request, id):
     # Calculate the price of the modification
     mod_xp_price = mod.xp_price_with_discount if user.has_care_package else mod.xp_price
     # Validate some conditions
-    if player.user != user: 
+    if player.user != user:
         return None
     if player.xp < mod_xp_price:
-        return HttpResponse("❌ You do not have enough XP to purchase this modification")
+        return HttpResponse(
+            "❌ You do not have enough XP to purchase this modification"
+        )
     if existing_mods and mod.item in existing_mods and not mod.multi_buy:
         return HttpResponse("❌ You already own this modification")
     # Purchase the modification
@@ -299,7 +304,11 @@ def htmx_upgrade_advice(request, id):
     player = Player.objects.get(pk=id)
     # Check if the player belongs to the user
     if player and player.user != request.user:
-        return render(request, "500.html", {"reason": "You do not own this player or the player does not exist"})
+        return render(
+            request,
+            "500.html",
+            {"reason": "You do not own this player or the player does not exist"},
+        )
     # Initialize the prompt
     response = "❌ Upgrade advice is currently disabled."
     # Return the response
@@ -313,8 +322,8 @@ class TrophyRackView(View):
         # Get the user's players
         players = Player.objects.get(pk=id)
         # Render the page
-        return render(request, "players/trophy_rack.html", {"players": players}) 
-    
+        return render(request, "players/trophy_rack.html", {"players": players})
+
 
 # This is a class-based view that will allow the user to compare two players
 class ComparePlayersView(View):
@@ -324,7 +333,7 @@ class ComparePlayersView(View):
         players = Player.objects.all()
         # Render the page
         return render(request, "players/compare_players.html", {"players": players})
-    
+
 
 # This is a class-based view that will allow the user to view & change player animations
 class PlayerAnimationsView(View):
@@ -335,10 +344,7 @@ class PlayerAnimationsView(View):
         if player.user != request.user:
             return render(request, "500.html", {"reason": "You do not own this player"})
         # Get the animation options
-        context = {
-            "player": player,
-            "animation_options": animation.animation_options
-        }
+        context = {"player": player, "animation_options": animation.animation_options}
         # Render the page
         return render(request, "players/player_animations.html", context)
 
@@ -371,9 +377,14 @@ def htmx_compare_players(request):
         if not player_1 or not player_2:
             return HttpResponse("❌ You must select two players to compare")
         if player_1 == player_2:
-            return HttpResponse(f"❌ You cannot compare a player to themselves: ({player_1}) ({player_2}).")
+            return HttpResponse(
+                f"❌ You cannot compare a player to themselves: ({player_1}) ({player_2})."
+            )
         # Check if both players exist
-        if not Player.objects.filter(pk=player_1).exists() or not Player.objects.filter(pk=player_2).exists():
+        if (
+            not Player.objects.filter(pk=player_1).exists()
+            or not Player.objects.filter(pk=player_2).exists()
+        ):
             return HttpResponse("❌ One or more of the players do not exist")
         # Get the players
         player_1 = Player.objects.get(pk=player_1)
@@ -391,7 +402,18 @@ def htmx_compare_players(request):
         player_1_stats = statfinder.StatFinder().player_stats(player_1)
         player_2_stats = statfinder.StatFinder().player_stats(player_2)
         # Render the page
-        return render(request, "players/fragments/compare_players_fragment.html", {"player_1": player_1, "player_2": player_2, "player_1_stats": player_1_stats, "player_2_stats": player_2_stats, "vital_fields": vital_fields, "stat_fields": stat_fields})
+        return render(
+            request,
+            "players/fragments/compare_players_fragment.html",
+            {
+                "player_1": player_1,
+                "player_2": player_2,
+                "player_1_stats": player_1_stats,
+                "player_2_stats": player_2_stats,
+                "vital_fields": vital_fields,
+                "stat_fields": stat_fields,
+            },
+        )
 
 
 # This function based htmx view will allow the user to update the player's styles

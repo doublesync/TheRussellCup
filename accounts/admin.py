@@ -1,17 +1,37 @@
 from django.contrib import admin
-from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
 
-from .forms import CustomUserCreationForm, CustomUserChangeForm
+from .forms import CustomUserChangeForm, CustomUserCreationForm
 from .models import CustomUser
+
 
 @admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
+    """
+    Custom User Admin for CustomUser model.
+    """
+
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
     model = CustomUser
-    list_display = ['username', 'can_pay_players', 'can_mark_upgrades', 'has_care_package', 'has_second_player_slot']
+    list_display = [
+        "username",
+        "can_pay_players",
+        "can_mark_upgrades",
+        "has_care_package",
+        "has_second_player_slot",
+    ]
     fieldsets = UserAdmin.fieldsets + (
-        ('Custom Fields', {'fields': ('can_pay_players', 'can_mark_upgrades', 'has_care_package', 'has_second_player_slot')}),
+        (
+            "Custom Fields",
+            {
+                "fields": (
+                    "can_pay_players",
+                    "can_mark_upgrades",
+                    "has_care_package",
+                    "has_second_player_slot",
+                )
+            },
+        ),
     )
-    search_fields = ['players__first_name', 'players__last_name', 'username']
+    search_fields = ["players__first_name", "players__last_name", "username"]

@@ -9,6 +9,7 @@ def user(request, user_id):
     """
     View function to display user profile.
     """
+
     return render(
         request,
         "account/user.html",
@@ -20,4 +21,5 @@ def claim_contracts(request):
     """
     View function to claim contracts for the logged-in user.
     """
+
     return HttpResponse(payment.pay_contracts(request.user))

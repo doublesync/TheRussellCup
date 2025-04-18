@@ -1,10 +1,7 @@
-# Python imports
 import os
 from pathlib import Path
-import django_heroku
-import dj_database_url
 
-# Third-party imports
+import django_heroku
 from dotenv import load_dotenv
 
 # Load secrets from .env file or production environment
@@ -35,50 +32,57 @@ DEV_MODE = os.getenv("DEV_MODE", "True") == "True"
 # }
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["*"]
 CSRF_TRUSTED_ORIGINS = [
-    'http://localhost:8000', 
-    'http://localhost:8001',
-    'https://ominous-zebra-qxxwgv6j9v43xj75-8000.app.github.dev/',
-    'https://ominous-zebra-qxxwgv6j9v43xj75-8001.app.github.dev/',
-    'https://rcup.live', 
-    'https://*.rcup.live',
+    "http://localhost:8000",
+    "http://localhost:8001",
+    "https://rcup.live",
+    "https://*.rcup.live",
 ]
 
 # Application definition
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
+APPS = {
+    "DJANGO_APPS": [
+        "unfold",
+        "django.contrib.admin",
+        "django.contrib.auth",
+        "django.contrib.contenttypes",
+        "django.contrib.sessions",
+        "django.contrib.messages",
+        "whitenoise.runserver_nostatic",
+        "django.contrib.staticfiles",
+        "django.contrib.sites",
+    ],
+    "THIRD_PARTY": [
+        "allauth",
+        "allauth.account",
+        "allauth.socialaccount",
+        "allauth.socialaccount.providers.google",
+        "allauth.socialaccount.providers.discord",
+        "crispy_forms",
+        "crispy_bootstrap5",
+        "debug_toolbar",
+        "django_extensions",
+        "django_table_sort",
+        "widget_tweaks",
+    ],
+    "LOCAL": [
+        "accounts",
+        "pages",
+        "news",
+        "players",
+        "teams",
+        "logs",
+        "stafftools",
+        "stats",
+        "events",
+    ],
+}
 INSTALLED_APPS = [
-    "unfold",
-    "django.contrib.admin",
-    "django.contrib.auth",
-    "django.contrib.contenttypes",
-    "django.contrib.sessions",
-    "django.contrib.messages",
-    "whitenoise.runserver_nostatic",
-    "django.contrib.staticfiles",
-    "django.contrib.sites",
-    # Third-party
-    "allauth",
-    "allauth.account",
-    "allauth.socialaccount",
-    "allauth.socialaccount.providers.google",
-    "allauth.socialaccount.providers.discord",
-    "crispy_forms",
-    "crispy_bootstrap5",
-    "debug_toolbar",
-    "django_extensions",
-    "django_table_sort",
-    "widget_tweaks",
-    # Local
-    "accounts",
-    "pages",
-    "news",
-    "players",
-    "teams",
-    "logs",
-    "stafftools",
-    "stats",
-    "events",
+    *APPS["DJANGO_APPS"],
+    *APPS["THIRD_PARTY"],
+    *APPS["LOCAL"],
 ]
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#middleware
@@ -127,13 +131,13 @@ if DEV_MODE:
     #     }
     # }
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'TRCLocal',
-            'USER': 'postgres',
-            'PASSWORD': 'Carlton33!',
-            'HOST': 'localhost',
-            'PORT': '5432', # Default PostgreSQL port
+        "default": {
+            "ENGINE": "django.db.backends.postgresql_psycopg2",
+            "NAME": "TRCLocal",
+            "USER": "postgres",
+            "PASSWORD": "Carlton33!",
+            "HOST": "localhost",
+            "PORT": "5432",  # Default PostgreSQL port
         }
     }
 else:
@@ -173,8 +177,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/dev/ref/settings/#language-code
 LANGUAGE_CODE = "en-us"
 
-FAKER_LOCALE = None # 'en_US' is loaded
-FAKER_PROVIDERS = None # faker.DEFAULT_PROVIDERS is loaded
+FAKER_LOCALE = None  # 'en_US' is loaded
+FAKER_PROVIDERS = None  # faker.DEFAULT_PROVIDERS is loaded
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#time-zone
 TIME_ZONE = "EST"
@@ -268,7 +272,7 @@ SOCIALACCOUNT_PROVIDERS = {
             "client_id": os.getenv("DISCORD_CLIENT_ID"),
             "secret": os.getenv("DISCORD_CLIENT_SECRET"),
         }
-    }
+    },
 }
 
 # Fixture System

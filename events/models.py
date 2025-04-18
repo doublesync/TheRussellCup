@@ -1,11 +1,13 @@
-# Django imports
 from django.db import models
 
-# Local imports
 from players.models import Player
 
-# Create your models here.
+
 class Event(models.Model):
+    """
+    Model representing an event in the league.
+    """
+
     title = models.CharField(max_length=100)
     description = models.TextField()
     rookies_allowed = models.BooleanField(default=False)
@@ -16,16 +18,28 @@ class Event(models.Model):
     max_entries = models.IntegerField(default=0)
 
     def __str__(self):
-        return self.title
+        """
+        String representation of the Event model.
+        """
 
-# Yes, it's spelled "Entree" and not "Entry" due to the fact that I can't spell
-class Entree(models.Model): 
+        return str(self.title)
+
+
+class Entree(models.Model):
+    """
+    Model representing an entry in the league.
+    """
+
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     player = models.ForeignKey(Player, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.player} - {self.event}"
-    
+
     class Meta:
+        """
+        Meta options for the Entree model.
+        """
+
         verbose_name = "Entry"
         verbose_name_plural = "Entries"

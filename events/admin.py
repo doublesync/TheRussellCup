@@ -1,9 +1,7 @@
-# Python imports
 from django.contrib import admin
 from unfold.admin import ModelAdmin
 
-# Local imports
-from events.models import Event, Entree
+from events.models import Entree, Event
 
 admin.site.register(Event, ModelAdmin)
 admin.site.register(Entree, ModelAdmin)

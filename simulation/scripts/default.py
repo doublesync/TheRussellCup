@@ -321,6 +321,7 @@ college_choices = [
 ]
 playoff_round_choices = ["Quarterfinals", "Semifinals", "Finals"]
 
+
 # Callable for attributes
 def default_attributes():
     return {
@@ -359,6 +360,7 @@ def default_attributes():
         "Vertical": 55,
         "Strength": 55,
     }
+
 
 # Callable for badges
 def default_badges():
@@ -409,6 +411,7 @@ def default_badges():
         "Boxout Beast": 0,
     }
 
+
 # Callable for tendencies
 def default_tendencies():
     return {
@@ -441,7 +444,7 @@ def default_tendencies():
         "Contested Jumper 3pt": 50,
         "Stepback Jumper Mid": 50,
         "Stepback Jumper 3pt": 50,
-        "Spin Jumper": 50,
+        "Spin Jumper Tendency": 50,
         "Transition Pull Up 3pt": 50,
         "Drive Pull Up 3pt": 50,
         "Drive Pull Up Mid": 50,
@@ -474,7 +477,7 @@ def default_tendencies():
         "Post Fade Left": 50,
         "Post Fade Right": 50,
         "Post Up And Under": 50,
-        "Post Hop Shot": 50,
+        "Post Hop Shot Tendency": 50,
         "Post Step Back Shot": 50,
         "Post Drive": 50,
         "Post Spin": 50,
@@ -508,28 +511,34 @@ def default_tendencies():
         "Driving Dribble Hesitation": 50,
         "Driving In And Out": 50,
         "No Driving Dribble Move": 50,
-        "Attack Strong On Drive": 50
+        "Attack Strong On Drive": 50,
     }
+
 
 # Callable for hotzones
 def default_hotzones():
     return {}
 
+
 # Callable for gear
 def default_gear():
     return {}
+
 
 # Callable for accessories
 def default_accessories():
     return {}
 
+
 # Callable for animations
 def default_animations():
     return {}
 
+
 # Callable for modifications
 def default_modifications():
     return {}
+
 
 # Callable for game highs
 def default_game_highs():
@@ -538,12 +547,53 @@ def default_game_highs():
         "label": "N/A",
     }
 
+
 # Callables for default team log fields
 def default_lineup():
     return {
-        "PG": {"player": "None", "touches": 50, "initiator": "No", "playtype_1": "N/A", "playtype_2": "N/A", "playtype_3": "N/A", "playtype_4": "N/A"},
-        "SG": {"player": "None", "touches": 50, "initiator": "No", "playtype_1": "N/A", "playtype_2": "N/A", "playtype_3": "N/A", "playtype_4": "N/A"},
-        "SF": {"player": "None", "touches": 50, "initiator": "No", "playtype_1": "N/A", "playtype_2": "N/A", "playtype_3": "N/A", "playtype_4": "N/A"},
-        "PF": {"player": "None", "touches": 50, "initiator": "No", "playtype_1": "N/A", "playtype_2": "N/A", "playtype_3": "N/A", "playtype_4": "N/A"},
-        "C": {"player": "None", "touches": 50, "initiator": "No", "playtype_1": "N/A", "playtype_2": "N/A", "playtype_3": "N/A", "playtype_4": "N/A"},
+        "PG": {
+            "player": "None",
+            "touches": 50,
+            "initiator": "No",
+            "playtype_1": "N/A",
+            "playtype_2": "N/A",
+            "playtype_3": "N/A",
+            "playtype_4": "N/A",
+        },
+        "SG": {
+            "player": "None",
+            "touches": 50,
+            "initiator": "No",
+            "playtype_1": "N/A",
+            "playtype_2": "N/A",
+            "playtype_3": "N/A",
+            "playtype_4": "N/A",
+        },
+        "SF": {
+            "player": "None",
+            "touches": 50,
+            "initiator": "No",
+            "playtype_1": "N/A",
+            "playtype_2": "N/A",
+            "playtype_3": "N/A",
+            "playtype_4": "N/A",
+        },
+        "PF": {
+            "player": "None",
+            "touches": 50,
+            "initiator": "No",
+            "playtype_1": "N/A",
+            "playtype_2": "N/A",
+            "playtype_3": "N/A",
+            "playtype_4": "N/A",
+        },
+        "C": {
+            "player": "None",
+            "touches": 50,
+            "initiator": "No",
+            "playtype_1": "N/A",
+            "playtype_2": "N/A",
+            "playtype_3": "N/A",
+            "playtype_4": "N/A",
+        },
     }

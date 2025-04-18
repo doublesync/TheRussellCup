@@ -20,7 +20,7 @@ tendency_categories = {
         "Contested Jumper Mid",
         "Stepback Jumper 3pt",
         "Stepback Jumper Mid",
-        "Spin Jumper",
+        "Spin Jumper Tendency",
         "Transition Pull Up 3pt",
         "Drive Pull Up 3pt",
         "Drive Pull Up Mid",
@@ -46,7 +46,7 @@ tendency_categories = {
         "Triple Threat Shoot",
         "Setup With Sizeup",
         "Setup With Hesitation",
-        "No Setup Dribble", 
+        "No Setup Dribble",
     ],
     "Driving": [
         "Drive",
@@ -81,7 +81,7 @@ tendency_categories = {
         "Post Fade Left",
         "Post Fade Right",
         "Post Up And Under",
-        "Post Hop Shot",
+        "Post Hop Shot Tendency",
         "Post Step Back Shot",
         "Post Drive",
         "Post Spin",
@@ -97,7 +97,7 @@ tendency_categories = {
         "Iso Vs Good Defender",
         "Iso Vs Average Defender",
         "Iso Vs Poor Defender",
-        "Play Discipline"
+        "Play Discipline",
     ],
     "Defense": [
         "Pass Interception",
@@ -114,6 +114,7 @@ tendency_categories = {
 tendency_price = 5
 tendency_lower_price = 5
 
+
 # A function to check the price of a tendency
 def check_tendency_price(start_level, end_level):
     cost = 0
@@ -123,7 +124,9 @@ def check_tendency_price(start_level, end_level):
         cost = abs(end_level - start_level) * tendency_price
     return cost
 
+
 import json
+
 
 def order_tendencies(tendencies, combine=False):
     # Order the tendencies by their categories

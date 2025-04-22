@@ -6,29 +6,83 @@
 {% block content %}
 <div class="p-6 max-w-7xl mx-auto">
 
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold">Player Animations</h1>
-        <div class="badge badge-primary p-3 text-lg font-semibold">
-            <i class="fa fa-coins mr-2"></i> {{ player.xp }}
-        </div>
-    </div>
+  <!-- Header -->
+  <div class="flex justify-between items-center mb-6">
+	<h1 class="text-3xl font-bold">{{ player }}'s Animations</h1>
+	<div class="badge badge-primary p-3 text-lg font-semibold">
+	  <i class="fa fa-coins mr-2"></i> {{ player.xp }}
+	</div>
+  </div>
 
-    <div class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {% for type, data in animation_options.items %}
-        <div class="card bg-base-100 shadow-md hover:shadow-lg transition-shadow">
-            <div class="card-body">
-                <h2 class="card-title text-lg font-semibold">{{ type }}</h2>
-                <p class="text-sm text-gray-500">
-                    <i class="fa fa-coins"></i> {{ data.xp_price }} XP
-                </p>
-                <div class="mt-4">
-                    <button class="btn btn-sm btn-primary w-full">
-                        <i class="fas fa-dice mr-2"></i> Roll Animation
-                    </button>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
+  <!-- Animation Result Section -->
+  {% include 'players/fragments/animation_result_fragment.html' %}
+
+  <!-- Animation Options Grid -->
+  <form>
+  	<div class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+		{% csrf_token %}
+		{% for type, data in animation_options.items %}
+		<div class="card bg-base-100 shadow-md hover:shadow-lg transition-shadow">
+		  <div class="card-body">
+			<h2 class="card-title text-lg font-semibold">{{ type }}</h2>
+			<p class="text-sm text-gray-500">
+			  <i class="fa fa-coins"></i> {{ data.xp_price }} XP
+			</p>
+			<div class="mt-4">
+			  <!-- Main Button to Open the Modal -->
+			  <label for="confirm-modal-toggle-{{ type }}" class="btn btn-sm btn-primary w-full">
+				<i class="fas fa-dice mr-2"></i> Roll Animation
+			  </label>
+			</div>
+		  </div>
+		</div>
+	
+		<!-- Modal for Each Animation -->
+		<input type="checkbox" id="confirm-modal-toggle-{{ type }}" class="modal-toggle" />
+		<div class="modal">
+		<div class="modal-box relative">
+			<!-- Modal Title with Icon -->
+			<h2 class="text-2xl font-semibold text-center mb-4">
+			<i class="fas fa-dice mr-2"></i> Confirm Purchase
+			</h2>
+
+			<!-- Modal Content with Details -->
+			<p class="text-lg text-center mb-6">
+			Are you sure you want to roll the <span class="font-semibold">{{ type }}</span> animation? This will cost
+			<span class="font-semibold text-success">{{ data.xp_price }} XP</span>.
+			</p>
+
+			<!-- Modal Actions -->
+			<div class="modal-action flex justify-center gap-4">
+			<!-- ✅ Confirm Button: HTMX inside <label> closes modal AND posts -->
+			<label for="confirm-modal-toggle-{{ type }}" class="btn btn-success btn-sm cursor-pointer">
+				<div
+				hx-post="{% url 'htmx_roll_animation' player.id %}"
+				hx-vals='{"animation_name": "{{ type }}"}'
+				hx-target="#animation-result"
+				hx-swap="innerHTML"
+				class="flex items-center gap-2 w-full h-full justify-center"
+				>
+				<i class="fas fa-check-circle"></i> Confirm
+				</div>
+			</label>
+
+			<!-- Cancel Button -->
+			<label for="confirm-modal-toggle-{{ type }}" class="btn btn-sm btn-error hover:bg-red-600">
+				<i class="fas fa-times-circle mr-2"></i> Cancel
+			</label>
+			</div>
+
+			<!-- Optional Close Icon in top corner -->
+			<label for="confirm-modal-toggle-{{ type }}" class="absolute top-2 right-2 text-2xl text-gray-600 hover:text-gray-900 cursor-pointer">
+			<i class="fas fa-times"></i>
+			</label>
+		</div>
+		</div>
+
+		{% endfor %}		
+	</div>
+</form>
 </div>
+
 {% endblock %}

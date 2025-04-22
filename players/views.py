@@ -3,7 +3,7 @@ import json
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.views.generic.base import View
@@ -451,3 +451,38 @@ def htmx_update_player_styles(request, id):
         messages.info(request, "ℹ️ No changes were made.")
     # Return a refresh with a success message
     return HttpResponse(status=204, headers={"HX-Refresh": "true"})
+
+
+# This function based htmx view will allow the user to update the player's animations
+def htmx_roll_animation(request, id):
+
+    if request.method != "POST":
+        return HttpResponse("Invalid request method.")
+
+    player = get_object_or_404(Player, pk=id)
+    if player.user != request.user:
+        return HttpResponse("❌ You do not own this player.")
+
+    animation_name = request.POST.get("animation_name")
+    animation_data = animation.animation_options.get(animation_name)
+    xp_price = animation_data.get("xp_price") if animation_data else None
+
+    if not animation_data or xp_price is None:
+        return HttpResponse("❌ This animation has not yet been configured.")
+    if player.xp < xp_price:
+        return HttpResponse("❌ You do not have enough XP to roll this animation.")
+
+    player.xp -= xp_price
+    rolled_animation = animation.roll_animation(animation_name)
+    player.signatures[animation_name] = rolled_animation
+    player.save()
+
+    return render(
+        request,
+        "players/fragments/animation_result_fragment.html",
+        {
+            "player": player,
+            "rolled_animation": rolled_animation,
+            "animation_name": animation_name,
+        },
+    )

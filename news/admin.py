@@ -1,14 +1,14 @@
-# Django imports
 from django.contrib import admin
 from unfold.admin import ModelAdmin
 
-# Local imports
 from news.models import Like, Post
-
-# Register your models here.
 
 
 class PostAdmin(ModelAdmin):
+    """
+    Admin interface for the Post model.
+    """
+
     search_fields = ["title"]
     autocomplete_fields = ["user"]
 

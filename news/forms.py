@@ -1,15 +1,18 @@
-# Python imports
-
-# Django imports
 from django import forms
 
-# Local imports
 from news.models import Post
 
 
-# Form for creating a post
 class PostForm(forms.ModelForm):
+    """
+    Form for creating and updating posts.
+    """
+
     class Meta:
+        """
+        Meta class for PostForm.
+        """
+
         model = Post
         fields = ["title", "content"]
         labels = {

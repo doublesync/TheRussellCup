@@ -1,65 +1,68 @@
-# Django imports
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404
-from django.shortcuts import render
-from django.shortcuts import redirect
+from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.http import require_POST
 from django.views.generic.edit import FormView
 
-# Local imports
-from news.models import Post, Like
 from news.forms import PostForm
-import simulation.webhook as webhook
+from news.models import Like, Post
 
 
-# A view to get a post
 def post(request, id):
-    post = Post.objects.get(pk=id)
+    """
+    A view to get a post by id
+    """
+    post = get_object_or_404(Post, pk=id)
     return render(
         request,
         "news/post.html",
         {
             "post": post,
-            "likes": Like.objects.filter(post=id).count(),
+            "likes": Like.objects.filter(post=post).count(),
         },
     )
 
 
-# A view to get all posts
 def posts(request):
-    # Get all posts (pagination is not implemented yet)
-    posts = Post.objects.all().order_by("-created")
-    # Render posts
-    return render(request, "news/posts.html", {"posts": posts})
+    """
+    A view to get all posts
+    """
+
+    return render(
+        request, "news/posts.html", {"posts": Post.objects.all().order_by("-created")}
+    )
 
 
-# A view to create a post
 class PostFormView(FormView):
+    """
+    A view to create a post
+    """
+
     template_name = "news/create_post.html"
     form_class = PostForm
 
     def form_valid(self, form):
-        if form.is_valid():
-            # Create the post
-            data = form.cleaned_data
-            new_post = Post(
-                user=self.request.user,
-                title=data["title"],
-                content=data["content"],
-            )
-            new_post.save()
-            return redirect(post, new_post.id)
+        """
+        If the form is valid, save the post and redirect to the post detail view.
+        """
+        new_post = form.save(commit=False)  # Use Django's built-in form save method
+        new_post.user = self.request.user  # Assign the current user to the post
+        new_post.save()
+        return redirect(
+            "post", id=new_post.id
+        )  # Use named URL patterns for better maintainability
 
 
-# A view to create a like
+@require_POST
 def htmx_create_like(request, id):
-    # Create the like if one doesn't exist
-    like_exists = Like.objects.filter(user=request.user, post=id).exists()
-    if like_exists:
-        Like.objects.filter(user=request.user, post=id).delete()
-    else:
-        new_like = Like(user=request.user, post=Post.objects.get(id=id))
-        new_like.save()
-    # Return the fragment to update the like count
-    html = f'{Like.objects.filter(post=id).count()}'
-    return HttpResponse(html)
+    """
+    A view to toggle a like for a post
+    """
+
+    post = get_object_or_404(Post, id=id)
+    like, created = Like.objects.get_or_create(user=request.user, post=post)
+
+    if not created:
+        like.delete()
+
+    like_count = Like.objects.filter(post=post).count()
+    return HttpResponse(like_count, content_type="text/plain")

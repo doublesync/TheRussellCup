@@ -2,5 +2,9 @@ from django.apps import AppConfig
 
 
 class PlayersConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'players'
+    """
+    Configuration for the Players app.
+    """
+
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "players"

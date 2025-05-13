@@ -3,12 +3,13 @@
 # Django imports
 from django.db import models
 
+import simulation.config as config
+import simulation.scripts.animation as animation
+import simulation.scripts.default as default
+import simulation.scripts.utility as utility
+
 # Local imports
 from simulation.frivolity import SimulationRating
-import simulation.config as config
-import simulation.scripts.default as default
-import simulation.scripts.animation as animation
-import simulation.scripts.utility as utility
 
 # fmt:off
 
@@ -62,6 +63,7 @@ class Player(models.Model):
     accessories = models.JSONField(default=default.default_accessories, null=True, blank=True)
     signatures = models.JSONField(default=default.default_animations, null=True, blank=True)
     sim_rating = models.FloatField(default=0.00)
+    girlfriend = models.JSONField(default=dict, null=True, blank=True)
     # Timestamp fields
     created = models.DateTimeField(auto_now_add=True)
     # Miscanellous fields

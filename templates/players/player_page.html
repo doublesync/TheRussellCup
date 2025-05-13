@@ -36,6 +36,21 @@
 						<a href="{% url 'player_styles' player.id %}" class="btn btn-md btn-circle btn-outline mr-2 ml-2"><i class="fas fa-paint-brush"></i></a>
 						<a href="{% url 'player_animations' player.id %}" class="btn btn-md btn-circle btn-outline mr-2 ml-2"><i class="fas fa-film"></i></a>
 					</div>
+
+					{% comment %} Generate girlfriend button {% endcomment %}
+						<div class="card-actions justify-center my-5 p-4">
+							<h2 class="text-lg font-bold">Current Girlfriend</h2>
+							<span name="girlfriend-status" id="girlfriend-status" class="badge bg-base-100 w-full p-4">{{ player.girlfriend.name }}</span>
+							{% if not player.girlfriend %}
+							<form>
+								{% csrf_token %}
+								<button class="btn btn-secondary btn-sm mr-2 ml-2" hx-post="{% url 'generate_girlfriend' player.id %}" hx-target="#girlfriend-status" hx-swap="innerHTML">
+									<i class="fas fa-heart"></i> Find Single Ladies Near You
+								</button>
+							</form>
+							{% endif %}
+						</div>	
+
 					{% comment %} Player page tabs {% endcomment %}
 					<div role="tablist" class="tabs tabs-lifted">
 

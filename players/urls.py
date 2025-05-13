@@ -24,5 +24,6 @@ urlpatterns = [
     path("player/<int:id>/styles/", views.PlayerStylesView.as_view(), name="player_styles"),
     path("player/<int:id>/styles/update/", views.htmx_update_player_styles, name="htmx_update_player_styles"),
     path("player/<int:id>/animations/update/", views.htmx_roll_animation, name="htmx_roll_animation"),
+    path("player/<int:id>/generate/girlfriend/", views.htmx_generate_girlfriend, name="generate_girlfriend"),
     # fmt:on
 ]

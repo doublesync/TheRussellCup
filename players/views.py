@@ -3,7 +3,7 @@ import json
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseForbidden
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.views.generic.base import View
@@ -26,6 +26,7 @@ import simulation.upgrade as upgrade
 import simulation.webhook as webhook
 from players.forms import PlayerForm, UpgradeForm
 from players.models import Modification, Player
+from simulation.frivolity import get_girlfriend
 from stats.models import PlayerSeasonStats, Season
 
 
@@ -486,3 +487,42 @@ def htmx_roll_animation(request, id):
             "animation_name": animation_name,
         },
     )
+
+
+# This function based htmx view will allow the user to generate a girlfriend for the player
+def htmx_generate_girlfriend(request, id):
+
+    # Check if the player exists & belongs to the current user
+    player = get_object_or_404(Player, pk=id)
+    if player.user != request.user:
+        return render(request, "500.html", {"reason": "You do not own this player"})
+    if player.girlfriend:
+        return HttpResponse(
+            "❌ You already have a spouse, please break up with them first."
+        )
+
+    # Generate a girlfriend
+    girlfriend = get_girlfriend()
+
+    # Update the player's girlfriend field (assumes JSONField or TextField)
+    player.girlfriend = girlfriend
+    player.save()
+
+    description = (
+        f"Meet {girlfriend['name']}, a {girlfriend['age']}-year-old who stands "
+        f"{girlfriend['height']} feet tall and weighs {girlfriend['weight']} lbs. "
+        f"{girlfriend['pronouns'][1].capitalize()} loves {', '.join(girlfriend['hobbies'])}, "
+        f"adores the color {girlfriend['favorite_color']}, and could eat {girlfriend['favorite_food']} every day. "
+        f"{girlfriend['pronouns'][1].capitalize()}'s favorite movie is '{girlfriend['favorite_movie']}', "
+        f"and {girlfriend['pronouns'][0]}'s usually listening to {', '.join(girlfriend['favorite_music'])}. "
+        f"People describe {girlfriend['pronouns'][1]} as {', '.join(girlfriend['personality_traits'])}."
+    )
+
+    # Optionally: send to webhook, Discord, logs, etc.
+    webhook.send_webhook(
+        url="tinder",
+        title=f"🍆 {player.first_name} {player.last_name} has a new spouse!",
+        body=description,
+    )
+
+    return HttpResponse("✅ Spouse generated successfully")

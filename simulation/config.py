@@ -6,9 +6,9 @@ CONFIG_USER = {
 
 # Season configuration
 CONFIG_SEASON = {
-    "CURRENT_WEEK": 22,  # This controls the player/loser of the week updates
-    "GAME_WEEK": 22,  # This controls the payment week
-    "CURRENT_SEASON": 7,
+    "CURRENT_WEEK": 1,  # This controls the player/loser of the week updates
+    "GAME_WEEK": 1,  # This controls the payment week
+    "CURRENT_SEASON": 8,
     "MAX_SP_WEEK": 90,  # Deprecated (scared to remove it!)
     "MAX_SP_SEASON": 3000,  # Raised from 2340 SP
     "CHECKIN_SP": 30,

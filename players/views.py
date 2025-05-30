@@ -1,4 +1,5 @@
 import json
+import random
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -526,3 +527,33 @@ def htmx_generate_girlfriend(request, id):
     )
 
     return HttpResponse("✅ Spouse generated successfully")
+
+
+# This function based htmx view will generate a random present for the player
+def htmx_generate_present(request, id):
+    # Check if the player exists & belongs to the current user
+    player = get_object_or_404(Player, pk=id)
+    if player.user != request.user:
+        return render(request, "500.html", {"reason": "You do not own this player"})
+
+    # Check if the player has a presents_received field, if not, initialize it
+    if not player.presents_received:
+        player.presents_received = []
+
+    # Check if the player has already received a present today
+    if "Departure Present" in player.presents_received:
+        return HttpResponse("❌ You have already received the sync present.")
+
+    # Generate a random present
+    presents = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
+    present = random.choice(presents)
+    player.sp += present
+    player.xp += present * 2
+
+    # Add the present to the player's presents_received list
+    player.presents_received.append("Departure Present")
+    player.save()
+
+    return HttpResponse(
+        f"✅ You received a present worth {present} SP and {present * 2} XP!"
+    )

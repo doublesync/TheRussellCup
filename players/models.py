@@ -64,6 +64,7 @@ class Player(models.Model):
     signatures = models.JSONField(default=default.default_animations, null=True, blank=True)
     sim_rating = models.FloatField(default=0.00)
     girlfriend = models.JSONField(default=dict, null=True, blank=True)
+    presents_received = models.JSONField(default=list, null=True, blank=True)
     # Timestamp fields
     created = models.DateTimeField(auto_now_add=True)
     # Miscanellous fields

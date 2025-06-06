@@ -429,8 +429,8 @@ class GameValidator:
             self.errors.append([False, "Team points cannot be negative, silly!"])
         if self.home_team_points == self.away_team_points:
             self.errors.append([False, "A tie? Really? Team points cannot be equal"])
-        if self.home_team_points > 99 or self.away_team_points > 99:
-            self.errors.append([False, "Team points cannot exceed 99"])
+        if self.home_team_points > 199 or self.away_team_points > 199:
+            self.errors.append([False, "Team points cannot exceed 199"])
         
     def validate_player_stats(self):
 

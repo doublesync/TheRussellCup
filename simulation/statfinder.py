@@ -444,8 +444,8 @@ class GameValidator:
                 # Regular validations
                 # if value < 0 and value not in self.allowed_negatives:
                 #     self.errors.append([False, f"{stat.title()} cannot be negative"])
-                if value >= 70:
-                    self.errors.append([False, f"{stat.title()} cannot exceed 70"])
+                if value >= 99:
+                    self.errors.append([False, f"{stat.title()} cannot exceed 99"])
                 # Conditional validations
                 if stat in self.raise_stat_error_at:
                     if value >= self.raise_stat_error_at[stat]:

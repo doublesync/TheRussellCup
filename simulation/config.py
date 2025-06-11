@@ -21,7 +21,7 @@ CONFIG_SEASON = {
 CONFIG_PLAYER = {
     "SP_DEFAULT": 7500,  # Raised from 6000 SP
     "SP_ANOMALY_BONUS": 1500,  # 30% of the starting SP
-    "XP_DEFAULT": 9500,  # Raised from 8500 XP
+    "XP_DEFAULT": 10000,  # Raised from 8500 XP
     "BADGE_LABELS": {
         0: "❌ None",
         1: "🟫 Bronze",

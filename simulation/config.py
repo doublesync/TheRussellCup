@@ -14,7 +14,7 @@ CONFIG_SEASON = {
     "CHECKIN_SP": 30,
     "CHECKIN_XP": 100,
     "DEFAULT_CONTRACT": 150,
-    "FREE_AGENCY_OPEN": True,  # This is the phase where players can be signed to contracts
+    "FREE_AGENCY_OPEN": False,  # This is the phase where players can be signed to contracts
 }
 
 # Player configuration
